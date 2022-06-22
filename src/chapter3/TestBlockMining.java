@@ -4,7 +4,6 @@ public class TestBlockMining {
     public static void main(String[] args) {
         Block block = new Block("0", 10);
 
-        // Creating 10 test transactions to include in the block
         for (int num_transaction = 0; num_transaction < 10; num_transaction++) {
             block.addTransaction("Transaction" + num_transaction);
         }

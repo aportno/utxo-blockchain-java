@@ -3,18 +3,18 @@ import java.security.MessageDigest;
 import java.util.Base64;
 
 public class UtilityMethods {
-    public static byte[] messageDigestSHA256_toBytes(String message) {
+    public static byte[] messageDigestSHA256_toBytes(String msg) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(message.getBytes());
+            md.update(msg.getBytes());
             return md.digest();
         } catch (java.security.NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static String messageDigestSHA256_toString(String message) {
-        return Base64.getEncoder().encodeToString(messageDigestSHA256_toBytes(message));
+    public static String messageDigestSHA256_toString(String msg) {
+        return Base64.getEncoder().encodeToString(messageDigestSHA256_toBytes(msg));
     }
 
     public static long getTimeStamp() {
