@@ -151,3 +151,21 @@ The limitations to this approach is that public and private key pairs are not su
 amounts of data. For example, if we use RSA algorithm to generate public and private key pairs with key size of 2048 bits
 (256 bytes), then the public and private keys can only encrypt and decrypt a block of data no larger
 than 256 bytes.
+
+To put that into perspective, eight bits are called a byte. One byte character sets can contain 256 characters. So the 
+maximum number of plain text characters that can be encrypted is 256 * 256 = 65,536 characters long
+
+A sample of public and private key flows between two users:
+1) User B generates a key pair (public :: private key) and keeps private key safe (hidden)
+2) User B sends their public key to User A
+3) User A applies User B's public key to encrypt data
+4) User A sends User B the encrypted data
+5) User B applies their private key to decrypt the data
+
+Another scenario where public and private key techniques can be utilized is between a client and server that are starting up
+a secure network connection for data transportation:
+1) the client sends his public key to the server
+2) The server randomly generates a secret key, utilizes the client's public key to encrypt the secret key and sends it back to the client
+3) The client uses his own private key to decrypt the message to see the secret key
+4) After this exchange, a secure connection has been established so that all messages between the server and the client are encrypted using the secret key
+
