@@ -131,3 +131,23 @@ blockchain takes the following precautions:
 2) Verify that the transaction is initiated by the right payer (i.e., only the genuine payer can make a transaction under his name)
 3) Publish the transaction such that it is transparent, final and unchangeable
 
+We can verify if a transaction is genuinely initiated by the payer using public and private key technology
+
+To encrypt a digital message, we use a key (i.e. a password), to turn the message into a byte array via a specific algorithm
+or process, and then later we can use another key, which might be the same or different from the original key, to decrypt the
+byte array into the original message. The byte array is machine-readable, not human-readable.
+
+If the key to decrypt is the same as the key to encrypt, it is called symmetric encryption (and the key is usually called the
+secret key). This is the traditional encryption approach but is an inconvenient way of sharing data without giving direct
+access to another user.
+
+A workaround is achieved through the use of the public and private key algorithm, an asymmetric encryption in which the key to
+decrypt and the key to encrypt are different. Public keys and private keys are pair entities. In other words, a public key
+has exactly one private key to match. Using a public and private key pair, a user can publish the public key for communal
+usage, keep the private key, and not worry about information leakage. As long as the private key is safe, it does not matter
+who has access to the public key.
+
+The limitations to this approach is that public and private key pairs are not suitable for encrypting and decrypting large
+amounts of data. For example, if we use RSA algorithm to generate public and private key pairs with key size of 2048 bits
+(256 bytes), then the public and private keys can only encrypt and decrypt a block of data no larger
+than 256 bytes.
