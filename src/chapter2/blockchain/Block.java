@@ -1,6 +1,5 @@
-package blockchain;
+package chapter2.blockchain;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class Block implements java.io.Serializable {
     private static final long serialVersionUID = 1L;

@@ -38,19 +38,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
-    <configuration name="TestBlockMining" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="blockchain.TestBlockMining" />
+    <configuration name="chapter2.blockchain.TestBlockMining" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter2.blockchain.TestBlockMining" />
       <module name="learn_blockchain_in_java_zhou" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="blockchain.*" />
+          <option name="PATTERN" value="chapter2.blockchain.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -60,7 +60,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.TestBlockMining" />
+        <item itemvalue="Application.chapter2.blockchain.TestBlockMining" />
       </list>
     </recent_temporary>
   </component>

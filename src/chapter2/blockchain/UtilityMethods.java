@@ -1,4 +1,4 @@
-package blockchain;
+package chapter2.blockchain;
 import java.security.MessageDigest;
 import java.util.Base64;
 

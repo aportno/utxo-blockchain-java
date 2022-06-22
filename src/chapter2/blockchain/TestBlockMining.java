@@ -1,4 +1,4 @@
-package blockchain;
+package chapter2.blockchain;
 
 public class TestBlockMining {
     public static void main(String[] args) {

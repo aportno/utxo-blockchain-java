@@ -1,4 +1,4 @@
-package blockchain;
+package chapter2.blockchain;
 
 public class TestHashing {
     public static void main(String[] args) {
