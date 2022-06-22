@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/src/chapter3/TestCipher_1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter3/TestCipher_1.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter3/TestCipher_2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter3/TestSignature.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +51,7 @@
       <recent name="chapter3" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.TestCipher_1">
+  <component name="RunManager" selected="Application.TestSignature">
     <configuration name="TestBlockMining" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chapter2.TestBlockMining" />
       <module name="learn_blockchain_in_java_zhou" />
@@ -76,12 +78,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestHashing" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter2.blockchain.TestHashing" />
+    <configuration name="TestCipher_2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter3.TestCipher_2" />
       <module name="learn_blockchain_in_java_zhou" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter2.blockchain.*" />
+          <option name="PATTERN" value="chapter3.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -89,12 +91,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="chapter2.blockchain.TestBlockMining" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter2.blockchain.TestBlockMining" />
+    <configuration name="TestSignature" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter3.TestSignature" />
       <module name="learn_blockchain_in_java_zhou" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter2.blockchain.*" />
+          <option name="PATTERN" value="chapter3.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -117,11 +119,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.TestSignature" />
+        <item itemvalue="Application.TestCipher_2" />
         <item itemvalue="Application.TestCipher_1" />
         <item itemvalue="Application.chapter3.TestBlockMining" />
         <item itemvalue="Application.TestBlockMining" />
-        <item itemvalue="Application.chapter2.blockchain.TestBlockMining" />
-        <item itemvalue="Application.TestHashing" />
       </list>
     </recent_temporary>
   </component>
@@ -225,7 +227,14 @@
       <option name="project" value="LOCAL" />
       <updated>1655938261678</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="update">
+      <created>1655938490492</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1655938490492</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
