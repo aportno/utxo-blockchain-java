@@ -5,8 +5,8 @@ public class TestBlockMining {
         Block block = new Block("0", 10);
 
         // Creating 10 test transactions to include in the block
-        for (int t=0; t<10; t++) {
-            block.addTransaction("Transaction" + t);
+        for (int num_transaction = 0; num_transaction < 10; num_transaction++) {
+            block.addTransaction("Transaction" + num_transaction);
         }
 
         System.out.println("Mining the block...");
