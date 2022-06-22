@@ -61,3 +61,25 @@ our hash ID? We adjust the "nonce". A nonce is an integer that is incorporated i
 changed (incremented) to obtain a different hash ID until the hash meets the requirement (of leading zeros).
 
 In essence, mining is the process of finding the right nonce
+
+We added the method `hashMeetsDifficultyLevel()` to the `UtilityMethods` class to examine if a hash string has at least 
+a certain number of leading zeros. It converts the input string into a char array and then counts the leading zeros.
+
+`toBinaryString()` is another method added to `UtilityMethods`. It converts a hash in bytes form into a bit string.
+
+Finally, we need to construct a `Block` class that includes the mining process
+
+The `Block()` constructor takes `previousBlockHashID` and `difficultyLevel` as an input. It then sets 
+the class `previousBlockHashID`, timestamp (using the `getTimeStamp()` in the `UtilityMethod` class), and `difficultyLevel`.
+
+`computeHashID` creates a new string and adds together:
+1) `previousBlockHashID`
+2) `this.timestamp` as a hex string
+3) each transaction in the block (which are added via the `addTransaction()` method)
+4) `this.difficultyLevel` as a hex string
+5) the `nonce`
+
+The string is then converted into a byte array and then returns a bit string
+
+`mineTheBlock()` method will continue to increase the nonce of the block until the difficulty level is met. Once achieved,
+the block is mined
