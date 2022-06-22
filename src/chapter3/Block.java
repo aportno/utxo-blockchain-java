@@ -1,4 +1,5 @@
-package chapter2.blockchain;
+package chapter3;
+
 import java.util.ArrayList;
 
 public class Block implements java.io.Serializable {

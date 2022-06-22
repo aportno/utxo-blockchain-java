@@ -83,3 +83,6 @@ The string is then converted into a byte array and then returns a bit string
 
 `mineTheBlock()` method will continue to increase the nonce of the block until the difficulty level is met. Once achieved,
 the block is mined
+
+## Chapter 3 :: Transaction and Cryptography
+

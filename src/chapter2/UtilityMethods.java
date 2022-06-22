@@ -1,4 +1,4 @@
-package chapter2.blockchain;
+package chapter2;
 import java.security.MessageDigest;
 import java.util.Base64;
 
