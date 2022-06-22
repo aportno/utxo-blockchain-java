@@ -99,3 +99,35 @@ that is easy to catch and fix. This mechanism ensures that the classes in use ar
 
 ## Chapter 3 :: Transaction and Cryptography
 
+Transactions are probably the central tenet in digital cryptocurrency. Bitcoin, the initial blockchain system, was developed
+to ensure that transactions are transparent, secure and irreversible in a distributed environment. The act of transacting
+is so important that bitcoin had Script specifically developed to safeguard transactions.
+
+As an analogy of how bitcoin handles transactions, assume you go to a market to purchase a product that costs
+$59.12, and you can only pay with cash. First you need to have enough cash in your pocket -- we'll delineate this as
+"unspent money". Let's assume you only have a few $50 bills. You hand over two $50 bills to the seller who acknowledges 
+your payment and gives you 1) the product and 2) $40.88 as the change.
+
+Bitcoin blockchain transactions follow a similar logic, where available cash is known as unspent transaction output (UTXO).
+Only UTXOs can be used as transferable funds, and these UTXOs are considered input in transactions. Payments are considered
+outputs. To transfer enough funds, enough UTXOs are collected to pay the receiver. At the same time, the change is collected
+as another UTXO. Continuing the analogy above, each $50 bill is considered a UTXO (i.e., the first $50 is UTXO_1 and the
+second $50 is UTXO_2)
+
+Once the transaction is completed, the original inputs have been spent and can no longer be spent again, but the change 
+in the form of UTXO is available for further spending. From the buyers point of view, the change is part of the output in
+the transaction and is marked as payment from and to yourself.
+
+Throughout the transaction, only two parties are involved. The buyer and the seller.
+
+How does this differ transactions that include third parties such as a bank? Traditionally, assuming a buyer and seller 
+want to transact, then the buyers bank will get in touch with the sellers bank and initiate the transaction. If the funds
+are available and the transaction is approved, then the buyer and the seller will each see the transaction in their own
+private statements.
+
+Blockchain settlement is different whereas all transactions are publicly announced to the network. To beget confidence, 
+blockchain takes the following precautions:
+1) Examine if the user has enough UTXO to cover the transaction cost (include any transaction fees)
+2) Verify that the transaction is initiated by the right payer (i.e., only the genuine payer can make a transaction under his name)
+3) Publish the transaction such that it is transparent, final and unchangeable
+
