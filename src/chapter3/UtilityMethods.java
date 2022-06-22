@@ -23,7 +23,7 @@ public class UtilityMethods {
 
     public static boolean hashMeetsDifficultyLevel(String hash, int difficultyLevel) {
         char[] chars = hash.toCharArray();
-        for (int i=0; i < difficultyLevel; i++) {
+        for (int i = 0; i < difficultyLevel; i++) {
             if (chars[i] != '0') {
                 return false;
             }
@@ -33,8 +33,7 @@ public class UtilityMethods {
 
     public static String toBinaryString(byte[] hash) {
         StringBuilder sb = new StringBuilder();
-        for (int i=0; i < hash.length; i++) {
-            // Transform a byte into an unsigned integer
+        for (int i = 0; i < hash.length; i++) {
             int num = ((int)hash[i]);
             String str = Integer.toBinaryString(num);
             while (str.length() < 8) {
