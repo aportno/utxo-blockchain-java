@@ -84,5 +84,18 @@ The string is then converted into a byte array and then returns a bit string
 `mineTheBlock()` method will continue to increase the nonce of the block until the difficulty level is met. Once achieved,
 the block is mined
 
+Why does the `Block` class use `java.io.Serializable`? If objects of a class need to be transported across a network or
+written into a file as bytes for later retrieval then `java.io.Serizializable` must be implemented. Simply, it acts as a
+gesture to inform JBM that objects of this class should be serialized into bytes when needed.
+
+The variable `serialVersionID` is only important when our package is used across multiple locations and there is a risk 
+that different locations may have a different version of the `Block` class.
+
+For example, say that a `Block` object is serialized at location A, JVM associates it with the `serialVersionUID`. When 
+the object is deserialized at another JVM at location B, the JBM of location B needs to load `Block` class
+as a template for this object to be reconstructed. The class loader checks if `Block` class at location B and the `Block`
+object from location A have the same `serialVersionID` value. If the `UID` values differ, the program will throw an exception
+that is easy to catch and fix. This mechanism ensures that the classes in use are consistent and compatible.
+
 ## Chapter 3 :: Transaction and Cryptography
 
