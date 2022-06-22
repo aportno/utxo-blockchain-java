@@ -3,12 +3,13 @@ import java.util.ArrayList;
 
 public class Block implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
-    private int difficultyLevel = 20;
     private ArrayList<String> transactions = new ArrayList<String>();
     private long timestamp;
-    private String previousBlockHashID;
     private int nonce = 0;
+    private int difficultyLevel = 20;
     private String hashID;
+
+    private String previousBlockHashID;
 
     public Block(String previousBlockHashID, int difficultyLevel) {
         this.previousBlockHashID = previousBlockHashID;
@@ -27,12 +28,21 @@ public class Block implements java.io.Serializable {
         return UtilityMethods.toBinaryString(b);
     }
 
+    protected boolean mineTheBlock() {
+        this.hashID = this.computeHashID();
+        while (!UtilityMethods.hashMeetsDifficultyLevel(this.hashID, this.difficultyLevel)) {
+            this.nonce++;
+            this.hashID = this.computeHashID();
+        }
+        return true;
+    }
+
     public void addTransaction (String s) {
         this.transactions.add(s);
     }
 
-    public String getHashID() {
-        return this.hashID;
+    public int getDifficultyLevel() {
+        return this.difficultyLevel;
     }
 
     public int getNonce() {
@@ -47,16 +57,9 @@ public class Block implements java.io.Serializable {
         return this.previousBlockHashID;
     }
 
-    protected boolean mineTheBlock() {
-        this.hashID = this.computeHashID();
-        while (!UtilityMethods.hashMeetsDifficultyLevel(this.hashID, this.difficultyLevel)) {
-            this.nonce++;
-            this.hashID = this.computeHashID();
-        }
-        return true;
+    public String getHashID() {
+        return this.hashID;
     }
 
-    public int getDifficultyLevel() {
-        return this.difficultyLevel;
-    }
+
 }
