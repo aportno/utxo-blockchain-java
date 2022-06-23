@@ -1,6 +1,6 @@
 # Learning Blockchain in Java by Hong Zhou
 
-[Purchase on Amazon](https://www.amazon.com/Learning-Blockchain-Java-step-step/dp/1795002158)
+[Purchase "Learning Blockchain in Java" on Amazon](https://www.amazon.com/Learning-Blockchain-Java-step-step/dp/1795002158)
 
 [Reference Zhou's GitHub Repo](https://github.com/hhohho/learning-blockchain-in-java-edition-2)
 
@@ -193,3 +193,23 @@ A UTXO represents a spendable fund. It should include the following data:
    1) This is another hash based on the above data items (where the UTXO is from, the sender, the receiver, amount of funds and a timestamp)
    2) We also need a unique sequential number that is different for each UTXO to make the ID absolutely unique
 
+Our `UTXO` class packages a number of variables and methods to help us retrieve this metadata.
+
+We serialized the class using `java.io.Serializable` to ensure the network is referencing the same `UTXO` objects. When 
+a UTXO object at location A is serialized into bytes and transported to another location B, the JVM at location B determines
+that the incoming bytes are for an instance of class `UTXO`. The JVM's class loader uploads the class structure
+of the `UTXO` class to reconstruct the UTXO object based on the incoming bytes.
+
+It is possible that location A and location B are using different, incompatible version of UTXO classes, which can cause
+unexpected errors. It is a good programming convention to specify a `serialVersionUID` and update it whenever the class is
+modified in an effort to avoid these unexpected errors.
+
+`parentTransactionID` is the unique hash value of the transaction in which the UTXO is created as an element. This allows us to 
+always track back to the transaction owning the UTXO via this hash value
+
+The constructor the `UTXO` class takes the `parentTransactionID` as a string, `sender` as a public key, `receiver` as a public key
+and the `amountToTransfer` as a double as inputs. We initialize the object with `"O"` as the `parentTransactionID`.
+
+`PublicKey` is an interface that groups all public key interfaces. First we need to create a `KeyPair` object using our `generateKeyPair()`
+method in our `UtilityMethods` class. This will produce an address that we can assign to a sender or receiver. We can then
+pass these objects into the constructor.
