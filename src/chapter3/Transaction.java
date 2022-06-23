@@ -8,17 +8,17 @@ import java.util.ArrayList;
 public class Transaction implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    public static final double TRANSACTION_FEE = 1.0;
     private String hashID;
     private PublicKey sender;
     private PublicKey[] receivers;
     private double[] amountToTransfer;
     private long timestamp;
+    private long mySequentialNumber;
     private ArrayList<UTXO> inputs = new ArrayList<UTXO>();
     private ArrayList<UTXO> outputs = new ArrayList<UTXO>(4);
     private byte[] signature = null;
     private boolean signed = false;
-    private long mySequentialNumber;
+    public static final double TRANSACTION_FEE = 1.0;
 
     public Transaction(PublicKey sender, PublicKey receiver, double amountToTransfer, ArrayList<UTXO> inputs) {
         PublicKey[] publicKeys = new PublicKey[1];
@@ -56,6 +56,21 @@ public class Transaction implements java.io.Serializable {
         return UtilityMethods.verifySignature(this.sender, this.signature, message);
     }
 
+    protected void computeHashID() {
+        String message = getMessageData();
+        this.hashID = UtilityMethods.messageDigestSHA256_toString(message);
+    }
+
+    protected void addOutputUTXO(UTXO utxo) {
+        if(!signed) {
+            outputs.add(utxo);
+        }
+    }
+
+    public boolean equals(Transaction T) {
+        return this.getHashID().equals(T.getHashID());
+    }
+
     private String getMessageData() {
         StringBuilder sb = new StringBuilder();
         sb.append(UtilityMethods.getKeyString(sender))
@@ -69,11 +84,6 @@ public class Transaction implements java.io.Serializable {
             sb.append(ut.getHashID());
         }
         return sb.toString();
-    }
-
-    protected void computeHashID() {
-        String message = getMessageData();
-        this.hashID = UtilityMethods.messageDigestSHA256_toString(message);
     }
 
     public String getHashID() {
@@ -100,12 +110,6 @@ public class Transaction implements java.io.Serializable {
         return f;
     }
 
-    protected void addOutputUTXO(UTXO utxo) {
-        if(!signed) {
-            outputs.add(utxo);
-        }
-    }
-
     public int getNumberOfOutputUTXOs() {
         return this.outputs.size();
     }
@@ -124,9 +128,5 @@ public class Transaction implements java.io.Serializable {
 
     public UTXO getInputUTXO(int i) {
         return this.inputs.get(i);
-    }
-
-    public boolean equals(Transaction T) {
-        return this.getHashID().equals(T.getHashID());
     }
 }

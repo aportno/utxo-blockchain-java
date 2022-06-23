@@ -239,3 +239,52 @@ Our `Transaction` class required some in-depth explanation.
 The `TRANSACTION_FEE` constant refers to the mining reward received by a miner. In bitcoin, transaction fees are dynamically
 allocated by the transaction sender, in which case the transaction fee can increase or decrease depending on network traffic
 
+`Transaction` includes two constructors. The first constructor...
+
+```aidl
+    public Transaction(PublicKey sender, PublicKey receiver, double amountToTransfer, ArrayList<UTXO> inputs) {
+        PublicKey[] publicKeys = new PublicKey[1];
+        publicKeys[0] = receiver;
+        double[] funds = new double[1];
+        funds[0] = amountToTransfer;
+        this.setUp(sender, publicKeys, funds, inputs);
+    }
+```
+
+...takes a single instance of a `receiver` and `amountToTransfer`, while the second constructor takes an array of these variables:
+
+```aidl
+    public Transaction(PublicKey sender, PublicKey[] receivers, double[] amountToTransfer, ArrayList<UTXO> inputs) {
+        this.setUp(sender, receivers, amountToTransfer, inputs);
+    }
+```
+
+The first constructor initializes a `PublicKey` array of length 1, and then sets `receiver` as the first value in the array.
+It then creates a `double` array of length 1, and sets the `amountToTransfer` as the first value in the array. Finally, the
+last step in the initialization process is to call the `setUp` method:
+
+```aidl
+    private void setUp(PublicKey sender, PublicKey[] receivers, double[] amountToTransfer, ArrayList<UTXO> inputs) {
+        this.mySequentialNumber = UtilityMethods.getUniqueNumber();
+        this.sender = sender;
+        this.receivers = new PublicKey[1];
+        this.receivers = receivers;
+        this.amountToTransfer = amountToTransfer;
+        this.inputs = inputs;
+        this.timestamp = java.util.Calendar.getInstance().getTimeInMillis();
+
+        computeHashID();
+    }
+```
+
+Note there can be one `sender` that can transact with multiple `receivers` which requires the method to consume an array 
+of UTXOs. The `computeHashID()` method is different from the `computeHashID()` in the `UTXO` class:
+
+```aidl
+    protected void computeHashID() {
+        String message = getMessageData();
+        this.hashID = UtilityMethods.messageDigestSHA256_toString(message);
+    }
+```
+
+
