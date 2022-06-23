@@ -34,6 +34,14 @@ public class UTXO implements java.io.Serializable {
         return UtilityMethods.messageDigestSHA256_toString(message);
     }
 
+    public boolean equals(UTXO utxo) {
+        return this.getHashID().equals(utxo.getHashID());
+    }
+
+    public boolean isMiningReward() {
+        return false;
+    }
+
     public String getHashID() {
         return this.hashID;
     }
@@ -56,13 +64,5 @@ public class UTXO implements java.io.Serializable {
 
     public double getAmountTransferred() {
         return this.amountTransferred;
-    }
-
-    public boolean equals(UTXO utxo) {
-        return this.getHashID().equals(utxo.getHashID());
-    }
-
-    public boolean isMiningReward() {
-        return false;
     }
 }
