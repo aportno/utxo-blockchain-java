@@ -169,3 +169,6 @@ a secure network connection for data transportation:
 3) The client uses his own private key to decrypt the message to see the secret key
 4) After this exchange, a secure connection has been established so that all messages between the server and the client are encrypted using the secret key
 
+We need to add a few additional methods to our `UtilityMethods` class...
+
+``

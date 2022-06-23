@@ -6,6 +6,10 @@ import java.util.Base64;
 public class UtilityMethods {
     public static long uniqueNumber = 0;
 
+    public static long getUniqueNumber() {
+        return UtilityMethods.uniqueNumber++;
+    }
+
     public static KeyPair generateKeyPair() {
         try {
             KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
