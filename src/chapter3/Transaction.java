@@ -14,7 +14,7 @@ public class Transaction implements java.io.Serializable {
     private PublicKey[] receivers;
     private double[] amountToTransfer;
     private long timestamp;
-    private ArrayList<UTXO> inputs = null;
+    private ArrayList<UTXO> inputs = new ArrayList<UTXO>();
     private ArrayList<UTXO> outputs = new ArrayList<UTXO>(4);
     private byte[] signature = null;
     private boolean signed = false;
@@ -65,8 +65,8 @@ public class Transaction implements java.io.Serializable {
             sb.append(UtilityMethods.getKeyString(this.receivers[i])).append(Double.toHexString(this.amountToTransfer[i]));
         }
         for (int i = 0; i < this.getNumberOfInputUTXOs(); i++) {
-            UTXO utxo = this.getInputUTXO(i);
-            sb.append(utxo.getHashID());
+            UTXO ut = this.getInputUTXO(i);
+            sb.append(ut.getHashID());
         }
         return sb.toString();
     }
@@ -106,12 +106,24 @@ public class Transaction implements java.io.Serializable {
         }
     }
 
-    public int getNumberOfInputUTXOs() {
+    public int getNumberOfOutputUTXOs() {
         return this.outputs.size();
     }
 
-    public UTXO getInputUTXO(int i) {
+    public UTXO getOutputUTXO(int i) {
         return this.outputs.get(i);
+    }
+
+    public int getNumberOfInputUTXOs() {
+        if (this.inputs == null) {
+            return 0;
+        } else {
+            return this.inputs.size();
+        }
+    }
+
+    public UTXO getInputUTXO(int i) {
+        return this.inputs.get(i);
     }
 
     public boolean equals(Transaction T) {

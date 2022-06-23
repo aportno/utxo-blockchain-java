@@ -50,6 +50,8 @@ public class UTXO implements java.io.Serializable {
         return this.parentTransactionID;
     }
 
+    public PublicKey getReceiver() { return this.receiver; }
+
     public PublicKey getSender() {
         return this.sender;
     }
