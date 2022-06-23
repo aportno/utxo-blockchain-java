@@ -171,4 +171,25 @@ a secure network connection for data transportation:
 
 We need to add a few additional methods to our `UtilityMethods` class...
 
-``
+`getUniqueNumber()` is used to increment the `uniqueNumber` class variable
+
+`generateKeyPair()` initializes a 2048 bit instance of RSA and returns a key pair
+
+`generateSignature()` takes a `privateKey` and `message` as an input and returns a signature using SHA256 with RSA
+
+`verifySignature()` takes a `publicKey`, `signature` and `message` as an input
+
+`getKeyString()` is used because when we compute the hash ID for UTXO or a transaction, we need to include the sender's public
+key and the receiver's public key as strings
+
+A UTXO represents a spendable fund. It should include the following data:
+1) Where it comes from
+   1) A UTXO is generated inside a transaction so we need to know inside which transaction this UTXO is
+   2) It is a good idea to record who sends the fund (technically this is optional)
+2) The owner of the UTXO. The receiver (in the form on a public key) is the owner of the UTXO
+3) The amount of funds available inside the UTXO
+4) A timestamp
+5) A unique ID identifying the UTXO
+   1) This is another hash based on the above data items (where the UTXO is from, the sender, the receiver, amount of funds and a timestamp)
+   2) We also need a unique sequential number that is different for each UTXO to make the ID absolutely unique
+
