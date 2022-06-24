@@ -12,6 +12,7 @@ public class TestTransaction {
 
         for (int i = 0; i < receivers.length; i++) {
             receivers[i] = UtilityMethods.generateKeyPair().getPublic();
+            System.out.println(receivers[i]);
             amountToTransfer[i] = (i + 1) * 100;
         }
 
