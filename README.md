@@ -278,7 +278,9 @@ last step in the initialization process is to call the `setUp` method:
 ```
 
 Note there can be one `sender` that can transact with multiple `receivers` which requires the method to consume an array 
-of UTXOs. The `computeHashID()` method is different from the `computeHashID()` in the `UTXO` class:
+of UTXOs. Observe that we also need to guarantee that the number of recipients matches the number of funds.
+
+The `computeHashID()` method is different from the `computeHashID()` in the `UTXO` class:
 
 ```aidl
     protected void computeHashID() {
@@ -287,4 +289,22 @@ of UTXOs. The `computeHashID()` method is different from the `computeHashID()` i
     }
 ```
 
+It first creates a string `message` using `getMessageData()`:
+
+```aidl
+    private String getMessageData() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(UtilityMethods.getKeyString(sender))
+                .append(Long.toHexString(this.timestamp))
+                .append(Long.toString(this.mySequentialNumber));
+        for (int i = 0; i < this.receivers.length; i++) {
+            sb.append(UtilityMethods.getKeyString(this.receivers[i])).append(Double.toHexString(this.amountToTransfer[i]));
+        }
+        for (int i = 0; i < this.getNumberOfInputUTXOs(); i++) {
+            UTXO ut = this.getInputUTXO(i);
+            sb.append(ut.getHashID());
+        }
+        return sb.toString();
+    }
+```
 
