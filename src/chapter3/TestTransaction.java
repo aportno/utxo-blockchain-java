@@ -16,9 +16,9 @@ public class TestTransaction {
         }
 
         // Create the input UTXOs and output UTXOs
-        UTXO utxo1 = new UTXO("0", sender.getPublic(), sender.getPublic(), 1000);
+        UTXO inputUTXO = new UTXO("0", sender.getPublic(), sender.getPublic(), 1000);
         ArrayList<UTXO> input = new ArrayList<UTXO>();
-        input.add(utxo1);
+        input.add(inputUTXO);
         Transaction transaction = new Transaction(sender.getPublic(), receivers, amountToTransfer, input);
 
         // Ensure sender has enough funds
@@ -37,14 +37,14 @@ public class TestTransaction {
 
         // Generate the output UTXOs
         for (int i = 0; i < receivers.length; i++) {
-            UTXO utxo2 = new UTXO(transaction.getHashID(), sender.getPublic(), receivers[i], amountToTransfer[i]);
-            transaction.addOutputUTXO(utxo2);
+            UTXO outputUTXO = new UTXO(transaction.getHashID(), sender.getPublic(), receivers[i], amountToTransfer[i]);
+            transaction.addOutputUTXO(outputUTXO);
         }
 
         // Generate the change as an UTXO to the sender
-        double change = available - totalCost;
-        UTXO utxo3 = new UTXO(transaction.getHashID(), sender.getPublic(), sender.getPublic(), change);
-        transaction.addOutputUTXO(utxo3);
+        double remainingFunds = available - totalCost;
+        UTXO remainingUTXO = new UTXO(transaction.getHashID(), sender.getPublic(), sender.getPublic(), remainingFunds);
+        transaction.addOutputUTXO(remainingUTXO);
 
         // Sign the transaction
         transaction.signTheTransaction(sender.getPrivate());

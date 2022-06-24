@@ -426,10 +426,10 @@ A more eloquent way to improve this class would be to use a hash table. At the m
 arrays (one for the keys, and one for the amounts). We assume the position integrity of the arrays will not be tampered with.
 If it is, then the account balances will not map to the correct amounts.
 
-Our next step is to create our first input `UTXO` and output `UTXO`
+Our next step is to create an **_input_** `UTXO`
 
 ```aidl
-   UTXO utxo1 = new UTXO("0", sender.getPublic(), sender.getPublic(), 1000);
+   UTXO inputUTXO = new UTXO("0", sender.getPublic(), sender.getPublic(), 1000);
    ArrayList<UTXO> input = new ArrayList<UTXO>();
    input.add(utxo1);
    Transaction transaction = new Transaction(sender.getPublic(), receivers, amountToTransfer, input);
@@ -472,6 +472,96 @@ in the `Transaction` class
     }
 ```
 
+The transaction will need to abort if there is insufficient funds; where the available funds are less than the total cost of
+the transaction:
+```aidl
+   if (available < totalCost) {
+      System.out.println("Fund available=" + available + ", not enough for total cost of " + totalCost);
+   }
+```
 
+Now that the input `UTXO` is complete, we can create our **_output_** `UTXO`:
 
+```aidl
+   for (int i = 0; i < receivers.length; i++) {
+      UTXO outputUTXO = new UTXO(transaction.getHashID(), sender.getPublic(), receivers[i], amountToTransfer[i]);
+      transaction.addOutputUTXO(utxo2);
+   }
+```
+
+This for loop will iterate over each position in the original `receivers` array. At each position,
+we create a new `UTXO` object referencing the current transaction, the `sender` public key, the `receivers`
+public key and the amount to be transferred tied to the `receivers` address. We then use the `addOutputUTXO()` method in the
+`Transaction` class to add the UTXO to our `transaction` object
+
+```aidl
+    protected void addOutputUTXO(UTXO utxo) {
+        if(!signed) {
+            outputs.add(utxo);
+        }
+    }
+```
+
+We now need to create a `UTXO` to return any change to the `sender`.
+
+```aidl
+   double remainingFunds = available - totalCost;
+   UTXO remainingUTXO = new UTXO(transaction.getHashID(), sender.getPublic(), sender.getPublic(), remainingFunds);
+   transaction.addOutputUTXO(remainingUTXO);
+```
+
+First we compute what the remaining funds will be and create a fourth `UTXO`. In this instance,
+we reference the same `transaction` but the `sender` and `receiver` address will be the original `sender` account in the amount
+of the remaining funds left. That is, the sender is going to pay themselves the difference between their available funds and
+the cost of the transfer.
+
+As the final step, the transaction is signed by the `sender` private key
+
+```aidl
+    transaction.signTheTransaction(sender.getPrivate());
+```
+
+The `signTheTransaction()` method takes a `PrivateKey` instance as an input
+
+```aidl
+    public void signTheTransaction(PrivateKey privateKey) {
+        if(this.signature == null && !signed) {
+            this.signature = UtilityMethods.generateSignature(privateKey, getMessageData());
+            signed = true;
+        }
+    }
+```
+
+The `transaction` object is initiated with a `null` value and the `boolean` variable `signed` is set to false:
+
+```aidl
+    private byte[] signature = null;
+    private boolean signed = false;
+```
+
+So the `signTheTransaction()` method will then set the `signature` using the `generateSignature()` method.
+
+Notice that once the sender signs the transaction, we are no longer able to add additional `UTXO` to the
+transaction object:
+
+```aidl
+    protected void addOutputUTXO(UTXO utxo) {
+        if(!signed) {
+            outputs.add(utxo);
+        }
+    }
+```
+
+We can test to see if the signature is verified using our `verifySignature()` method.
+
+```aidl
+    public boolean verifySignature() {
+        String message = getMessageData();
+        return UtilityMethods.verifySignature(this.sender, this.signature, message);
+    }
+
+```
+
+We first request the message data from our `transaction` object and then check to see if the `sender` who signed
+the `transaction` is indeed the same address.
 
