@@ -318,3 +318,36 @@ It first creates a string `message` using `getMessageData()`:
     }
 ```
 
+Another secure coding practice is used in the method `signTheTransaction()`
+
+```aidl
+    public void signTheTransaction(PrivateKey privateKey) {
+        if(this.signature == null && !signed) {
+            this.signature = UtilityMethods.generateSignature(privateKey, getMessageData());
+            signed = true;
+        }
+    }
+```
+
+This method takes a `PrivateKey` as the input argument, but only uses it and never stores it. Any private key
+should never be stored outside the key owner.
+
+```aidl
+    public double getTotalAmountToTransfer() {
+        double f = 0;
+        for (int i = 0; i < this.amountToTransfer.length; i++) {
+            f += this.amountToTransfer[i];
+        }
+        return f;
+    }
+```
+
+The `Transaction` class does not provide any access to the instance variable `double[] amountToTransfer` for two reasons.
+One reason is that the content of the double array can be obtained from the output UTXOs. A more import reason is for secure
+coding practice. We cannot have a method that returns an array of double because arrays are accessed by reference. If we provide
+a method `double[] getAmountToTransfer()` which returns the original array `amountToTransfer`, then when the returned array is
+modified outside the `Transaction` object, the content of the `Transaction` object is altered.
+
+Such a scenario should never be allowed to happen.
+
+We wrote a test class that initiates a transaction.
