@@ -239,6 +239,16 @@ Our `Transaction` class required some in-depth explanation.
 The `TRANSACTION_FEE` constant refers to the mining reward received by a miner. In bitcoin, transaction fees are dynamically
 allocated by the transaction sender, in which case the transaction fee can increase or decrease depending on network traffic
 
+```aidl
+    private byte[] signature = null;
+    private boolean signed = false;
+```
+
+The signature is initially null. Once it is generated successfully, i.e., not null, the instance variable `signed` is set
+to be true. In the `Transaction` class, only the method `signTheTransaction()` can change the valuables of variable `signature`
+and variable `signed`. Moreover, once `signature` is not null or `signed` becomes true, the signature cannot be regenerated.
+This is a secure coding practice to ensure that a transaction cannot be signed more than once.
+
 `Transaction` includes two constructors. The first constructor...
 
 ```aidl
