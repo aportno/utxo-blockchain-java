@@ -607,4 +607,16 @@ We start by adding another method called `prepareOutputUTXOs()` to our `Transact
         return true;
     }
 ```
+The `available` constant is set to `0.0` because we will use this variable to accumulate the total amount of funds we will transfer.
+
+There are two checks in this method to safeguard that the initiation of a transaction is valid.
+
+First, the length of receivers (or number of receivers) must match the length `amountToTransfer` exactly. I've raised this
+observation earlier whereas we have a relatively insufficient mapping of accounts -> transfer value. We will look to optimize
+this feature as we approach the end of our project.
+
+Second, the `available` funds from the input `UTXO` must be enough for the `totalCost`. If at least one condition is unmet then
+the method aborts and returns false.
+
+There is one more additional safeguard we will add in the final chapter to help safeguard against some blockchain attack cases
 
