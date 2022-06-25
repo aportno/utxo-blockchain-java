@@ -581,4 +581,30 @@ By the end of this chapter, we should be able to code:
 * Checking balances
 * Storing a pair of public and private keys
 
+We start by adding another method called `prepareOutputUTXOs()` to our `Transaction` class:
+
+```aidl
+    public boolean prepareOutputUTXOs() {
+        if (this.receivers.length != this.amountToTransfer.length) {
+            return false;
+        }
+        double totalCost = this.getTotalAmountToTransfer() + Transaction.TRANSACTION_FEE;
+        double available = 0.0;
+        for (UTXO input : this.inputs) {
+            available += input.getAmountTransferred();
+        }
+        if (available < totalCost) {
+            return false;
+        }
+        this.outputs.clear();
+        for (int i = 0; i < receivers.length; i++) {
+            UTXO utxo = new UTXO(this.getHashID(), this.sender, receivers[i], this.amountToTransfer[i]);
+            this.outputs.add(utxo);
+        }
+        double remainingAmount = available - totalCost;
+        UTXO change = new UTXO(this.getHashID(), this.sender, this.sender, remainingAmount);
+        this.outputs.add(change);
+        return true;
+    }
+```
 
