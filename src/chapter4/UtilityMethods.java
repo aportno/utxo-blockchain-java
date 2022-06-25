@@ -1,5 +1,8 @@
 package chapter4;
 
+import jdk.jshell.execution.Util;
+
+import java.io.PrintStream;
 import java.security.*;
 import java.util.Base64;
 
@@ -117,5 +120,49 @@ public class UtilityMethods {
             sb.append(str);
         }
         return sb.toString();
+    }
+
+    public static void displayTab(PrintStream out, int level, String str) {
+        for (int i = 0; i < level; i++) {
+            out.print("\t");
+        }
+        out.println(str);
+    }
+
+    public static void displayUTXO(UTXO utxo, PrintStream out, int level) {
+        displayTab(out, level, "fund: "
+                + utxo.getAmountTransferred()
+                + ", receiver: "
+                + UtilityMethods.getKeyString(utxo.getReceiver()));
+    }
+
+    public static void displayTransaction(Transaction transaction, PrintStream out, int level) {
+        displayTab(out, level, "Transaction{");
+        displayTab(out, level + 1, "ID: " + transaction.getHashID());
+        displayTab(out, level + 1, "Sender: " + UtilityMethods.getKeyString(transaction.getSender()));
+        displayTab(out, level + 1, "Amount to be transferred total: " + transaction.getTotalAmountToTransfer());
+        displayTab(out, level + 1, "Input:");
+
+        for (int i = 0; i < transaction.getNumberOfInputUTXOs(); i++) {
+            UTXO utxo = transaction.getInputUTXO(i);
+            displayUTXO(utxo, out, level + 2);
+        }
+
+        displayTab(out, level + 1, "Output:");
+
+        for (int i = 0; i < transaction.getNumberOfOutputUTXOs() - 1; i++) {
+            UTXO utxo = transaction.getOutputUTXO(i);
+            displayUTXO(utxo, out, level + 2);
+        }
+
+        UTXO change = transaction.getOutputUTXO(transaction.getNumberOfOutputUTXOs() - 1);
+
+        displayTab(out, level + 2, "Change: " + change.getAmountTransferred());
+        displayTab(out, level + 1, "Transaction fee: " + Transaction.TRANSACTION_FEE);
+
+        boolean isVerified = transaction.verifySignature();
+
+        displayTab(out, level + 1, "Signature verification: " + isVerified);
+        displayTab(out, level, "}");
     }
 }
