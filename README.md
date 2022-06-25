@@ -649,7 +649,7 @@ sake of easier identification, we will give each wallet a name.
 
 The method constructor will take a `walletName` as a string and then initialize the `keyPair` and `walletNames` of the object
 
-```aidl
+```
     public Wallet(String walletName) {
         this.keyPair = UtilityMethods.generateKeyPair();
         this.walletName = walletName;
@@ -725,7 +725,7 @@ the same password.
 
 We test our encryption and decryption in our `TestXOR` class. The results show our function is working as expected:
 
-```aidl
+```
 Our message to encrypt is: At the most beautiful place, remember the most beautiful you
 The password is: blockchain
 
