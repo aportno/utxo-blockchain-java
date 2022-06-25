@@ -635,3 +635,5 @@ The final preparation required for this method is to compute the "change" or rem
    this.outputs.add(change);
 ```
 
+Note this output `UTXO` will send the remaining funds back to the `sender`
+
