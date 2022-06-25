@@ -679,3 +679,19 @@ methods to the `UtilityMethods` class to make it handy to apply the bitwise excl
     }
 ```
 
+In the `encryptionByXOR()` method, we generate a hash value first based on the password. This provides an extra layer of
+security. The hash value has only 32 bytes (256 bits) based on the SHA-256 algorithm we've been using, which may not be
+long enough to XOR every bit in the byte array `key`. 
+
+The bitwise operator is a binary operation that takes two bit patterns of equal length and performs the logical inclusive
+OR operation on each pair of corresponding bits. The result in each position is 0 if both bits are 0, while otherwise
+the result is 1. In other words, as long as one of the bits is a 1, then the operator will return a 1.
+
+| R   | 0   | 1   | 1   | 0   |
+|-----|-----|-----|-----|-----|
+| A   | 0   | 1   | 0   | 1   |
+| B   | 0   | 1   | 1   | 0   |
+
+Where **R** is the return value of the bitwise operator.
+
+The bitwise exclusive OR (also known as XOR) 
