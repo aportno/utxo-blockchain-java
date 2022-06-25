@@ -122,6 +122,21 @@ public class UtilityMethods {
         return sb.toString();
     }
 
+    public static byte[] encryptionByXOR(byte[] key, String password) {
+        byte[] passwordToBytes = UtilityMethods.messageDigestSHA256_toBytes(password);
+        byte[] result = new byte[key.length];
+
+        for (int i = 0; i < key.length; i++) {
+            int j = i % passwordToBytes.length;
+            result[i] = (byte)((key[i] ^ passwordToBytes[j]) & 0xFF);
+        }
+        return result;
+    }
+
+    public static byte[] decryptionByXOR(byte[] key, String password) {
+        return encryptionByXOR(key, password);
+    }
+
     public static void displayTab(PrintStream out, int level, String str) {
         for (int i = 0; i < level; i++) {
             out.print("\t");

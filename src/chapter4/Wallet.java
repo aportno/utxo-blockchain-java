@@ -7,6 +7,7 @@ import java.security.PublicKey;
 public class Wallet {
     private KeyPair keyPair;
     private String walletName;
+    private static String keyLocation = "keys";
 
     public Wallet(String walletName) {
         this.keyPair = UtilityMethods.generateKeyPair();

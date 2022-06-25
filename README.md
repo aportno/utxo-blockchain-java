@@ -647,3 +647,35 @@ sake of easier identification, we will give each wallet a name.
     private String walletName;
 ```
 
+The method constructor will take a `walletName` as a string and then initialize the `keyPair` and `walletNames` of the object
+
+```aidl
+    public Wallet(String walletName) {
+        this.keyPair = UtilityMethods.generateKeyPair();
+        this.walletName = walletName;
+    }
+```
+
+We then need to include two additional data items:
+1) a password
+2) a location where the keys are to be stored
+
+The password is used only for the wallet creation and retrieval. The location for key storage should be a specific
+directory added as a static field inside the `Wallet` class.
+
+To use a password to protect our saved keys, we need a mechanism that will encrypt the keys using the password. We add in two more static
+methods to the `UtilityMethods` class to make it handy to apply the bitwise exclusive XOR to encrypt and decrypt data.
+
+```
+    public static byte[] encryptionByXOR(byte[] key, String password) {
+        byte[] passwordToBytes = UtilityMethods.messageDigestSHA256_toBytes(password);
+        byte[] result = new byte[key.length];
+        
+        for (int i = 0; i < key.length; i++) {
+            int j = i % passwordToBytes.length;
+            result[i] = (byte)((key[i] ^ passwordToBytes[j]) & 0xFF);
+        }
+        return result;
+    }
+```
+
