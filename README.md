@@ -723,7 +723,7 @@ as `key[i]` and `passwordToBytes[j]` are both of the data type byte, it is not n
 The `decryptionByXOR()` method calls `encryptionByXOR()` method to convert the encrypted data back to the original using
 the same password.
 
-We test our encryption and decryption in our `TestXOR` class. The results show our function is working as expected:
+We test the encryption and decryption in our `TestXOR` class. The results show our function is working as expected:
 
 ```
 Our message to encrypt is: At the most beautiful place, remember the most beautiful you
