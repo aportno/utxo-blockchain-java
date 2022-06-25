@@ -637,3 +637,13 @@ The final preparation required for this method is to compute the "change" or rem
 
 Note this output `UTXO` will send the remaining funds back to the `sender`
 
+We also created our first `Wallet` class in this chapter. The `Wallet` class is one of the most complicated programs in blockchain.
+
+The most basic requirements for our wallet are a pair of keys and a name. Wallets are represented by their public keys, but for the
+sake of easier identification, we will give each wallet a name.
+
+```aidl
+    private KeyPair keyPair;
+    private String walletName;
+```
+
