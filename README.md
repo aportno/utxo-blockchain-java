@@ -694,4 +694,17 @@ the result is 1. In other words, as long as one of the bits is a 1, then the ope
 
 Where **R** is the return value of the bitwise operator.
 
-The bitwise exclusive OR (also known as XOR) 
+The bitwise exclusive OR (also known as XOR) has an outstanding property: 
+* A XOR B = C, then
+* B XOR C = A
+
+Assuming **B** is the password, **A** is the data, and **C** is the encrypted data obtained by A XOR B.
+
+To obtain A from C, we just need to perform XOR action between B and C. In Java, the exclusive OR operator
+is represented by `^`, which can only be performed between two integers.
+
+We can reconstruct missing data if we have 2 parts of the 3 items:
+* 65 XOR 22 = 87
+* 87 XOR 22 = 65
+* 65 XOR 87 = 22
+
