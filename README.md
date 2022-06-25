@@ -620,3 +620,18 @@ the method aborts and returns false.
 
 There is one more additional safeguard we will add in the final chapter to help safeguard against some blockchain attack cases
 
+We use `this.outputs.clear()` to ensure the `UTXO` output array is cleared before we add any `UTXOs`. This is important
+to avoid overpaying the recipients in error.
+
+Next, we create two output `UTXOs` and append them to our clean `outputs` UTXO array:
+1) Output `UTXO` for the first receiver
+2) Output `UTXO` for the second receiver
+
+The final preparation required for this method is to compute the "change" or remaining funds to pay back to the `sender`.
+
+```aidl
+   double remainingAmount = available - totalCost;
+   UTXO change = new UTXO(this.getHashID(), this.sender, this.sender, remainingAmount);
+   this.outputs.add(change);
+```
+
