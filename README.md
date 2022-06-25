@@ -572,5 +572,13 @@ the `transaction` is indeed the same address.
 
 ## Chapter 4 :: Transaction, Wallet and Miner
 
+In blockchain, transactions are initiated by wallets. The bitcoin white paper suggests that users should utilize a different
+pair of public/private keys for each transaction to ensure security. If this suggestion is followed, a wallet must be capable
+of storing a large number of keys belonging to the same user.
+
+By the end of this chapter, we should be able to code:
+* A wallet capable of initiating transactions
+* Checking balances
+* Storing a pair of public and private keys
 
 
