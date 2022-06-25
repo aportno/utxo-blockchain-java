@@ -244,7 +244,7 @@ Our `Transaction` class required some in-depth explanation.
 The `TRANSACTION_FEE` constant refers to the mining reward received by a miner. In bitcoin, transaction fees are dynamically
 allocated by the transaction sender, in which case the transaction fee can increase or decrease depending on network traffic
 
-```aidl
+```
     private byte[] signature = null;
     private boolean signed = false;
 ```
@@ -256,7 +256,7 @@ This is a secure coding practice to ensure that a transaction cannot be signed m
 
 `Transaction` includes two constructors. The first constructor...
 
-```aidl
+```
     public Transaction(PublicKey sender, PublicKey receiver, double amountToTransfer, ArrayList<UTXO> inputs) {
         PublicKey[] publicKeys = new PublicKey[1];
         publicKeys[0] = receiver;
@@ -268,7 +268,7 @@ This is a secure coding practice to ensure that a transaction cannot be signed m
 
 ...takes a single instance of a `receiver` and `amountToTransfer`, while the second constructor takes an array of these variables:
 
-```aidl
+```
     public Transaction(PublicKey sender, PublicKey[] receivers, double[] amountToTransfer, ArrayList<UTXO> inputs) {
         this.setUp(sender, receivers, amountToTransfer, inputs);
     }
@@ -278,7 +278,7 @@ The first constructor initializes a `PublicKey` array of length 1, and then sets
 It then creates a `double` array of length 1, and sets the `amountToTransfer` as the first value in the array. Finally, the
 last step in the initialization process is to call the `setUp` method:
 
-```aidl
+```
     private void setUp(PublicKey sender, PublicKey[] receivers, double[] amountToTransfer, ArrayList<UTXO> inputs) {
         this.mySequentialNumber = UtilityMethods.getUniqueNumber();
         this.sender = sender;
@@ -297,7 +297,7 @@ of UTXOs. Observe that we also need to guarantee that the number of recipients m
 
 The `computeHashID()` method is different from the `computeHashID()` in the `UTXO` class:
 
-```aidl
+```
     protected void computeHashID() {
         String message = getMessageData();
         this.hashID = UtilityMethods.messageDigestSHA256_toString(message);
@@ -306,7 +306,7 @@ The `computeHashID()` method is different from the `computeHashID()` in the `UTX
 
 It first creates a string `message` using `getMessageData()`:
 
-```aidl
+```
     private String getMessageData() {
         StringBuilder sb = new StringBuilder();
         sb.append(UtilityMethods.getKeyString(sender))
@@ -325,7 +325,7 @@ It first creates a string `message` using `getMessageData()`:
 
 Another secure coding practice is used in the method `signTheTransaction()`
 
-```aidl
+```
     public void signTheTransaction(PrivateKey privateKey) {
         if(this.signature == null && !signed) {
             this.signature = UtilityMethods.generateSignature(privateKey, getMessageData());
@@ -337,7 +337,7 @@ Another secure coding practice is used in the method `signTheTransaction()`
 This method takes a `PrivateKey` as the input argument, but only uses it and never stores it. Any private key
 should never be stored outside the key owner.
 
-```aidl
+```
     public double getTotalAmountToTransfer() {
         double f = 0;
         for (int i = 0; i < this.amountToTransfer.length; i++) {
@@ -357,7 +357,7 @@ Such a scenario should never be allowed to happen.
 
 We wrote the test class `TestTransaction` that initiates a transaction.
 
-```aidl
+```
    KeyPair sender = UtilityMethods.generateKeyPair();
    PublicKey[] receivers = new PublicKey[2];
    double[] amountToTransfer = new double[receivers.length];
@@ -370,7 +370,7 @@ In total, there will be 3 parties involved - 1 one sender, 2 receivers. The `amo
 exact size as the `receivers` array to ensure all funds are dispensed accordingly.
 
 Three sample addresses involved in the transaction are below
-```aidl
+```
    Sender: Sun RSA public key, 2048 bits
    params: null
    modulus: 19340388782177945236365016871001458330256161166593780182058800290781697561634874354722647434402065625360099888083228457128712720112542483050327347387767996889181601365641065355272287432228765124112214498704745874637706775822274789575206678923276209605744024988227938057410005795123842748469529920823072671362776387111543882314252991193737732684804962956601580962041435488602347496094553457691915166826727389950315618707896157669875506555876984517384830221513917277471195999786511527019587541015284620191858644609815843723222171625719670541653868542224819860970106577563803643071644323773007288249022830424929497454899
@@ -387,7 +387,7 @@ Three sample addresses involved in the transaction are below
    public exponent: 65537
 ```
 Next, a loop iterates over the `receivers` array.
-```aidl
+```
    for (int i = 0; i < receivers.length; i++) {
       receivers[i] = UtilityMethods.generateKeyPair().getPublic();
       amountToTransfer[i] = (i + 1) * 100;
@@ -400,7 +400,7 @@ The first account is credited with 1 * 100 = 100 funds. The second account is cr
 
 A sample of the public keys populated would like similar to:
 
-```aidl
+```
 Sun RSA public key, 2048 bits
   params: null
   modulus: 23280617649686657869694767207020301177370369689502418432636947250717027703849368037149499666863497359217169863501719566521819037545414856621102722566100111317227198919226477314340792336226128171634713206541004833936727851904260807506050578982705948078331817623568462738016243250069470120979247317684807711150844279532335531162157229170023400118041175455671308158383132115005139054486917436883393634987163294071869004175357439268023191893152356439699408347964515561674221688779738805127508994984186459267776988996661404301103260926510840231205996588625995779882620351596918697192121778729561080542859757051835810445779
@@ -416,7 +416,7 @@ As a small tangent, the `generateKeyPair()` method can produce public keys (usin
 `getPrivate()`). This was generated by the same `KeyPair`. Note the modulus is the same, however the public exponent and 
 the private exponent differ. A sample of the values are below:
 
-```aidl
+```
 Sun RSA public key, 2048 bits
   params: null
   modulus: 21733588452862127161893467390477728307228815719676859254871484782954575528080519803389735440568191163004846485707480209518796347098897854987716620912924805164437584440122477085055664357522547284251323617384942669532951391501657223891200081415777199253193021680951534207408186208895176139186444671662820818677130888245931485568718972362381178163049707290792185605319121000546040246128936908622237048356864127818452122412257344707013376717553577866336893883505414671335452090787712698384561289621719811806916616006438681062908197451907778403439880591936661463304792288479783618172913632980740900520111261312636626029951
@@ -433,7 +433,7 @@ If it is, then the account balances will not map to the correct amounts.
 
 Our next step is to create an **_input_** `UTXO`
 
-```aidl
+```
    UTXO inputUTXO = new UTXO("0", sender.getPublic(), sender.getPublic(), 1000);
    ArrayList<UTXO> input = new ArrayList<UTXO>();
    input.add(utxo1);
@@ -448,7 +448,7 @@ added one `UTXO` object.
 To refresh how the current metadata stands, our first `UTXO` had the same `sender` and `receiver`. We want to ensure the amount
 of funds available at the `sender` address is sufficient
 
-```aidl
+```
    double available = 0.0;
    for (UTXO value : input) {
       available += value.getAmountTransferred();
@@ -458,7 +458,7 @@ of funds available at the `sender` address is sufficient
 We loop through each `UTXO` in the `input` array and run the summation of the amounts transferred, which we've programmed
 to be 1000.
 
-```aidl
+```
     double totalCost = transaction.getTotalAmountToTransfer() + Transaction.TRANSACTION_FEE;
 ```
 
@@ -467,7 +467,7 @@ the mining fee (or transaction fee) of 1. The first for loop populated that firs
 with 200 funds, so in total the amount to be transferred is 300. This number is computed using the `getTotalAmountToTransfer()` method
 in the `Transaction` class
 
-```aidl
+```
     public double getTotalAmountToTransfer() {
         double f = 0;
         for (int i = 0; i < this.amountToTransfer.length; i++) {
@@ -479,7 +479,7 @@ in the `Transaction` class
 
 The transaction will need to abort if there is insufficient funds; where the available funds are less than the total cost of
 the transaction:
-```aidl
+```
    if (available < totalCost) {
       System.out.println("Fund available=" + available + ", not enough for total cost of " + totalCost);
    }
@@ -487,7 +487,7 @@ the transaction:
 
 Now that the input `UTXO` is complete, we can create our **_output_** `UTXO`:
 
-```aidl
+```
    for (int i = 0; i < receivers.length; i++) {
       UTXO outputUTXO = new UTXO(transaction.getHashID(), sender.getPublic(), receivers[i], amountToTransfer[i]);
       transaction.addOutputUTXO(utxo2);
@@ -499,7 +499,7 @@ we create a new `UTXO` object referencing the current transaction, the `sender` 
 public key and the amount to be transferred tied to the `receivers` address. We then use the `addOutputUTXO()` method in the
 `Transaction` class to add the UTXO to our `transaction` object
 
-```aidl
+```
     protected void addOutputUTXO(UTXO utxo) {
         if(!signed) {
             outputs.add(utxo);
@@ -509,7 +509,7 @@ public key and the amount to be transferred tied to the `receivers` address. We 
 
 We now need to create a `UTXO` to return any change to the `sender`.
 
-```aidl
+```
    double remainingFunds = available - totalCost;
    UTXO remainingUTXO = new UTXO(transaction.getHashID(), sender.getPublic(), sender.getPublic(), remainingFunds);
    transaction.addOutputUTXO(remainingUTXO);
@@ -522,13 +522,13 @@ the cost of the transfer.
 
 As the final step, the transaction is signed by the `sender` private key
 
-```aidl
+```
     transaction.signTheTransaction(sender.getPrivate());
 ```
 
 The `signTheTransaction()` method takes a `PrivateKey` instance as an input
 
-```aidl
+```
     public void signTheTransaction(PrivateKey privateKey) {
         if(this.signature == null && !signed) {
             this.signature = UtilityMethods.generateSignature(privateKey, getMessageData());
@@ -539,7 +539,7 @@ The `signTheTransaction()` method takes a `PrivateKey` instance as an input
 
 The `transaction` object is initiated with a `null` value and the `boolean` variable `signed` is set to false:
 
-```aidl
+```
     private byte[] signature = null;
     private boolean signed = false;
 ```
@@ -549,7 +549,7 @@ So the `signTheTransaction()` method will then set the `signature` using the `ge
 Notice that once the sender signs the transaction, we are no longer able to add additional `UTXO` to the
 transaction object:
 
-```aidl
+```
     protected void addOutputUTXO(UTXO utxo) {
         if(!signed) {
             outputs.add(utxo);
@@ -559,7 +559,7 @@ transaction object:
 
 We can test to see if the signature is verified using our `verifySignature()` method.
 
-```aidl
+```
     public boolean verifySignature() {
         String message = getMessageData();
         return UtilityMethods.verifySignature(this.sender, this.signature, message);
@@ -583,7 +583,7 @@ By the end of this chapter, we should be able to code:
 
 We start by adding another method called `prepareOutputUTXOs()` to our `Transaction` class:
 
-```aidl
+```
     public boolean prepareOutputUTXOs() {
         if (this.receivers.length != this.amountToTransfer.length) {
             return false;
