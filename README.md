@@ -629,7 +629,7 @@ Next, we create two output `UTXOs` and append them to our clean `outputs` UTXO a
 
 The final preparation required for this method is to compute the "change" or remaining funds to pay back to the `sender`.
 
-```aidl
+```
    double remainingAmount = available - totalCost;
    UTXO change = new UTXO(this.getHashID(), this.sender, this.sender, remainingAmount);
    this.outputs.add(change);
