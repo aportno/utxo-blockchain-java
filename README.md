@@ -708,3 +708,37 @@ We can reconstruct missing data if we have 2 parts of the 3 items:
 * 87 XOR 22 = 65
 * 65 XOR 87 = 22
 
+Back to the `encryptionByXOR()` method, the code `key[i] ^ passwordToBytes[j]` performs an XOR operation between a byte in
+`key` and a byte in `passwordToBytes`, the result of which is further performed an `&` i.e., AND operation with the hexadecimal
+number 0xFF. 0xFF is a 4-byte integer with every bit being 1. We know that the `&` operation can only result in 1 if both bits
+are 1, otherwise the result will be 0. This `&` operation here is to guarantee that the result is preserved properly. In fact,
+as `key[i]` and `passwordToBytes[j]` are both of the data type byte, it is not necessary to add this `&` operation.
+
+```
+    public static byte[] decryptionByXOR(byte[] key, String password) {
+        return encryptionByXOR(key, password);
+    }
+```
+
+The `decryptionByXOR()` method calls `encryptionByXOR()` method to convert the encrypted data back to the original using
+the same password.
+
+We test our encryption and decryption in our `TestXOR` class. The results show our function is working as expected:
+
+```aidl
+Our message to encrypt is: At the most beautiful place, remember the most beautiful you
+The password is: blockchain
+
+The encrypted data is: 
+???U_U?5??h????8=???<???m?Q????O:f??y?????98???}??
+
+After proper decryption, the message is:
+At the most beautiful place, remember the most beautiful you
+
+Using an incorrect password, the decrypted message looks like:
+?}E?q^?^??*J??N?$?q
+?]?;??F?%?77?(?
+
+Process finished with exit code 0
+
+```
