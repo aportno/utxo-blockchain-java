@@ -739,6 +739,4 @@ Using an incorrect password, the decrypted message looks like:
 ?}E?q^?^??*J??N?$?q
 ?]?;??F?%?77?(?
 
-Process finished with exit code 0
-
 ```
