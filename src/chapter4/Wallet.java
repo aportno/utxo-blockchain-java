@@ -40,7 +40,6 @@ public class Wallet {
         this.walletName = walletName;
     }
 
-
     public String getName() {
         return this.walletName;
     }

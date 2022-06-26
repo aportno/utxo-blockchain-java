@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter4/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter4/Wallet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter4/Miner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter4/TestWallet_1.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +55,7 @@
       <recent name="chapter3" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.TestEncryptionDecryptionWithAES">
+  <component name="RunManager" selected="Application.TestWallet_1">
     <configuration name="TestEncryptionDecryptionWithAES" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chapter4.TestEncryptionDecryptionWithAES" />
       <module name="learn_blockchain_in_java_zhou" />
@@ -69,8 +69,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestSignature" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter3.TestSignature" />
+    <configuration name="TestTransaction" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter3.TestTransaction" />
       <module name="learn_blockchain_in_java_zhou" />
       <extension name="coverage">
         <pattern>
@@ -82,12 +82,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestTransaction" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter3.TestTransaction" />
+    <configuration name="TestWallet_1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter4.TestWallet_1" />
       <module name="learn_blockchain_in_java_zhou" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter3.*" />
+          <option name="PATTERN" value="chapter4.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -123,11 +123,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.TestWallet_1" />
         <item itemvalue="Application.TestEncryptionDecryptionWithAES" />
         <item itemvalue="Application.TestXOR" />
         <item itemvalue="Application.chapter4.TestTransaction" />
         <item itemvalue="Application.TestTransaction" />
-        <item itemvalue="Application.TestSignature" />
       </list>
     </recent_temporary>
   </component>
@@ -139,13 +139,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00013" summary="update">
-      <created>1655938261678</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1655938261678</updated>
     </task>
     <task id="LOCAL-00014" summary="update">
       <created>1655938490492</created>
@@ -483,7 +476,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656211969520</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="update">
+      <created>1656212860056</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1656212860056</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
