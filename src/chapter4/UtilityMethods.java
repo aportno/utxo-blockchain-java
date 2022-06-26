@@ -192,6 +192,63 @@ public class UtilityMethods {
         }
     }
 
+    public static byte[] decryptionByAES(byte[] key, String password) {
+        try {
+            int j = 0;
+            byte[] lengthByte = new byte[Integer.BYTES];
+
+            for (int i = 0; i < lengthByte.length; i++, j++) {
+                lengthByte[i] = key[j];
+            }
+
+            int dataSize = bytesToInt(lengthByte);
+            for (int i = 0; i < lengthByte.length; i++, j++) {
+                lengthByte[i] = key[j];
+            }
+
+            int ivSize = bytesToInt(lengthByte);
+            byte[] salt = new byte[8];
+            for (int i = 0; i < salt.length; i++, j++) {
+                salt[i] = key[j];
+            }
+
+            byte[] ivBytes = new byte[ivSize];
+            for (int i = 0; i < ivBytes.length; i++, j++) {
+                ivBytes[i] = key[j];
+            }
+
+            byte[] dataBytes = new byte[dataSize];
+            for (int i = 0; i < dataBytes.length; i++, j++) {
+                dataBytes[i] = key[j];
+            }
+
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, 1024, 128);
+            String keyAlgo = "PBKDF2WithHmacSHA1";
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(keyAlgo);
+            SecretKey tempKey = secretKeyFactory.generateSecret(pbeKeySpec);
+            SecretKey secretKey = new SecretKeySpec(tempKey.getEncoded(), "AES");
+            Cipher cipher2 = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
+            cipher2.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(ivBytes));
+            byte[] data = cipher2.doFinal(dataBytes);
+
+            return data;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static byte[] intToBytes(int num) {
+        byte[] b = new byte[Integer.BYTES];
+
+        for (int i = b.length - 1; i >= 0; i--) {
+            b[i] = (byte)(num & 0xFF);
+            num = num >> Byte.SIZE;
+        }
+
+        return b;
+    }
+
     public static void displayTab(PrintStream out, int level, String str) {
         for (int i = 0; i < level; i++) {
             out.print("\t");
