@@ -153,7 +153,7 @@ public class UtilityMethods {
             SecretKeyFactory factory = SecretKeyFactory.getInstance(keyAlgo);
             KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 1024, 128);
             SecretKey tempKey = factory.generateSecret(keySpec);
-            SecretKey secretKey = new SecretKeySpec(tempKey.getEncoded(), "AES")''
+            SecretKey secretKey = new SecretKeySpec(tempKey.getEncoded(), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);

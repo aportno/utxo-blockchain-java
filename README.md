@@ -741,3 +741,9 @@ Using an incorrect password, the decrypted message looks like:
 
 ```
 
+Alternatively, we can use the AES encryption algorithm for password-based encryption. The central ideas to AES encryption are:
+1) Apply the password and a random large number called _salt_ to prepare a KeySpec object `keySpec`, then create a temporary key based on `keySpec`
+2) Obtain a SecretKey instance compatible with the AES encryption algorithm by using the temp key's information
+3) Create a Cipher object and initialize it with the secret key to encrypt the data. The password is incorporated into the key generation process so that only the authentic password can repeat this process to construct a correct SecretKey instance to decrypt the data
+4) Data items such as _salt_ must remain constant for proper decryption, and so they must also be incorporated into the encrypted data
+
