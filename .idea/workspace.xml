@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change afterPath="$PROJECT_DIR$/src/chapter4/Miner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chapter4/TestWallet_1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keys/alexander_keys" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,20 +138,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00014" summary="update">
-      <created>1655938490492</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1655938490492</updated>
-    </task>
-    <task id="LOCAL-00015" summary="update">
-      <created>1655940037937</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1655940037937</updated>
     </task>
     <task id="LOCAL-00016" summary="update">
       <created>1655944700882</created>
@@ -483,7 +468,21 @@
       <option name="project" value="LOCAL" />
       <updated>1656212860056</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="update">
+      <created>1656213692336</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1656213692336</updated>
+    </task>
+    <task id="LOCAL-00064" summary="update">
+      <created>1656213703564</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1656213703564</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
