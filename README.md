@@ -102,6 +102,7 @@ the object is deserialized at another JVM at location B, the JBM of location B n
 as a template for this object to be reconstructed. The class loader checks if `Block` class at location B and the `Block`
 object from location A have the same `serialVersionID` value. If the `UID` values differ, the program will throw an exception
 that is easy to catch and fix. This mechanism ensures that the classes in use are consistent and compatible.
+
 ---
 ## Chapter 3 :: Transaction and Cryptography
 
