@@ -788,5 +788,10 @@ The `keySpec` variable is instantiated with `PBEKeySpec` with four arguments:
 3) the iteration count which specifies how many times the password is hashed for the derivation of the crypto key (we used 1024)
 4) the key size (we used 128 because for AES algo, keys of 128-bits are the most common)
 
-Now that we have mastered the tools for storing and retrieving keys, we can return to working on the `Wallet` class
+We add a second constructor to our `Wallet` class that takes two strings as arguments:
 
+```
+   public Wallet(String walletName, String password) {
+   this.keyPair = UtilityMethods.generateKeyPair();
+   this.walletName = walletName;
+```
