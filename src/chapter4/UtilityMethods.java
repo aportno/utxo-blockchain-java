@@ -4,7 +4,12 @@ import jdk.jshell.execution.Util;
 
 import java.io.PrintStream;
 import java.security.*;
+import java.security.spec.KeySpec;
 import java.util.Base64;
+import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class UtilityMethods {
     public static long uniqueNumber = 0;
@@ -135,6 +140,56 @@ public class UtilityMethods {
 
     public static byte[] decryptionByXOR(byte[] key, String password) {
         return encryptionByXOR(key, password);
+    }
+
+    public static byte[] encryptionByAES(byte[] key, String password) {
+        try {
+            byte[] salt = new byte[8];
+            SecureRandom rand = new SecureRandom();
+
+            rand.nextBytes(salt);
+
+            String keyAlgo = "PBKDF2WithHmacSHA1";
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(keyAlgo);
+            KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 1024, 128);
+            SecretKey tempKey = factory.generateSecret(keySpec);
+            SecretKey secretKey = new SecretKeySpec(tempKey.getEncoded(), "AES")''
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+
+            AlgorithmParameters algoParams = cipher.getParameters();
+            byte[] iv = algoParams.getParameterSpec(IvParameterSpec.class).getIV();
+            byte[] output = cipher.doFinal(key);
+            byte[] outputSizeBytes = UtilityMethods.intToBytes(output.length);
+            byte[] ivSizeBytes = UtilityMethods.intToBytes(iv.length);
+            byte[] data = new byte[Integer.BYTES * 2 + salet.length + iv.length + output.length];
+
+            int j = 0;
+            for (int i = 0; i < outputSizeBytes.length; i++, j++) {
+                data[j] = outputSizeBytes[i];
+            }
+
+            for (int i = 0; i < ivSizeBytes.length; i++, j++) {
+                data[j] = ivSizeBytes[i];
+            }
+
+            for (int i = 0; i < salt.length; i++, j++) {
+                data[j] = salt[i];
+            }
+
+            for (int i = 0; i < iv.length; i++, j++) {
+                data[j] = iv[i];
+            }
+
+            for (int i = 0; i < output.length; i++, j++) {
+                data[j] = output[i];
+            }
+
+            return data;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void displayTab(PrintStream out, int level, String str) {
