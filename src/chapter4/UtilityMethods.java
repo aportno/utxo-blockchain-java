@@ -163,7 +163,7 @@ public class UtilityMethods {
             byte[] output = cipher.doFinal(key);
             byte[] outputSizeBytes = UtilityMethods.intToBytes(output.length);
             byte[] ivSizeBytes = UtilityMethods.intToBytes(iv.length);
-            byte[] data = new byte[Integer.BYTES * 2 + salet.length + iv.length + output.length];
+            byte[] data = new byte[Integer.BYTES * 2 + salt.length + iv.length + output.length];
 
             int j = 0;
             for (int i = 0; i < outputSizeBytes.length; i++, j++) {
@@ -247,6 +247,15 @@ public class UtilityMethods {
         }
 
         return b;
+    }
+
+    public static int bytesToInt(byte[] b) {
+        int j = 0;
+        for (int i = 0; i < b.length; i++) {
+            j = j << Byte.SIZE;
+            j = j | (b[i] & 0xFF);
+        }
+        return j;
     }
 
     public static void displayTab(PrintStream out, int level, String str) {
