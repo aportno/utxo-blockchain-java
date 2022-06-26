@@ -9,11 +9,13 @@ public class TestWallet_1 {
 
         System.out.println("Please create a password: ");
         String userPassword = userInput.nextLine();
-
         userInput.close();
+
+        System.out.println("Attempting to create a wallet...");
         Wallet firstWallet = new Wallet(userName, userPassword);
         System.out.println("Wallet created for " + firstWallet.getName());
 
+        System.out.println("Reattempting to create a wallet...");
         Wallet secondWallet = new Wallet(userName, userPassword);
         System.out.println("Wallet loaded successfully, " + "wallet name = " + secondWallet.getName());
     }
