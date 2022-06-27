@@ -890,6 +890,35 @@ public class Miner extends Wallet{
     }
 }
 ```
+---
+## Halfway Recap
+
+We've now approached around the halfway point in the text. So far we've created a `Block`, `Miner`, `Transaction`, `UtilityMethods`,
+`UTXO`, and `Wallet` class. We then built test cases such as `TestBlockMining`, `TestTransaction` and `TestWallet` using these classes
+as building blocks.
+
+From first principles, a `block` on the blockchain is composed of `transactions` between a sender `wallet` and a receiver `wallet`.
+A `miner` validates the `transactions` by verifying the validity of the `utxo` involved in the exchange.
+
+#### The UTXO (Unspent Transaction Output)
+The `UTXO` class is takes a transaction ID, the sender public keys, the receivers public keys and the amount to be transferred from the senders
+wallet to the receiver's wallet address. The `UTXO` object operates similar to a `block` object in the sense that the metadata
+of the `UTXO` is hashed using a SHA256 algorithm. The hash value will be composed of the parent transaction ID, the senders public key,
+the receivers public key, the amount transferred, the timestamp of the UTXO, and a unique number (in our case it's a counter for the number
+of times we've called out `UtilityMethods` class).
+
+In a simple transaction, there will be an input `UTXO` and an output `UTXO`. The difference between the two is trivial: there will be one
+input `UTXO` constructed with the sender's public address as both the `sender` and `receiver` of the `UTXO` and two
+output `UTXO` -- one to pay the `receiver` party and one to pay any change back to the `sender`.
+
+The `transaction` class is initialized with a single public key address and amount so the primary constructor is called.
+The `transaction` class will store all public keys involved in the `transaction` in an array. Initially, the first value in the
+array will be the `receiver` public key address. The `amountToTransfer` will be initialized in a separate array but will also
+replace the first value in the array with the `receivers` public keys. Similar to the `UTXO` and `Block` methods, the `transaction`
+metadata is hashed, specifically the `transaction` values of a unique number, the sender address, the receiver address, amount transferred,
+the `UTXO` involved, and a timestamp.
+
+
 
 ---
 ## Chapter 5 :: Block and Blockchain
