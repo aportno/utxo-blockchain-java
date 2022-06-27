@@ -900,7 +900,7 @@ as building blocks.
 From first principles, a `block` on the blockchain is composed of `transactions` between a sender `wallet` and a receiver `wallet`.
 A `miner` validates the `transactions` by verifying the validity of the `utxo` involved in the exchange.
 
-#### The UTXO (Unspent Transaction Output)
+#### <u>The UTXO (Unspent Transaction Output)</u>
 The `UTXO` class is takes a transaction ID, the sender public keys, the receivers public keys and the amount to be transferred from the senders
 wallet to the receiver's wallet address. The `UTXO` object operates similar to a `block` object in the sense that the metadata
 of the `UTXO` is hashed using a SHA256 algorithm. The hash value will be composed of the parent transaction ID, the senders public key,
@@ -910,6 +910,8 @@ of times we've called out `UtilityMethods` class).
 In a simple transaction, there will be an input `UTXO` and an output `UTXO`. The difference between the two is trivial: there will be one
 input `UTXO` constructed with the sender's public address as both the `sender` and `receiver` of the `UTXO` and two
 output `UTXO` -- one to pay the `receiver` party and one to pay any change back to the `sender`.
+
+#### <u>The Transaction</u>
 
 The `transaction` class is initialized with a single public key address and amount so the primary constructor is called.
 The `transaction` class will store all public keys involved in the `transaction` in an array. Initially, the first value in the
@@ -951,6 +953,24 @@ So the only way to know if the signature is verified if I'm able to unlock the m
 then the message was not sent from your address and an exception is raised and the transaction fails.
 
 You can read more about signing with a private key, verifying with a public key on this [auth0 blog post](https://auth0.com/blog/how-to-explain-public-key-cryptography-digital-signatures-to-anyone/).
+
+#### <u>The Miner </u>
+To achieve our end goal of having this `transaction` put on the ledger (included in a `block`), we need to rely on a `miner` to validate
+the authenticity of the `transaction`. If the `signature` is not verified by the miner, the `transaction` fails, and it will not be included
+in the next block. First the `transaction` is broadcast to all `miner`. Then the `miner` actively tries to compute a hash value
+that meets the constraints of the `block` difficulty specified by the protocol. Once the miner solves for the correct
+nonce, they broadcast their solution to the network. If all miners agree with the solution then the `block` is added to the
+`blockchain`.
+
+#### <u>The Block </u>
+And then the process starts all over again. Our initial transaction is finally part of the blockchain. We created `UTXO` to form
+a `transaction`. The `transaction` was validated by a `miner` and included in the blocks `hash` value that the network has come to
+a consensus on. The next `block` will need to reference the previous `block` where the initial transaction took place. If there
+is any tampering that takes place then the hash value of the previous `block` will be completely different than what the network came
+to consensus on and the network will be tasked with correcting to the rightful state and handling the malicious actor
+
+#### <u>What's next? </u>
+We will introduce the dynamic of having active `wallets` carrying `UTXO` and other functions of `blocks` on the `blockchain`.
 
 ---
 ## Chapter 5 :: Block and Blockchain
