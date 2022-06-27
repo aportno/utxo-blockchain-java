@@ -918,7 +918,28 @@ replace the first value in the array with the `receivers` public keys. Similar t
 metadata is hashed, specifically the `transaction` values of a unique number, the sender address, the receiver address, amount transferred,
 the `UTXO` involved, and a timestamp.
 
+This initialization of the `transaction` object references the input `utxo` only. The output `utxo` in the `transaction` is created
+by first checking if the length of the `receiver` array is equal to the length of the `amountToTransfer` array. If true,
+then we check if the total amount the sender wants to transfer is less than the total amount of the input `UTXO` provided.
+The next step is to create output `utxo` for each public key in the `receiver` array. The `amountToTransfer` is mapped to the index
+of the `funds` array. Each output `utxo` is then added to the `output` `UTXO` array of the `transaction` object.
 
+At this point, the `transaction` object contains one input `utxo` and two output `utxo` objects (one for each `receiver` address involved in the transaction).
+There is one missing component to complete the lifecycle of the transaction; the change to return to the `sender` address.
+To do so, we create one more output `UTXO` object that takes the same unique number as all other output `UTXO` but the `sender` and
+`receiver` address will populate as the `sender` address (similar to the initial input `utxo`).
+
+The preparation of our output `UTXO` is now complete. To ensure the authenticity of the proposed transaction by the `sender`, the program
+attempts to sign the transaction using the `sender` private key and the transactions message data (a hash value).
+
+We've successfully used cryptographic techniques to generate our first transaction. But how do we know if the `sender` is actually
+the one who initiated the request and gave consent to transfer the expected funds? We use the method `verifySignature` to check
+if the `sender` was indeed the address that signed the `transaction`. First, we retrieve the message data inside the `transaction` object.
+Next, we call `verifySignature` and pass in the `sender` public key, the `signature` of the `transaction` object, and the `transaction` `message data`.
+
+For avoidance of doubt, the `signature` of the transaction required the `sender` private key and the `transaction` `messageData`.
+Now to verify the `signature`, we require the `sender` public key, `signature`, and `messageData`. How do we verify with this information?
+Because we can derive the
 
 ---
 ## Chapter 5 :: Block and Blockchain
