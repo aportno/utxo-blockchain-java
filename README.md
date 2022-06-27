@@ -939,7 +939,18 @@ Next, we call `verifySignature` and pass in the `sender` public key, the `signat
 
 For avoidance of doubt, the `signature` of the transaction required the `sender` private key and the `transaction` `messageData`.
 Now to verify the `signature`, we require the `sender` public key, `signature`, and `messageData`. How do we verify with this information?
-Because we can derive the
+
+The general idea behind this digital signature is to sign with the private key, verify with a public key. To send me a message
+with proof that you are the sender, you use the private key to lock the message. You're the only person with the private key, and only a public
+key can unlock messages locked by your private key. If the message was tampered then upon arrival, I would notice the message you
+sent was no longer signed. If the person tampering the message wanted to conceal involvement, they could try to resign the message
+using the public key (because only you have the private key). But now when I receive the tampered, resigned message, I am no longer
+able to open up because the only way I can open it with your public key is if the message is signed with your private key!
+
+So the only way to know if the signature is verified if I'm able to unlock the message with your public key. If I cannot do this,
+then the message was not sent from your address and an exception is raised and the transaction fails.
+
+You can read more about signing with a private key, verifying with a public key on this [auth0 blog post](https://auth0.com/blog/how-to-explain-public-key-cryptography-digital-signatures-to-anyone/).
 
 ---
 ## Chapter 5 :: Block and Blockchain
