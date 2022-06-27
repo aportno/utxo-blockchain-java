@@ -897,8 +897,8 @@ We've now approached around the halfway point in the text. So far we've created 
 `UTXO`, and `Wallet` class. We then built test cases such as `TestBlockMining`, `TestTransaction` and `TestWallet` using these classes
 as building blocks.
 
-From first principles, a `block` on the blockchain is composed of `transactions` between a sender `wallet` and a receiver `wallet`.
-A `miner` validates the `transactions` by verifying the validity of the `utxo` involved in the exchange.
+From first principles, a `block` on the blockchain is composed of `transactions` that have been validated by `miners`. The transactions are between a sender `wallet` and a receiver `wallet`.
+A `miner` validates the `transactions` by verifying the validity of the `utxo` involved in the `transaction`.
 
 #### <u>The UTXO (Unspent Transaction Output)</u>
 The `UTXO` class is takes a transaction ID, the sender public keys, the receivers public keys and the amount to be transferred from the senders
