@@ -18,12 +18,13 @@ public class TestTransaction {
             amountToTransfer[i] = (i + 1) * 100;
         }
 
-        // Create the input UTXOs and output UTXOs
+        // Create the input UTXOs
         UTXO inputUTXO = new UTXO("0", sender.getPublic(), sender.getPublic(), 1000);
         ArrayList<UTXO> input = new ArrayList<UTXO>();
         input.add(inputUTXO);
         Transaction transaction = new Transaction(sender.getPublic(), receivers, amountToTransfer, input);
 
+        // Create output UTXOs
         boolean isPreparedOutputUTXO = transaction.prepareOutputUTXOs();
         if (!isPreparedOutputUTXO) {
             System.out.println("Transaction failed");
