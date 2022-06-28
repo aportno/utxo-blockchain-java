@@ -18,11 +18,9 @@ public class Wallet {
 
         try {
             populateExistingWallet(walletName, password);
-            System.out.println("A wallet exists with the same name and password. Loaded the existing wallet");
         } catch (Exception e) {
             try {
                 this.prepareWallet(password);
-                System.out.println("Created a new wallet based on the name and password");
             } catch (IOException ioe) {
                 throw new RuntimeException(ioe);
             }
@@ -72,8 +70,8 @@ public class Wallet {
 
             this.keyPair = (KeyPair) (objectInputStream.readObject());
             this.walletName = walletName;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
