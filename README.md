@@ -984,7 +984,7 @@ We revisit our `Block` class and add some additional functionality. The class no
     private String previousBlockHashID;
     private long timestamp;
     private int nonce = 0;
-    private int difficultyLevel = 25;
+    private int difficultyLevel;
 ```
 We added a `TRANSACTION_UPPER_LIMIT` instance field to specify the maximum number of transactions allowed in a block. This 
 is a targeted constraint within this blockchain and differs from bitcoins approach where block transactions are somewhat limited by its
@@ -1016,8 +1016,8 @@ is greater than the upper limit than the boolean returns `false`. Otherwise, the
 accordingly and the boolean returns `true`.
 
 In order to chain these blocks together to form the blockchain, we will need to use a data structure than contains a list.
-We opted to use a customized class named `LedgerList` because it wraps an `ArrayList` instance and provides necessary functions for the blockchain to
-add a block at the end and find a block quickly with an index. It does not allow a block to be inserted or deleted.
+We opted to use a customized class named `LedgerList` because it wraps an instance of an `ArrayList` and provides necessary functions for the blockchain to
+add a block at the end of the chain or find a block quickly with an index. It does not allow a block to be inserted or deleted.
 
 For the purpose of secure coding, the elements of the `LedgerList` class can only be accessed one at a time.
 
