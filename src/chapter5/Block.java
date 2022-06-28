@@ -3,13 +3,15 @@ package chapter5;
 import java.util.ArrayList;
 
 public class Block implements java.io.Serializable {
+    public final static int TRANSACTION_UPPER_LIMIT = 2;
+
     private static final long serialVersionUID = 1L;
-    private ArrayList<String> transactions = new ArrayList<String>();
+    private ArrayList<Transaction> transactions = new ArrayList<Transaction>();
     private String hashID;
     private String previousBlockHashID;
     private long timestamp;
     private int nonce = 0;
-    private int difficultyLevel = 20;
+    private int difficultyLevel = 25;
 
     public Block(String previousBlockHashID, int difficultyLevel) {
         this.previousBlockHashID = previousBlockHashID;
@@ -17,11 +19,20 @@ public class Block implements java.io.Serializable {
         this.difficultyLevel = difficultyLevel;
     }
 
+    public boolean addTransaction (Transaction transaction) {
+        if (this.getTotalNumberOfTransactions() >= Block.TRANSACTION_UPPER_LIMIT) {
+            return false;
+        } else {
+            this.transactions.add(transaction);
+            return true;
+        }
+    }
+
     protected String computeHashID() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.previousBlockHashID).append(Long.toHexString(this.timestamp));
-        for (String transaction : transactions) {
-            sb.append(transaction);
+        for (Transaction transaction : transactions) {
+            sb.append(transaction.getHashID());
         }
         sb.append(Integer.toHexString(this.difficultyLevel)).append(nonce);
         byte[] b = UtilityMethods.messageDigestSHA256_toBytes(sb.toString());
@@ -37,8 +48,12 @@ public class Block implements java.io.Serializable {
         return true;
     }
 
-    public void addTransaction (String transaction) {
-        this.transactions.add(transaction);
+    public Transaction getTransaction(int index) {
+        return this.transactions.get(index);
+    }
+
+    public int getTotalNumberOfTransactions() {
+        return this.transactions.size();
     }
 
     public int getDifficultyLevel() {
