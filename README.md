@@ -644,7 +644,7 @@ We also created our first `Wallet` class in this chapter. The `Wallet` class is 
 The most basic requirements for our wallet are a pair of keys and a name. Wallets are represented by their public keys, but for the
 sake of easier identification, we will give each wallet a name.
 
-```aidl
+```
     private KeyPair keyPair;
     private String walletName;
 ```
@@ -1020,4 +1020,43 @@ We opted to use a customized class named `LedgerList` because it wraps an `Array
 add a block at the end and find a block quickly with an index. It does not allow a block to be inserted or deleted.
 
 For the purpose of secure coding, the elements of the `LedgerList` class can only be accessed one at a time.
+
+We create a new `Blockchain` class that contains one constructor that uses a genesis block as the input:
+
+```
+    public Blockchain(Block genesisBlock) {
+        this.blockchain = new LedgerList<>();
+        this.blockchain.add(genesisBlock);
+    }
+```
+
+The genesis block is very special in the history of a blockchain. Every blockchain starts from a genesis block, therefore
+it would be a good idea to request the genesis block in order to construct a blockchain.
+
+The `addBlock()` method is `synchronized` because we must guarantee that only one calling method can append a block to the
+blockchain at a time.
+
+```
+    public synchronized void addBlock(Block block) {
+        if (block.getPreviousBlockHashID().equals(this.getLastBlock().getHashID())) {
+            this.blockchain.add(block);
+        }
+    }
+```
+
+Next, we updated our `Wallet` class so that it can transfer funds on the `Blockchain`
+
+First, we added a new instance variable `localLedger` to let each wallet have a local blockchain:
+
+```
+    private Blockchain localLedger;
+```
+
+We can then use `getLocalLedger()` to return the local blockchain of this wallet
+
+```
+    public synchronized Blockchain getLocalLedger() {
+        return this.localLedger;
+    }
+```
 

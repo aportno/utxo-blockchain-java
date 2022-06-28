@@ -4,11 +4,13 @@ import java.io.*;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.ArrayList;
 
 public class Wallet {
     private KeyPair keyPair;
     private String walletName;
-    private static String keyLocation = "keys";
+    private static final String keyLocation = "keys";
+    private Blockchain localLedger;
 
     public Wallet(String walletName, String password) {
         this.keyPair = UtilityMethods.generateKeyPair();
@@ -27,19 +29,7 @@ public class Wallet {
         }
     }
 
-    public String getName() {
-        return this.walletName;
-    }
-
-    public PublicKey getPublicKey() {
-        return this.keyPair.getPublic();
-    }
-
-    public PrivateKey getPrivateKey() {
-        return this.keyPair.getPrivate();
-    }
-
-    private void prepareWallet(String password) throws IOException, FileNotFoundException {
+    private void prepareWallet(String password) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
@@ -62,7 +52,7 @@ public class Wallet {
         byteArrayOutputStream.close();
     }
 
-    private void populateExistingWallet(String walletName, String password) throws IOException, FileNotFoundException, ClassNotFoundException {
+    private void populateExistingWallet(String walletName, String password) {
         try {
             FileInputStream fileInputStream = new FileInputStream(Wallet.keyLocation
                     + "/"
@@ -75,9 +65,7 @@ public class Wallet {
 
             byte[] data = new byte[size];
 
-            for (int i = 0; i < data.length; i++) {
-                data[i] = bb[i];
-            }
+            System.arraycopy(bb, 0, data, 0, data.length);
 
             byte[] keyBytes = UtilityMethods.decryptionByXOR(data, password);
             ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(keyBytes));
@@ -87,5 +75,73 @@ public class Wallet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Transaction transferFund(PublicKey[] receivers, double[] amountToTransfer) {
+        ArrayList<UTXO> unspent = new ArrayList<>();
+        double available = this.getLocalLedger().findUnspentUTXOs(this.getPublicKey(), unspent);
+        double totalNeeded = Transaction.TRANSACTION_FEE;
+        for (double fund : amountToTransfer) {
+            totalNeeded += fund;
+        }
+
+        if (available < totalNeeded) {
+            System.out.println(this.walletName + "balance=" + available + ", not enough to make the transfer of " + totalNeeded);
+            return null;
+        }
+
+        // Create input for the transaction
+        ArrayList<UTXO> inputUTXOs = new ArrayList<>();
+        available = 0;
+        for (int i = 0; i < unspent.size() && available < totalNeeded; i++) {
+            UTXO unspentUTXO = unspent.get(i);
+            available += unspentUTXO.getAmountTransferred();
+            inputUTXOs.add(unspentUTXO);
+        }
+
+        // Create the transaction
+        Transaction transaction = new Transaction(this.getPublicKey(), receivers, amountToTransfer, inputUTXOs);
+
+        // Prepare output UTXO
+        boolean isPreparedOutputUTXO = transaction.prepareOutputUTXOs();
+        if (isPreparedOutputUTXO) {
+            transaction.signTheTransaction(this.getPrivateKey());
+            return transaction;
+        } else {
+            return null;
+        }
+    }
+
+    public Transaction transferFund(PublicKey receiver, double amountToTransfer) {
+        PublicKey[] receivers = new PublicKey[1];
+        double[] amount = new double[1];
+        receivers[0] = receiver;
+        amount[0] = amountToTransfer;
+        return transferFund(receivers, amount);
+    }
+
+    public String getName() {
+        return this.walletName;
+    }
+
+    public PublicKey getPublicKey() {
+        return this.keyPair.getPublic();
+    }
+
+    public PrivateKey getPrivateKey() {
+        return this.keyPair.getPrivate();
+    }
+
+    public synchronized Blockchain getLocalLedger() {
+        return this.localLedger;
+    }
+
+    public double getCurrentBalance(Blockchain ledger) {
+        return ledger.checkBalance(this.getPublicKey());
+    }
+
+    public synchronized boolean setLocalLedger(Blockchain ledger) {
+        this.localLedger = ledger;
+        return true;
     }
 }
