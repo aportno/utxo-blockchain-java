@@ -975,4 +975,49 @@ We will introduce the dynamic of having active `wallets` carrying `UTXO` and oth
 ---
 ## Chapter 5 :: Block and Blockchain
 
-We revisit our `Block` class and add some additional functionality
+We revisit our `Block` class and add some additional functionality. The class now contains the following class variables:
+```
+    public final static int TRANSACTION_UPPER_LIMIT = 2;
+    private static final long serialVersionUID = 1L;
+    private ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+    private String hashID;
+    private String previousBlockHashID;
+    private long timestamp;
+    private int nonce = 0;
+    private int difficultyLevel = 25;
+```
+We added a `TRANSACTION_UPPER_LIMIT` instance field to specify the maximum number of transactions allowed in a block. This 
+is a targeted constraint within this blockchain and differs from bitcoins approach where block transactions are somewhat limited by its
+size. Each bitcoin block could not exceed 1mb. The `transactions` array was also adjusted from an array of `string` to an array of `Transaction` class.
+
+```
+    public Block(String previousBlockHashID, int difficultyLevel) {
+        this.previousBlockHashID = previousBlockHashID;
+        this.timestamp = UtilityMethods.getTimeStamp();
+        this.difficultyLevel = difficultyLevel;
+    }
+```
+
+We created an `addTransaction()` method that takes `Transaction` as an input and returns a boolean:
+
+```
+    public boolean addTransaction (Transaction transaction) {
+        if (this.getTotalNumberOfTransactions() >= Block.TRANSACTION_UPPER_LIMIT) {
+            return false;
+        } else {
+            this.transactions.add(transaction);
+            return true;
+        }
+    }
+```
+
+Utilizing our `TRANSACTION_UPPER_LIMIT` as an upper boundary, if the total number of transactions (or the size of the transaction array) 
+is greater than the upper limit than the boolean returns `false`. Otherwise, the transaction is added to the transaction array
+accordingly and the boolean returns `true`.
+
+In order to chain these blocks together to form the blockchain, we will need to use a data structure than contains a list.
+We opted to use a customized class named `LedgerList` because it wraps an `ArrayList` instance and provides necessary functions for the blockchain to
+add a block at the end and find a block quickly with an index. It does not allow a block to be inserted or deleted.
+
+For the purpose of secure coding, the elements of the `LedgerList` class can only be accessed one at a time.
+
