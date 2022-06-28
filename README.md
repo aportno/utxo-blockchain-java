@@ -1056,20 +1056,19 @@ The constructor will create a simple dynamic ArrayList:
 
 The class has two private variables:
 1) `serialVerionUSD` is used for serialization
-2) `list` is an `ArrayList` that will house all transactions. Note that given it is a `private` variable, the only way to call the variable is within the class
+2) `list` is an `ArrayList` that will house all blocks. Note that given it is a `private` variable, the only way to call the variable is within the class
 
 ```
     @Serial
     private static final long serialVersionUID = 1L;
-    private final ArrayList<Transactions> list;
+    private final ArrayList<E> list;
 ```
 
 The only way to edit `list` is using the `add()` method. This restricts our access to `list` and allows us to only append accordingly:
 
 ```
-    public boolean add(Transactions transaction) {
-        return this.list.add(transaction);
-    }
+    public boolean add(E e) { return this.list.add(e); }
+
 ```
 
 For the purpose of secure coding, the elements of the `LedgerList` class can only be accessed one at a time.
