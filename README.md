@@ -1018,7 +1018,7 @@ is greater than the upper limit than the boolean returns `false`. Otherwise, the
 accordingly and the boolean returns `true`. Note that at inception, the size of the transaction array is 0, and can only increase
 in size by utilizing this `addTransaction()` method.
 
-The `computeHashID()` method is largely unchanged, except the for loop has been adjusted to accommodate the `transaction` array (previously
+The `computeHashID()` method is largely unchanged, except the enhanced for loop has been adjusted to accommodate the `transaction` array (previously
 was an array of strings during our earlier tests)
 
 ```
@@ -1035,9 +1035,14 @@ was an array of strings during our earlier tests)
 ```
 
 All previous getter methods are still included in the `Block` class, as well as our `mineTheBlock()` method which increments the nonce
-until the required difficulty level is solved.
+until the required difficulty level is solved. That completes the remaining adjustments to the `Block` class.
 
-In order to chain these blocks together to form the blockchain, we will need to use a data structure than contains a list.
+In order to chain these blocks together to form a blockchain, we will need to use a data structure that contains a list.
+The genesis block _G_ should link to the first block _B<sub>1</sub>_, linked to _B<sub>2</sub>_, etc:
+
+| G   | B<sub>1</sub> | B<sub>2</sub>    | B<sub>3</sub> | ... |
+|-----|---------------|------------------|---------------|-----|
+
 We opted to use a customized class named `LedgerList` because it wraps an instance of an `ArrayList` and provides necessary functions for the blockchain to
 add a block at the end of the chain or find a block quickly with an index. It does not allow a block to be inserted or deleted.
 
