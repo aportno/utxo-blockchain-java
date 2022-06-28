@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class LedgerList<Transactions> implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private ArrayList<Transactions> list;
+    private final ArrayList<Transactions> list;
 
     public LedgerList() {
-        list = new ArrayList<Transactions>();
+        list = new ArrayList<>();
     }
 
     public int size() {
@@ -24,8 +24,8 @@ public class LedgerList<Transactions> implements java.io.Serializable {
         return this.list.get(0);
     }
 
-    public boolean add(Transactions e) {
-        return this.list.add(e);
+    public boolean add(Transactions transaction) {
+        return this.list.add(transaction);
     }
 
     public Transactions findByIndex(int index) {

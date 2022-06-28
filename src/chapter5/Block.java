@@ -1,16 +1,18 @@
 package chapter5;
 
+import java.io.Serial;
 import java.util.ArrayList;
 
 public class Block implements java.io.Serializable {
     public final static int TRANSACTION_UPPER_LIMIT = 2;
+    @Serial
     private static final long serialVersionUID = 1L;
-    private ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+    private final ArrayList<Transaction> transactions = new ArrayList<>();
     private String hashID;
-    private String previousBlockHashID;
-    private long timestamp;
+    private final String previousBlockHashID;
+    private final long timestamp;
     private int nonce = 0;
-    private int difficultyLevel = 25;
+    private final int difficultyLevel;
 
     public Block(String previousBlockHashID, int difficultyLevel) {
         this.previousBlockHashID = previousBlockHashID;
