@@ -6,13 +6,13 @@ import java.security.PublicKey;
 public class UTXO implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private String hashID;
-    private String parentTransactionID;
-    private PublicKey receiver;
-    private PublicKey sender;
-    private long timestamp;
-    private double amountTransferred;
-    private long sequentialNumber = 0;
+    private final String hashID;
+    private final String parentTransactionID;
+    private final PublicKey receiver;
+    private final PublicKey sender;
+    private final long timestamp;
+    private final double amountTransferred;
+    private final long sequentialNumber;
 
     public UTXO(String parentTransactionID, PublicKey sender, PublicKey receiver, double amountToTransfer) {
         this.sequentialNumber = UtilityMethods.getUniqueNumber();

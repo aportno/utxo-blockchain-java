@@ -73,6 +73,37 @@ public class Blockchain implements java.io.Serializable {
                 unspent.add(utxo);
             }
         }
-        return gain - spending;
+
+        return (gain - spending);
+    }
+
+    public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent, ArrayList<UTXO> unspent) {
+        ArrayList<Transaction> sendingTransactions = new ArrayList<>();
+
+        return findRelatedUTXOs(publicKey, all, spent, unspent, sendingTransactions);
+    }
+
+    public double checkBalance(PublicKey key) {
+        ArrayList<UTXO> all = new ArrayList<>();
+        ArrayList<UTXO> spent = new ArrayList<>();
+        ArrayList<UTXO> unspent = new ArrayList<>();
+
+        return findRelatedUTXOs(key, all, spent, unspent);
+    }
+
+    public ArrayList<UTXO> findUnspentUTXOs(PublicKey publicKey) {
+        ArrayList<UTXO> all = new ArrayList<>();
+        ArrayList<UTXO> spent = new ArrayList<>();
+        ArrayList<UTXO> unspent = new ArrayList<>();
+        findRelatedUTXOs(publicKey, all, spent, unspent);
+
+        return unspent;
+    }
+
+    public double findUnspentUTXOs(PublicKey publicKey, ArrayList<UTXO> unspent) {
+        ArrayList<UTXO> all = new ArrayList<>();
+        ArrayList<UTXO> spent = new ArrayList<>();
+
+        return findRelatedUTXOs(publicKey, all, spent, unspent);
     }
 }
