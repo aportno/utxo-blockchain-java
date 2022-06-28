@@ -988,8 +988,10 @@ We revisit our `Block` class and add some additional functionality. The class no
 ```
 We added a `TRANSACTION_UPPER_LIMIT` instance field to specify the maximum number of transactions allowed in a block. This 
 is a targeted constraint within this blockchain and differs from bitcoins approach where block transactions are somewhat limited by its
-size. Each bitcoin block could not exceed 1mb. The `transactions` array was also adjusted from an array of `string` to an array of `Transaction` class.
+size. Each bitcoin block could not exceed 1mb. The `transactions` array was also adjusted from an array of `string` to an array of `Transaction` class
+to accommodate the dynamic nature of adding multiple transactions to a block.
 
+The constructor remains the same:
 ```
     public Block(String previousBlockHashID, int difficultyLevel) {
         this.previousBlockHashID = previousBlockHashID;
@@ -998,7 +1000,7 @@ size. Each bitcoin block could not exceed 1mb. The `transactions` array was also
     }
 ```
 
-We created an `addTransaction()` method that takes `Transaction` as an input and returns a boolean:
+We added a new `addTransaction()` method that takes `Transaction` as an input and returns a boolean:
 
 ```
     public boolean addTransaction (Transaction transaction) {
@@ -1013,7 +1015,27 @@ We created an `addTransaction()` method that takes `Transaction` as an input and
 
 Utilizing our `TRANSACTION_UPPER_LIMIT` as an upper boundary, if the total number of transactions (or the size of the transaction array) 
 is greater than the upper limit than the boolean returns `false`. Otherwise, the transaction is added to the transaction array
-accordingly and the boolean returns `true`.
+accordingly and the boolean returns `true`. Note that at inception, the size of the transaction array is 0, and can only increase
+in size by utilizing this `addTransaction()` method.
+
+The `computeHashID()` method is largely unchanged, except the for loop has been adjusted to accommodate the `transaction` array (previously
+was an array of strings during our earlier tests)
+
+```
+    protected String computeHashID() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.previousBlockHashID).append(Long.toHexString(this.timestamp));
+        for (Transaction transaction : transactions) {
+            sb.append(transaction.getHashID());
+        }
+        sb.append(Integer.toHexString(this.difficultyLevel)).append(nonce);
+        byte[] b = UtilityMethods.messageDigestSHA256_toBytes(sb.toString());
+        return UtilityMethods.toBinaryString(b);
+    }
+```
+
+All previous getter methods are still included in the `Block` class, as well as our `mineTheBlock()` method which increments the nonce
+until the required difficulty level is solved.
 
 In order to chain these blocks together to form the blockchain, we will need to use a data structure than contains a list.
 We opted to use a customized class named `LedgerList` because it wraps an instance of an `ArrayList` and provides necessary functions for the blockchain to
