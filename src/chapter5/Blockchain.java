@@ -22,22 +22,6 @@ public class Blockchain implements java.io.Serializable {
         }
     }
 
-    public Block getGenesisBlock() {
-        return this.blockchain.getFirst();
-    }
-
-    public Block getLastBlock() {
-        return this.blockchain.getLast();
-    }
-
-    public int getBlockchainSize() {
-        return this.blockchain.size();
-    }
-
-    public Block getBlock(int index) {
-        return this.blockchain.findByIndex(index);
-    }
-
     public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent, ArrayList<UTXO> unspent, ArrayList<Transaction> sentTransactions) {
         double gain = 0.0, spending = 0.0;
         HashMap<String, UTXO> map = new HashMap<>();
@@ -83,14 +67,6 @@ public class Blockchain implements java.io.Serializable {
         return findRelatedUTXOs(publicKey, all, spent, unspent, sendingTransactions);
     }
 
-    public double checkBalance(PublicKey key) {
-        ArrayList<UTXO> all = new ArrayList<>();
-        ArrayList<UTXO> spent = new ArrayList<>();
-        ArrayList<UTXO> unspent = new ArrayList<>();
-
-        return findRelatedUTXOs(key, all, spent, unspent);
-    }
-
     public ArrayList<UTXO> findUnspentUTXOs(PublicKey publicKey) {
         ArrayList<UTXO> all = new ArrayList<>();
         ArrayList<UTXO> spent = new ArrayList<>();
@@ -105,5 +81,29 @@ public class Blockchain implements java.io.Serializable {
         ArrayList<UTXO> spent = new ArrayList<>();
 
         return findRelatedUTXOs(publicKey, all, spent, unspent);
+    }
+
+    public double checkBalance(PublicKey key) {
+        ArrayList<UTXO> all = new ArrayList<>();
+        ArrayList<UTXO> spent = new ArrayList<>();
+        ArrayList<UTXO> unspent = new ArrayList<>();
+
+        return findRelatedUTXOs(key, all, spent, unspent);
+    }
+
+    public Block getGenesisBlock() {
+        return this.blockchain.getFirst();
+    }
+
+    public Block getLastBlock() {
+        return this.blockchain.getLast();
+    }
+
+    public int getBlockchainSize() {
+        return this.blockchain.size();
+    }
+
+    public Block getBlock(int index) {
+        return this.blockchain.findByIndex(index);
     }
 }
