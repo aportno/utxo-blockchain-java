@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/src/chapter5/Blockchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter5/Blockchain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter5/UTXO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter5/UTXO.java" afterDir="false" />
-    </list>
+    <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -140,20 +137,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00032" summary="update">
-      <created>1656038902080</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1656038902080</updated>
-    </task>
-    <task id="LOCAL-00033" summary="update">
-      <created>1656039023628</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1656039023628</updated>
     </task>
     <task id="LOCAL-00034" summary="update">
       <created>1656039417643</created>
@@ -484,7 +467,21 @@
       <option name="project" value="LOCAL" />
       <updated>1656382204118</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="update">
+      <created>1656383272370</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1656383272370</updated>
+    </task>
+    <task id="LOCAL-00082" summary="update">
+      <created>1656383491573</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1656383491573</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
