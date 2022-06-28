@@ -1038,17 +1038,43 @@ All previous getter methods are still included in the `Block` class, as well as 
 until the required difficulty level is solved. That completes the remaining adjustments to the `Block` class.
 
 In order to chain these blocks together to form a blockchain, we will need to use a data structure that contains a list.
-The genesis block _G_ should link to the first block _B<sub>1</sub>_, linked to _B<sub>2</sub>_, etc:
+The genesis block _G_ should link to the first block _B<sub>1</sub>_, linked to the second block _B<sub>2</sub>_, etc:
 
 | G   | B<sub>1</sub> | B<sub>2</sub>    | B<sub>3</sub> | ... |
 |-----|---------------|------------------|---------------|-----|
 
-We opted to use a customized class named `LedgerList` because it wraps an instance of an `ArrayList` and provides necessary functions for the blockchain to
-add a block at the end of the chain or find a block quickly with an index. It does not allow a block to be inserted or deleted.
+We opted to use a customized class `LedgerList` because it wraps an instance of an `ArrayList` and provides the necessary dynamic functionality for the blockchain to
+add a block at the end of the chain or find a block quickly with an index. The class does not allow a block to be inserted or deleted.
+
+The constructor will create a simple dynamic ArrayList:
+
+```
+    public LedgerList() {
+        list = new ArrayList<>();
+    }
+```
+
+The class has two private variables:
+1) `serialVerionUSD` is used for serialization
+2) `list` is an `ArrayList` that will house all transactions. Note that given it is a `private` variable, the only way to call the variable is within the class
+
+```
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private final ArrayList<Transactions> list;
+```
+
+The only way to edit `list` is using the `add()` method. This restricts our access to `list` and allows us to only append accordingly:
+
+```
+    public boolean add(Transactions transaction) {
+        return this.list.add(transaction);
+    }
+```
 
 For the purpose of secure coding, the elements of the `LedgerList` class can only be accessed one at a time.
 
-We create a new `Blockchain` class that contains one constructor that uses a genesis block as the input:
+We then create a new `Blockchain` class that contains one constructor that uses a genesis block as the input:
 
 ```
     public Blockchain(Block genesisBlock) {

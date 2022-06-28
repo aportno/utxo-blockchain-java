@@ -3,10 +3,10 @@ package chapter5;
 import java.io.Serial;
 import java.util.ArrayList;
 
-public class LedgerList<Transactions> implements java.io.Serializable {
+public class LedgerList<Data> implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private final ArrayList<Transactions> list;
+    private final ArrayList<Data> list;
 
     public LedgerList() {
         list = new ArrayList<>();
@@ -16,19 +16,19 @@ public class LedgerList<Transactions> implements java.io.Serializable {
         return this.list.size();
     }
 
-    public Transactions getLast() {
+    public Data getLast() {
         return this.list.get(size() - 1);
     }
 
-    public Transactions getFirst() {
+    public Data getFirst() {
         return this.list.get(0);
     }
 
-    public boolean add(Transactions transaction) {
-        return this.list.add(transaction);
+    public boolean add(Data data) {
+        return this.list.add(data);
     }
 
-    public Transactions findByIndex(int index) {
+    public Data findByIndex(int index) {
         return this.list.get(index);
     }
 }
