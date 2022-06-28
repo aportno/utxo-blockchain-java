@@ -1060,3 +1060,7 @@ We can then use `getLocalLedger()` to return the local blockchain of this wallet
     }
 ```
 
+We've now built enough functionality to test our blockchain using a `BlockchainPlatform` class. At the moment,
+our `wallets` are not distributed and all share the same copy of the blockchain. The system will be distributed when we
+apply networking architecture into our system.
+
