@@ -3,32 +3,28 @@ package chapter5;
 import java.io.Serial;
 import java.util.ArrayList;
 
-public class LedgerList<Data> implements java.io.Serializable {
+public class LedgerList<E> implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private final ArrayList<Data> list;
+    private final ArrayList<E> list;
 
-    public LedgerList() {
-        list = new ArrayList<>();
-    }
+    public LedgerList() { list = new ArrayList<>(); }
 
     public int size() {
         return this.list.size();
     }
 
-    public Data getLast() {
+    public E getLast() {
         return this.list.get(size() - 1);
     }
 
-    public Data getFirst() {
+    public E getFirst() {
         return this.list.get(0);
     }
 
-    public boolean add(Data data) {
-        return this.list.add(data);
-    }
+    public boolean add(E e) { return this.list.add(e); }
 
-    public Data findByIndex(int index) {
+    public E findByIndex(int index) {
         return this.list.get(index);
     }
 }
