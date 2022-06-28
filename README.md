@@ -1064,3 +1064,10 @@ We've now built enough functionality to test our blockchain using a `BlockchainP
 our `wallets` are not distributed and all share the same copy of the blockchain. The system will be distributed when we
 apply networking architecture into our system.
 
+The `BlockchainPlatform` class is primitive. This version lacks many necessary features:
+* Miners cannot collect mining rewards or transaction fees
+* When adding a block, currently we only examine if it is sequentially the correct block to use. There should be some other types of verification
+  * For example, we need to make sure that no UTXO is double spent, and no transaction is added twice
+
+___
+## Chapter 6 :: Blockchain Improved
