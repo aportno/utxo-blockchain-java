@@ -975,3 +975,4 @@ We will introduce the dynamic of having active `wallets` carrying `UTXO` and oth
 ---
 ## Chapter 5 :: Block and Blockchain
 
+We revisit our `Block` class and add some additional functionality

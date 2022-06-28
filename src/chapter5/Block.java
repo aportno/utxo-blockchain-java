@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Block implements java.io.Serializable {
     public final static int TRANSACTION_UPPER_LIMIT = 2;
-
     private static final long serialVersionUID = 1L;
     private ArrayList<Transaction> transactions = new ArrayList<Transaction>();
     private String hashID;
