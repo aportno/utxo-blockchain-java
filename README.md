@@ -1186,8 +1186,6 @@ The logic inside the method could be improved, but essentially it follows the be
 23) If the output UTXO is not in the hash map of spent UTXOs, then it is an unspent UTXO
 24) Return the difference between UTXOs received and UTXOs spent
 
-
-
 Next, we updated our `Wallet` class so that it can transfer funds on the `Blockchain`
 
 First, we added a new instance variable `localLedger` to let each wallet have a local blockchain:
@@ -1204,6 +1202,8 @@ We can then use `getLocalLedger()` to return the local blockchain of this wallet
     }
 ```
 
+// Explain transfer fund method and set local ledger method
+
 We've now built enough functionality to test our blockchain using a `BlockchainPlatform` class. At the moment,
 our `wallets` are not distributed and all share the same copy of the blockchain. The system will be distributed when we
 apply networking architecture into our system.
@@ -1213,5 +1213,6 @@ The `BlockchainPlatform` class is primitive. This version lacks many necessary f
 * When adding a block, currently we only examine if it is sequentially the correct block to use. There should be some other types of verification
   * For example, we need to make sure that no UTXO is double spent, and no transaction is added twice
 
+// Explain the blockchain platform test case
 ___
 ## Chapter 6 :: Blockchain Improved
