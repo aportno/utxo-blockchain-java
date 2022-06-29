@@ -42,37 +42,37 @@ public class Blockchain implements java.io.Serializable {
             for (int j = 0; j < blockSize; j++) {
                 Transaction transaction = block.getTransaction(j);
 
-                // check if input UTXO sender address is from designated public key (wallet address). Skip genesis block.
+                // check if sender address in transaction is from designated public key (wallet address). Skip genesis block.
                 int n;
                 if (i != 0 && transaction.getSender().equals(publicKey)) {
 
                     // count number of input UTXOs involved in the transaction -- these will be spent UTXOs
                     n = transaction.getNumberOfInputUTXOs();
 
-                    // loop through the input UTXO in the transaction
+                    // loop through each input UTXO in each transaction
                     for (int k = 0; k < n; k++) {
 
                         // retrieve the input UTXO
                         UTXO inputUTXO = transaction.getInputUTXO(k);
 
-                        // add the input UTXO to the spent arrayList
+                        // add the input UTXO to the spent arrayList -- it's an input UTXO with the wallet address as the sender
                         spent.add(inputUTXO);
 
-                        // map the input UTXO hash ID with the input UTXO object
+                        // map the input UTXO hash ID with the input UTXO object to record the spent UTXO
                         map.put(inputUTXO.getHashID(), inputUTXO);
 
                         // increment the spend variable with the total amount transferred by the input UTXO
                         spending += inputUTXO.getAmountTransferred();
                     }
 
-                    // record the transaction in the sent transaction arrayList
+                    // record the transaction in the sentTransaction arrayList
                     sentTransactions.add(transaction);
-                }
+                } // all transactions where the input UTXO has the sender as the public key have been checked
 
-                // count number of output UTXOs involved in the transaction -- these will be gained UTXOs
+                // now we count number of output UTXOs involved in the transaction -- these will be gained UTXOs
                 n = transaction.getNumberOfOutputUTXOs();
 
-                // loop through the output UTXO in the transaction
+                // loop through the output UTXOs in each transaction
                 for (int k = 0; k < n; k++) {
 
                     // retrieve the output UTXO
