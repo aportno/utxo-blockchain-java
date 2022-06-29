@@ -25,6 +25,8 @@ public class Blockchain implements java.io.Serializable {
     public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent, ArrayList<UTXO> unspent, ArrayList<Transaction> sentTransactions) {
         // counter to track UTXO received (gain) and UTXO sent (spent)
         double gain = 0.0, spending = 0.0;
+
+        // map will contain all spent input UTXOs from wallet
         HashMap<String, UTXO> map = new HashMap<>();
 
         // for-loop boundary
@@ -46,7 +48,7 @@ public class Blockchain implements java.io.Serializable {
                 int n;
                 if (i != 0 && transaction.getSender().equals(publicKey)) {
 
-                    // count number of input UTXOs involved in the transaction -- these will be spent UTXOs
+                    // first we count the number of input UTXOs involved in the transaction -- these will be spent UTXOs
                     n = transaction.getNumberOfInputUTXOs();
 
                     // loop through each input UTXO in each transaction
@@ -69,7 +71,7 @@ public class Blockchain implements java.io.Serializable {
                     sentTransactions.add(transaction);
                 } // all transactions where the input UTXO has the sender as the public key have been checked
 
-                // now we count number of output UTXOs involved in the transaction -- these will be gained UTXOs
+                // now we count the number of output UTXOs involved in the transaction -- these will be gained UTXOs
                 n = transaction.getNumberOfOutputUTXOs();
 
                 // loop through the output UTXOs in each transaction
@@ -81,7 +83,7 @@ public class Blockchain implements java.io.Serializable {
                     // check if output UTXO receiver address is from designated public key (wallet address)
                     if (outputUTXO.getReceiver().equals(publicKey)) {
 
-                        // add the output UTXO to the all arrayList
+                        // add the output UTXO to the all arrayList -- this might include transaction where the sender and receiver of the UTXO is the wallet
                         all.add(outputUTXO);
 
                         // increment the gain variable with the total amount transferred by the output UTXO
@@ -94,7 +96,7 @@ public class Blockchain implements java.io.Serializable {
         // loop through each output UTXO in the all arrayList
         for (UTXO utxo : all) {
 
-            // check if the output UTXO is inside the all arrayList. If it is, it is a spent UTXO. If it isn't then it is an unspent UTXO
+            // check if the output UTXO is inside the all arrayList. If it is, it is a spent input UTXO. If it isn't then it is an unspent input UTXO
             if (!map.containsKey(utxo.getHashID())) {
 
                 // add the unspent UTXO object to the unspent arrayList

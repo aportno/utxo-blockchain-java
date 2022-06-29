@@ -1155,8 +1155,8 @@ A wallet is only concerned with its own ledger, so searching through the entire 
 
 The method takes 5 arguments:
 1) `PublicKey publicKey` is the public key to the wallet you are searching for on the blockchain
-2) `ArrayList<UTXO> all` collects all output `UTXO`
-3) `ArrayList<UTXO> spent` collects all spent input `UTXO`
+2) `ArrayList<UTXO> all` collects all output `UTXO` where wallet is the receiver
+3) `ArrayList<UTXO> spent` collects all spent input `UTXO` where wallet is the sender
 4) `ArrayList<UTXO> unspent` collects all unspent input `UTXO`
 5) `ArrayList<Transaction> sentTransactions` collects are transactions affiliated with a `UTXO`
 
