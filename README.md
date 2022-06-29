@@ -1068,7 +1068,6 @@ The only way to edit `list` is using the `add()` method. This restricts our acce
 
 ```
     public boolean add(E e) { return this.list.add(e); }
-
 ```
 
 For the purpose of secure coding, the elements of the `LedgerList` class can only be accessed one at a time.
@@ -1081,12 +1080,24 @@ We then create a new `Blockchain` class that contains one constructor that uses 
         this.blockchain.add(genesisBlock);
     }
 ```
+As well as three class variables initialized:
 
-The genesis block is very special in the history of a blockchain. Every blockchain starts from a genesis block, therefore
+```
+    @Serial
+    private static final long serialVersionUID = 1L;
+    public static final double MINING_REWARD = 100.0;
+    private final LedgerList<Block> blockchain;
+```
+
+We utilize our new `LedgerList` class that will store objects from our `Block` class. In practice, each additional block will be
+"chained" in this array, forming the blockchain. We've set the `MINING_REWARD` with an arbitrary value of 100.0. At the moment,
+this parameter is not being used in our program.
+
+The genesis (or very first) block is very special in the history of a blockchain. Every blockchain starts from a genesis block, therefore
 it would be a good idea to request the genesis block in order to construct a blockchain.
 
 The `addBlock()` method is `synchronized` because we must guarantee that only one calling method can append a block to the
-blockchain at a time.
+blockchain at a time. This will avoid potential collision or forks in the future.
 
 ```
     public synchronized void addBlock(Block block) {
@@ -1095,6 +1106,59 @@ blockchain at a time.
         }
     }
 ```
+
+To help assist in finding the balance for a given public key, we created the method `findRelatedUTXOs()`. Later we will see
+why it's necessary to overload the function. The function is computationally expensive because it searches through the entire blockchain
+looking for UTXOs related to the public key. In reality, a complete search process is only necessary when validating a blockchain.
+A wallet is only concerned with its own ledger, so searching through the entire blockchain to find its balance is unnecessary.
+
+```
+    public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent, ArrayList<UTXO> unspent, ArrayList<Transaction> sentTransactions) {
+        double gain = 0.0, spending = 0.0;
+        HashMap<String, UTXO> map = new HashMap<>();
+        int limit = this.getBlockchainSize();
+        for (int i = 0; i < limit; i++) {
+            Block block = this.blockchain.findByIndex(i);
+            int blockSize = block.getTotalNumberOfTransactions();
+            for (int j = 0; j < blockSize; j++) {
+                Transaction transaction = block.getTransaction(j);
+                int n;
+                if (i != 0 && transaction.getSender().equals(publicKey)) {
+                    n = transaction.getNumberOfInputUTXOs();
+                    for (int k = 0; k < n; k++) {
+                        UTXO inputUTXO = transaction.getInputUTXO(k);
+                        spent.add(inputUTXO);
+                        map.put(inputUTXO.getHashID(), inputUTXO);
+                        spending += inputUTXO.getAmountTransferred();
+                    }
+                    sentTransactions.add(transaction);
+                }
+                n = transaction.getNumberOfOutputUTXOs();
+                for (int k = 0; k < n; k++) {
+                    UTXO outputUTXO = transaction.getOutputUTXO(k);
+                    if (outputUTXO.getReceiver().equals(publicKey)) {
+                        all.add(outputUTXO);
+                        gain += outputUTXO.getAmountTransferred();
+                    }
+                }
+            }
+        }
+        for (UTXO utxo : all) {
+            if (!map.containsKey(utxo.getHashID())) {
+                unspent.add(utxo);
+            }
+        }
+
+        return (gain - spending);
+    }
+```
+
+The method takes 5 arguments:
+1) `PublicKey publicKey` is the public key to the wallet you are searching for on the blockchain
+2) `ArrayList<UTXO> all` collects all output `UTXO`
+3) `ArrayList<UTXO> spent` collects all spent input `UTXO`
+4) `ArrayList<UTXO> unspent` collects all unspent input `UTXO`
+5) `ArrayList<Transaction> sentTransactions` collects are transactions affiliated with a `UTXO`
 
 Next, we updated our `Wallet` class so that it can transfer funds on the `Blockchain`
 
