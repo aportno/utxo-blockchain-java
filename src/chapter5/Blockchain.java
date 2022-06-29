@@ -60,7 +60,7 @@ public class Blockchain implements java.io.Serializable {
                         // add the input UTXO to the spent arrayList -- we know this input UTXO was sent from the wallet address
                         spent.add(inputUTXO);
 
-                        // map the input UTXO hash ID with the input UTXO object to record the spent UTXO -- this hash map contains all spent UTXOs from the wallet
+                        // map the input UTXO hash ID with the input UTXO object to record the spent UTXO -- this hash map contains all spent input UTXOs from the wallet
                         map.put(inputUTXO.getHashID(), inputUTXO);
 
                         // increment the spend variable with the total amount transferred by the input UTXO

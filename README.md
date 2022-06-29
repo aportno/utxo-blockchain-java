@@ -1160,6 +1160,34 @@ The method takes 5 arguments:
 4) `ArrayList<UTXO> unspent` collects all unspent input `UTXO`
 5) `ArrayList<Transaction> sentTransactions` collects are transactions affiliated with a `UTXO`
 
+The logic inside the method could be improved, but essentially it follows the below steps:
+1) Create a counter to track (output) UTXOs received and (input) UTXOs sent related to the public key (wallet address) specified
+2) Create a hash map containing all spent input UTXOs from wallet
+3) Create a for-loop boundary to cycle through every block in the blockchain
+4) Loop through each block in the blockchain
+5) Select the block in the blockchain
+6) Find the number of transactions in the block
+7) Loop through each transaction
+8) Check if the sender address in the transaction is from the public key, skipping the genesis block
+9) Count the number of input UTXOs involved in the transaction -- these will be spent UTXOs
+10) Loop through each spent input UTXO is the transaction
+11) Add the input UTXO to the spent array -- we know this input UTXO was sent from the wallet (spent)
+12) Add the input UTXO hash ID to the hash map containing all spent UTXOs from the wallet
+13) Increment the counter tracking the input UTXOs spent by the wallet
+14) Add the transaction to the list of historical transactions (`sentTransactions`)
+15) Count the number of output UTXOs involved in the transaction -- these will be received UTXOs from wallet
+16) Loop through each output UTXO in the transaction
+17) Check if the receiver address in the transaction is from the public key
+18) Add the output UTXO to the `all` array containing output UTXO where the wallet is the receiver
+19) Increment the counter tracking the output UTXOs received by the wallet
+20) Loop through each UTXO in the `all` array containing the output UTXO where the wallet is the receiver
+21) Check if the output UTXO is inside the hash map containing all spent input UTXOs
+22) If the output UTXO is also inside the hash map containing all spent input UTXOs then it is a spent UTXO
+23) If the output UTXO is not in the hash map of spent UTXOs, then it is an unspent UTXO
+24) Return the difference between UTXOs received and UTXOs spent
+
+
+
 Next, we updated our `Wallet` class so that it can transfer funds on the `Blockchain`
 
 First, we added a new instance variable `localLedger` to let each wallet have a local blockchain:
