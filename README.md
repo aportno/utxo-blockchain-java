@@ -1194,7 +1194,11 @@ First, we added a new instance variable `localLedger` to let each wallet have a 
     private Blockchain localLedger;
 ```
 
-We can then use `getLocalLedger()` to return the local blockchain of this wallet
+The constructor remains the same. The wallet is initialized with a `keyPair` and `walletName`. If the `walletName` exists
+then it is loaded accordingly, otherwise we create a new `wallet`.
+
+We can then use `getLocalLedger()` to return the local blockchain of this wallet. Essentially each wallet will have it's own
+"local" blockchain which will then connect to the larger "main" or "global" chain:
 
 ```
     public synchronized Blockchain getLocalLedger() {
@@ -1202,7 +1206,65 @@ We can then use `getLocalLedger()` to return the local blockchain of this wallet
     }
 ```
 
-// Explain transfer fund method and set local ledger method
+We added the new method `transferFund()`, which consumes a public key array `receivers` and a double array `amountToTransfer`.
+
+```
+    public Transaction transferFund(PublicKey[] receivers, double[] amountToTransfer) {
+        ArrayList<UTXO> unspent = new ArrayList<>();
+        double available = this.getLocalLedger().findUnspentUTXOs(this.getPublicKey(), unspent);
+        double totalNeeded = Transaction.TRANSACTION_FEE;
+        for (double fund : amountToTransfer) {
+            totalNeeded += fund;
+        }
+
+        if (available < totalNeeded) {
+            System.out.println(this.walletName + "balance=" + available + ", not enough to make the transfer of " + totalNeeded);
+            return null;
+        }
+
+        // Create input for the transaction
+        ArrayList<UTXO> inputUTXOs = new ArrayList<>();
+        available = 0;
+        for (int i = 0; i < unspent.size() && available < totalNeeded; i++) {
+            UTXO unspentUTXO = unspent.get(i);
+            available += unspentUTXO.getAmountTransferred();
+            inputUTXOs.add(unspentUTXO);
+        }
+
+        // Create the transaction
+        Transaction transaction = new Transaction(this.getPublicKey(), receivers, amountToTransfer, inputUTXOs);
+
+        // Prepare output UTXO
+        boolean isPreparedOutputUTXO = transaction.prepareOutputUTXOs();
+        if (isPreparedOutputUTXO) {
+            transaction.signTheTransaction(this.getPrivateKey());
+            return transaction;
+        } else {
+            return null;
+        }
+    }
+```
+
+The method initializes an ArrayList of `UTXO` objects. It's important to check the available funds for the wallet. We do so
+by calling `getLocalLedger()` to reference the `Blockchain` object initialized for this `wallet` and then by calling
+the `findUnspentUTXOs()` method explained previously. This will return all available UTXOs that can be spent by this wallet.
+
+Any transaction on our blockchain requires some transaction fee that is paid to the miners. We initialize `totalNeeded` with
+this value as a baseline amount as it is the bare minimum amount required to effectuate a transfer. The method goes on to check
+to make sure the available UTXOs will cover the transfer amount. Once confirmed, the wallet needs to create UTXOs to complete
+the requested transaction
+
+We create an ArrayList of `UTXO` to collect our `inputUTXO`, then we loop through our `unspent` utxo array and sum all
+available funds in the `UTXO`. The end of this process will result in an ArrayList of all available unspent `UTXO` associated
+with the wallet, a baseline requirement before initiating a transaction.
+
+Next we create a `Transaction` object using the `wallet` public key, the designated `receivers`, `amountToTransfer` and the 
+`inputUTXOs` that will be used to process the transfer. The `transcaction` object calls the `prepareOutputUTXOs()` method returning
+a boolean value. If the output returns true, then the `output` arrayList in transaction object will be populated with
+`outputUTXOs`.
+
+If the `outputUTXOs` are prepared, then by definition that means there was sufficient `inputUTXOs` to effectuate the transaction.
+The next step is for the wallet to sign the transaction with the wallets `privateKey`, and then return the signed `transaction` object.
 
 We've now built enough functionality to test our blockchain using a `BlockchainPlatform` class. At the moment,
 our `wallets` are not distributed and all share the same copy of the blockchain. The system will be distributed when we
