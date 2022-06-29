@@ -1275,6 +1275,25 @@ The `BlockchainPlatform` class is primitive. This version lacks many necessary f
 * When adding a block, currently we only examine if it is sequentially the correct block to use. There should be some other types of verification
   * For example, we need to make sure that no UTXO is double spent, and no transaction is added twice
 
-// Explain the blockchain platform test case
+However, it does highlight some key features we've built. The `BlockchainPlatform` class is initialized with two variables:
+
+```
+    private static Blockchain blockchain;
+    private static double transactionFee = 0.0;
+```
+
+The `blockchain` variable will serve as the object connecting all of the `block` we generate and the `transactionFee` is the amount
+miners will receive (this feature is yet to be built).
+
+Before diving into the `main()` method, the class has one additional method called `displayBalanceAfterBlock()` which essentially
+shows the balances of all participants involved on-chain and then some metadata about each block produced.
+
+Now inside our `main()` method, we initialize the level of mining difficulty:
+
+```
+        int difficultyLevel = 25;
+```
+
+
 ___
 ## Chapter 6 :: Blockchain Improved
