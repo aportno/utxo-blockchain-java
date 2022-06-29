@@ -96,14 +96,15 @@ public class Blockchain implements java.io.Serializable {
         // loop through each output UTXO in the all arrayList
         for (UTXO utxo : all) {
 
-            // check if the output UTXO is inside the all arrayList. If it is, it is a spent input UTXO. If it isn't then it is an unspent input UTXO
-            if (!map.containsKey(utxo.getHashID())) {
+            // check if the output UTXO is inside the hash map containing all spent input UTXOs
+            if (!map.containsKey(utxo.getHashID())) { // If the output UTXO is not in the hash map of spent UTXOs, then it is an unspent input UTXO
 
                 // add the unspent UTXO object to the unspent arrayList
                 unspent.add(utxo);
-            }
+            } // if the output UTXO is in the hash map of spent UTXOs, it is a spent UTXO
         }
 
+        // return the difference between the UTXOs received and the UTXOs spent
         return (gain - spending);
     }
 
