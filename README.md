@@ -1369,11 +1369,14 @@ remaining as "change" that will need to be remitted back to the `sender`. This a
 `outputs` array.
 
 We now have a `transaction` that's received a sufficient number of input `UTXO` from the `sender` to transfer an amount to
-the `receiver`. The `sender` will now need to provide a signature to authenticate the transaction. 
+the `receiver`. The `sender` will now need to provide a signature to authenticate the transaction, so it can be added to the block:
 
 ```
-     genesisTransaction.signTheTransaction(genesisMiner.getPrivateKey());
+    genesisTransaction.signTheTransaction(genesisMiner.getPrivateKey());
+    genesisBlock.addTransaction(genesisTransaction);
 ```
+
+*Note: surprisingly the program did not check to see if the transaction is verified before adding it to the block.
 
 
 
