@@ -1362,9 +1362,20 @@ all available funds and stores it in a variable `available`. This is a local var
 `available` is greater than the total cost then the method will continue.
 
 To recap what our `transaction` "knows" at the moment, there are 2 input `UTXO` equaling `20001.0` in total value. The `transaction` is looking
-to transfer `10000` from the `sender` to the `receiver`. There is 1 sender, and 1 receiver so there should be 1 output `UTXO` created.
+to transfer `10000` from the `sender` to the `receiver`. There is 1 sender, and 1 receiver so there should be 1 output `UTXO` created. The `prepareOutputUTXOs()` method creates local `UTXO` variables so each `receiver` will receive the `amountToTransfer`.  
 
-The `prepareOutputUTXOs()` method creates local `UTXO` variables where each `receiver` will get the `amountToTransfer`
+Since we are looking to transfer `10000.0` (plus a `1.0` fee) with `20001.0` in input `UTXO` available, there will be `20001.0` - `10001.0` = `10000`
+remaining as "change" that will need to be remitted back to the `sender`. This additional output `UTXO` is added to the 
+`outputs` array.
+
+We now have a `transaction` that's received a sufficient number of input `UTXO` from the `sender` to transfer an amount to
+the `receiver`. The `sender` will now need to provide a signature to authenticate the transaction. 
+
+```
+     genesisTransaction.signTheTransaction(genesisMiner.getPrivateKey());
+```
+
+
 
 ___
 ## Chapter 6 :: Blockchain Improved
