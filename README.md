@@ -1716,3 +1716,16 @@ Currently, our current blockchain system lacks a few necessary features:
 * Adding a block into the chain does not go through a complete validation process
 * Wallets currently share the same public blockchain instead of keeping local copies
 
+The bitcoin white paper discusses memory management when blockchain grows enormously. One solution involves pruning
+spent transactions from blocks buried deep in the chain, but the caveat is that discarding spent transactions can break 
+the block's hash. To bypass this complication, the algorithm merkle tree is applied to hash transactions.
+
+A Merkle tree can be a binary tree, a triple tree, or another type of tree. In a binary merkle hash tree, a node's hash is
+always constructed from hash values of the two tree nodes directly below it, the exception being the bottom nodes.
+
+Eventually, there will be only one hash left at the root, while the root hash is related to every bottom node. A block's hash
+can be computed from the previous block's hash, nonce, timestamp, and transactions' root hash which is computed via a merkle
+tree algorithm from all transactions' hashes.
+
+To implement this, we update out `UtilityMethods` class to include methods that compute merkle tree root hashes.
+
