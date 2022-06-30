@@ -1624,7 +1624,7 @@ Success message:
 Transaction 7 added to block 3...
 ```
 
-History of all results:
+Test results:
 ```
 Starting blockchain platform...
 Created genesis miner
