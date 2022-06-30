@@ -1707,6 +1707,12 @@ Number of blocks: 3
 
 Process finished with exit code 0
 ```
-
 ___
 ## Chapter 6 :: Blockchain Improved
+
+Currently, our current blockchain system lacks a few necessary features:
+* Mining rewards cannot be collected
+* There is no validation process when a transaction is added to a block
+* Adding a block into the chain does not go through a complete validation process
+* Wallets currently share the same public blockchain instead of keeping local copies
+

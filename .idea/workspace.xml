@@ -2,6 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
+      <change afterPath="$PROJECT_DIR$/src/chapter6/Block.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter6/Blockchain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter6/LedgerList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter6/Miner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter6/Transaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter6/UTXO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter6/UtilityMethods.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter6/Wallet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,11 +48,12 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "jdk.selected.JAVA_MODULE": "openjdk-18",
-    "last_opened_file_path": "C:/Users/nomura/IdeaProjects/learn_blockchain_in_java_zhou/src/chapter5"
+    "last_opened_file_path": "C:/Users/nomura/IdeaProjects/learn_blockchain_in_java_zhou/src/chapter6"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\nomura\IdeaProjects\learn_blockchain_in_java_zhou\src\chapter6" />
       <recent name="C:\Users\nomura\IdeaProjects\learn_blockchain_in_java_zhou\src\chapter5" />
       <recent name="C:\Users\nomura\IdeaProjects\learn_blockchain_in_java_zhou\src\chapter4" />
       <recent name="C:\Users\nomura\IdeaProjects\learn_blockchain_in_java_zhou\src" />
@@ -139,13 +149,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00065" summary="update">
-      <created>1656213734028</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1656213734028</updated>
     </task>
     <task id="LOCAL-00066" summary="update">
       <created>1656214246567</created>
@@ -483,7 +486,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656558586351</updated>
     </task>
-    <option name="localTasksCounter" value="114" />
+    <task id="LOCAL-00114" summary="update">
+      <created>1656558668046</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1656558668046</updated>
+    </task>
+    <option name="localTasksCounter" value="115" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
