@@ -16,12 +16,12 @@ public class BlockchainPlatform {
         Block genesisBlock = new Block("0", difficultyLevel);
         System.out.println("Created genesis block");
 
-        UTXO firstUTXO = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10001.0);
-        UTXO secondUTXO = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10000.0);
+        UTXO firstInputUTXO = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10001.0);
+        UTXO SecondInputUTXO = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10000.0);
 
         ArrayList<UTXO> inputUTXO = new ArrayList<>();
-        inputUTXO.add(firstUTXO);
-        inputUTXO.add(secondUTXO);
+        inputUTXO.add(firstInputUTXO);
+        inputUTXO.add(SecondInputUTXO);
 
         Transaction genesisTransaction = new Transaction(genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10000.0, inputUTXO);
 

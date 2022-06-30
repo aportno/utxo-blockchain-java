@@ -134,6 +134,7 @@ public class Transaction implements java.io.Serializable {
         if (this.receivers.length != this.amountToTransfer.length) {
             return false;
         }
+
         double totalCost = this.getTotalAmountToTransfer() + Transaction.TRANSACTION_FEE;
         double available = 0.0;
         for (UTXO input : this.inputs) {
@@ -142,11 +143,13 @@ public class Transaction implements java.io.Serializable {
         if (available < totalCost) {
             return false;
         }
+
         this.outputs.clear();
         for (int i = 0; i < receivers.length; i++) {
             UTXO utxo = new UTXO(this.getHashID(), this.sender, receivers[i], this.amountToTransfer[i]);
             this.outputs.add(utxo);
         }
+
         double remainingAmount = available - totalCost;
         UTXO change = new UTXO(this.getHashID(), this.sender, this.sender, remainingAmount);
         this.outputs.add(change);
