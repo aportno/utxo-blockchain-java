@@ -1460,6 +1460,49 @@ moment I'd rather the signature show some presence before triggering the verific
    }
 ```
 
+`transaction2` is complete and ready to be included in `block2`. The balances being printed in the code block above are related
+to the current balances on the `blockchain`, which at the moment only contains the `genesisBlock`. It won't be until after `block2`
+is mined and added to the `blockchain` until the balances are updated
+
+We add another test transaction, where the `genesisMiner` transfers 200 to `userB`:
+
+```
+   Transaction transaction3 = genesisMiner.transferFund(userB.getPublicKey(), 200);
+   if (transaction3 != null) {
+      if (transaction3.verifySignature() && block2.addTransaction(transaction3)) {
+          System.out.println("Balances on the BLOCKCHAIN prior to block 2 addition");
+          double total = genesisMiner.getCurrentBalance(blockchain)
+                  + userA.getCurrentBalance(blockchain)
+                  + userB.getCurrentBalance(blockchain)
+                  + userC.getCurrentBalance(blockchain);
+          System.out.println("Genesis miner: " + genesisMiner.getCurrentBalance(blockchain));
+          System.out.println("User A: " + userA.getCurrentBalance(blockchain));
+          System.out.println("User B: " + userB.getCurrentBalance(blockchain));
+          System.out.println("User C: " + userC.getCurrentBalance(blockchain));
+          System.out.println("Transaction added to second block...");
+      } else {
+          System.out.println("Failed to add transaction to second block");
+      }
+   } else {
+      System.out.println("Failed to create transaction");
+   }
+```
+
+`transaction3` will produce a successful result. We can now mine `block2` and add it to the `blockchain`:
+
+```
+   if (userA.mineBlock(block2)) {
+      blockchain.addBlock(block2);
+      System.out.println("User A mined second block");
+      System.out.println("Hash ID: " + block2.getHashID());
+      System.out.println("After second block is added to the chain, the balances are: ");
+      displayBalanceAfterBlock(block2, genesisMiner, userA, userB, userC);
+   }
+```
+
+`userA` is a `miner` object and will continue to compute hashes until the correct hash has been found. Once this occurs, 
+`block2` is added to the `blockchain` and the updated balances will reflect `transaction2` and `transaction3`"
+
 
 
 ___

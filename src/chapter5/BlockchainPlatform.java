@@ -14,7 +14,7 @@ public class BlockchainPlatform {
         System.out.println("Created genesis miner");
 
         Block genesisBlock = new Block("0", difficultyLevel);
-        System.out.println("Created genesis block");
+        System.out.println("Created genesis block\n");
 
         UTXO firstInputUTXO = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10001.0);
         UTXO SecondInputUTXO = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10000.0);
@@ -33,12 +33,13 @@ public class BlockchainPlatform {
 
         genesisTransaction.signTheTransaction(genesisMiner.getPrivateKey());
         genesisBlock.addTransaction(genesisTransaction);
+        System.out.println("Genesis transaction added to the genesis block successfully");
 
         System.out.println("Attempting to mine genesis block...");
         boolean isMinedBlock = genesisMiner.mineBlock(genesisBlock);
         if (isMinedBlock) {
-            System.out.println("Genesis block successfully mined");
-            System.out.println("Hash ID: " + genesisBlock.getHashID());
+            System.out.println("Genesis block successfully mined\n");
+            System.out.println("Hash ID: " + genesisBlock.getHashID() + "\n");
         } else {
             System.out.println("Failed to mine genesis block. System exit");
             System.exit(1);
@@ -46,10 +47,10 @@ public class BlockchainPlatform {
 
         System.out.println("Initializing blockchain...");
         blockchain = new Blockchain(genesisBlock);
-        System.out.println("Blockchain initialized with genesis block");
+        System.out.println("Blockchain initialized with genesis block\n");
 
         genesisMiner.setLocalLedger(blockchain);
-        System.out.println("Genesis miner balance: " + genesisMiner.getCurrentBalance(genesisMiner.getLocalLedger()));
+        System.out.println("Genesis miner balance: " + genesisMiner.getCurrentBalance(genesisMiner.getLocalLedger()) + "\n");
 
         Miner userA = new Miner("Miner A", "Miner A");
         Wallet userB = new Wallet("Wallet A", "Wallet A");
@@ -59,14 +60,14 @@ public class BlockchainPlatform {
         userB.setLocalLedger(blockchain);
         userC.setLocalLedger(blockchain);
 
-        System.out.println("Creating block...");
+        System.out.println("Creating block 2...");
         Block block2 = new Block(blockchain.getLastBlock().getHashID(), difficultyLevel);
-        System.out.println("Block created successfully");
+        System.out.println("Block 2 created successfully\n");
 
         Transaction transaction2 = genesisMiner.transferFund(userA.getPublicKey(), 100);
         if (transaction2 != null) {
             if (transaction2.verifySignature() && block2.addTransaction(transaction2)) {
-                System.out.println("Current balances");
+                System.out.println("Balances on the BLOCKCHAIN prior to block 2 addition");
                 double total = genesisMiner.getCurrentBalance(blockchain)
                         + userA.getCurrentBalance(blockchain)
                         + userB.getCurrentBalance(blockchain)
@@ -75,7 +76,7 @@ public class BlockchainPlatform {
                 System.out.println("User A: " + userA.getCurrentBalance(blockchain));
                 System.out.println("User B: " + userB.getCurrentBalance(blockchain));
                 System.out.println("User C: " + userC.getCurrentBalance(blockchain));
-                System.out.println("Transaction added to second block...");
+                System.out.println("Transaction 2 added to block 2...\n");
             } else {
                 System.out.println("Failed to create transaction");
             }
@@ -84,7 +85,7 @@ public class BlockchainPlatform {
         Transaction transaction3 = genesisMiner.transferFund(userB.getPublicKey(), 200);
         if (transaction3 != null) {
             if (transaction3.verifySignature() && block2.addTransaction(transaction3)) {
-                System.out.println("Current balances");
+                System.out.println("Balances on the BLOCKCHAIN prior to block 2 addition");
                 double total = genesisMiner.getCurrentBalance(blockchain)
                         + userA.getCurrentBalance(blockchain)
                         + userB.getCurrentBalance(blockchain)
@@ -93,7 +94,7 @@ public class BlockchainPlatform {
                 System.out.println("User A: " + userA.getCurrentBalance(blockchain));
                 System.out.println("User B: " + userB.getCurrentBalance(blockchain));
                 System.out.println("User C: " + userC.getCurrentBalance(blockchain));
-                System.out.println("Transaction added to second block...");
+                System.out.println("Transaction 3 added to block 2...\n");
             } else {
                 System.out.println("Failed to add transaction to second block");
             }
@@ -103,9 +104,9 @@ public class BlockchainPlatform {
 
         if (userA.mineBlock(block2)) {
             blockchain.addBlock(block2);
-            System.out.println("User A mined second block");
+            System.out.println("User A mined block2");
             System.out.println("Hash ID: " + block2.getHashID());
-            System.out.println("After second block is added to the chain, the balances are: ");
+            System.out.println("The current balances on the blockchain are: ");
             displayBalanceAfterBlock(block2, genesisMiner, userA, userB, userC);
         }
 
