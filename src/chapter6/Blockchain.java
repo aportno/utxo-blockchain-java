@@ -11,6 +11,14 @@ public class Blockchain implements java.io.Serializable {
     public static final double MINING_REWARD = 100.0;
     private final LedgerList<Block> blockchain;
 
+    private Blockchain(LedgerList<Block> blockchain) {
+        this.blockchain = new LedgerList<>();
+        int chainSize = blockchain.size();
+        for (int i = 0; i < chainSize; i++) {
+            this.blockchain.add(blockchain.findByIndex(i));
+        }
+    }
+
     public Blockchain(Block genesisBlock) {
         this.blockchain = new LedgerList<>();
         this.blockchain.add(genesisBlock);
@@ -20,6 +28,10 @@ public class Blockchain implements java.io.Serializable {
         if (block.getPreviousBlockHashID().equals(this.getLastBlock().getHashID())) {
             this.blockchain.add(block);
         }
+    }
+
+    public synchronized Blockchain copy_NotDeepCopy() {
+        return new Blockchain(this.blockchain);
     }
 
     public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent,
@@ -152,7 +164,7 @@ public class Blockchain implements java.io.Serializable {
         return findRelatedUTXOs(key, all, spent, unspent);
     }
 
-    public static boolean validateBlockchain(Blockchain ledger) {
+    public static boolean isValidatedBlockchain(Blockchain ledger) {
         int limit = ledger.getBlockchainSize() - 1;
         for (int i = limit; i > 0; i--) {
             Block currentBlock = ledger.getBlock(i);
@@ -183,7 +195,22 @@ public class Blockchain implements java.io.Serializable {
 
         isVerifiedBlock = UtilityMethods.hashMeetsDifficultyLevel(genesisBlock.getHashID(), genesisBlock.getDifficultyLevel()) && genesisBlock.computeHashID().equals(genesisBlock.getHashID());
         if (!isVerifiedBlock) {
-            System.out.println("validateBlockChain(): genesis block's " + (i+1) + " had a bad hash");
+            System.out.println("validateBlockChain(): genesis block " + (i+1) + " had a bad hash");
+            return false;
+        }
+        return true;
+
+    }
+
+    public synchronized boolean isBlockAdded(Block block) {
+        if (this.getBlockchainSize() == 0) {
+            this.blockchain.add(block);
+            return true;
+        } else if (block.getPreviousBlockHashID().equals(this.getLastBlock().getHashID())) {
+            this.blockchain.add(block);
+            return true;
+        } else {
+            return false;
         }
     }
 

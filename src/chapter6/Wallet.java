@@ -140,7 +140,120 @@ public class Wallet {
     }
 
     public synchronized boolean setLocalLedger(Blockchain ledger) {
-        this.localLedger = ledger;
+        boolean isValidatedBlockchain = Blockchain.isValidatedBlockchain(ledger);
+        if (!isValidatedBlockchain) {
+            System.out.println(this.getName() + "] Warning: the incoming blockchain failed validation");
+            return false;
+        }
+
+        if (this.localLedger == null) {
+            this.localLedger = ledger;
+            return true;
+        } else {
+            if (ledger.getBlockchainSize() > this.localLedger.getBlockchainSize() && ledger.getGenesisMiner().equals(this.localLedger.getGenesisMiner())) {
+                this.localLedger = ledger;
+                return true;
+            } else if (ledger.getBlockchainSize() <= this.localLedger.getBlockchainSize()) {
+                System.out.println(this.getName() + "] Warning: the incoming blockchain is no longer than current local one");
+                System.out.println("Local size: " + this.localLedger.getBlockchainSize());
+                System.out.println("Incoming size: " + ledger.getBlockchainSize());
+                return false;
+            } else {
+                System.out.println(this.getName() + "] Warning: the incoming blockchain has a different genesis miner than current local one");
+                return false;
+            }
+        }
+    }
+
+    public synchronized boolean isUpdatedLocalLedger(ArrayList<Blockchain> blockchains) {
+        if (blockchains.size() == 0) {
+            return false;
+        }
+
+        if (this.localLedger != null) {
+            Blockchain max = this.localLedger;
+            for (Blockchain blockchain : blockchains) {
+                boolean isGenesisMiner = blockchain.getGenesisMiner().equals(this.localLedger.getGenesisMiner());
+                if (isGenesisMiner && blockchain.getBlockchainSize() > max.getBlockchainSize() && Blockchain.isValidatedBlockchain(blockchain)) {
+                    max = blockchain;
+                }
+            }
+            this.localLedger = max;
+            return true;
+        } else {
+            Blockchain max = null;
+            int currentLength = 0;
+            for (Blockchain blockchain : blockchains) {
+                boolean isValidatedBlockchain = Blockchain.isValidatedBlockchain(blockchain);
+                if (isValidatedBlockchain && blockchain.getBlockchainSize() > currentLength) {
+                    max = blockchain;
+                    currentLength = max.getBlockchainSize();
+                }
+            }
+
+            if (max != null) {
+                this.localLedger = max;
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public synchronized boolean isUpdatedLocalLedger(Block block) {
+        if (isVerifiedGuestBlock(block)) {
+            return this.localLedger.addBlock(block);
+        }
+        return false;
+    }
+
+    public boolean isVerifiedGuestBlock(Block block, Blockchain ledger) {
+        if (!block.isVerifiedSignature(block.getCreator())) {
+            System.out.println("\tWarning: block(" + block.getHashID() + ") invalid signature");
+            return false;
+        }
+
+        if (!UtilityMethods.hashMeetsDifficultyLevel(block.getHashID(), block.getDifficultyLevel()) || !block.computeHashID().equals(block.getHashID())) {
+            System.out.println("\tWarning: block(" + block.getHashID() + ") is not linking to last block");
+            return false;
+        }
+
+        int totalNumTx = block.getTotalNumberOfTransactions();
+        for (int i = 0; i < totalNumTx; i++) {
+            Transaction tx = block.getTransaction(tx);
+            if (!isValidatedTransaction(tx)) {
+                System.out.println("\tWarning: block(" + block.getHashID() +") transaction " + i + " is invalid");
+                return false;
+            }
+        }
+
+        Transaction rewardTx = block.getRewardTransaction();
+        if (rewardTx.getTotalAmountToTransfer() > Blockchain.MINING_REWARD + block.getTransactionFeeAmount()) {
+            System.out.println("\tWarning: block(" + block.getHashID() + ") over rewarded");
+            return false;
+        }
         return true;
+    }
+
+    public boolean isVerifiedGuestBlock(Block block) {
+        return this.isVerifiedGuestBlock(block, this.getLocalLedger());
+    }
+
+    public boolean isValidatedTransaction(Transaction transaction) {
+        if (transaction == null) {
+            return false;
+        }
+        if (!transaction.verifySignature()) {
+            System.out.println("WARNING: transaction ID=" + transaction.getHashID() + " from " + " is invalid. It has been tampered");
+            return false;
+        }
+
+        boolean isExisting;
+        if (this.getLocalLedger() == null) {
+            isExisting = false;
+        } else {
+            isExisting = this.getLocalLedger().isTransactionExist(transaction);
+        }
+        return !isExisting;
     }
 }
