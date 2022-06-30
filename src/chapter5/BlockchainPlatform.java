@@ -78,7 +78,7 @@ public class BlockchainPlatform {
                 System.out.println("User C: " + userC.getCurrentBalance(blockchain));
                 System.out.println("Transaction 2 added to block 2...\n");
             } else {
-                System.out.println("Failed to create transaction");
+                System.out.println("Failed to create transaction 2 \n");
             }
         }
 
@@ -96,10 +96,10 @@ public class BlockchainPlatform {
                 System.out.println("User C: " + userC.getCurrentBalance(blockchain));
                 System.out.println("Transaction 3 added to block 2...\n");
             } else {
-                System.out.println("Failed to add transaction to second block");
+                System.out.println("Failed to add transaction 3 to block 2\n");
             }
         } else {
-            System.out.println("Failed to create transaction");
+            System.out.println("Failed to create transaction 3\n");
         }
 
         System.out.println("Attempting to mine block2...");
@@ -113,57 +113,58 @@ public class BlockchainPlatform {
 
         System.out.println("\nCreating block...");
         Block block3 = new Block(block2.getHashID(), difficultyLevel);
-        System.out.println("Block created successfully");
+        System.out.println("Block created successfully\n");
 
         Transaction transaction4 = userA.transferFund(userB.getPublicKey(), 200.0);
         if (transaction4 != null) {
             if (transaction4.verifySignature() && block3.addTransaction(transaction4)) {
-                System.out.println("Transaction added to third block");
+                System.out.println("Transaction 4 added to block 3...\n");
             } else {
-                System.out.println("Failed to add transaction to third block");
+                System.out.println("Failed to add transaction 4 to block 3\n");
             }
         } else {
-            System.out.println("Failed to create transaction");
+            System.out.println("Failed to create transaction 4\n");
         }
 
         Transaction transaction5 = userA.transferFund(userC.getPublicKey(), 300.0);
         if (transaction5 != null) {
             if (transaction5.verifySignature() && block3.addTransaction(transaction5)) {
-                System.out.println("Transaction added to third block");
+                System.out.println("Transaction 5 added to block 3...\n");
             } else {
-                System.out.println("Failed to add transaction to block");
+                System.out.println("Failed to add transaction 5 to block\n");
             }
         } else {
-            System.out.println("Failed to create transaction");
+            System.out.println("Failed to create transaction 5\n");
         }
 
         Transaction transaction6 = userA.transferFund(userC.getPublicKey(), 20.0);
         if (transaction6 != null) {
             if (transaction6.verifySignature() && block3.addTransaction(transaction6)) {
-                System.out.println("Transaction added to third block");
+                System.out.println("Transaction 6 added to block 3...\n");
             } else {
-                System.out.println("Failed to add transaction to block");
+                System.out.println("Failed to add transaction 6 to block\n");
             }
         } else {
-            System.out.println("Failed to create transaction");
+            System.out.println("Failed to create transaction 6\n");
         }
 
         Transaction transaction7 = userB.transferFund(userC.getPublicKey(), 80.0);
         if (transaction7 != null) {
             if (transaction7.verifySignature() && block3.addTransaction(transaction7)) {
-                System.out.println("Transaction added to third block");
+                System.out.println("Transaction 7 added to block 3...\n");
             } else {
-                System.out.println("Failed to add transaction to block");
+                System.out.println("Failed to add transaction 7 to block\n");
             }
         } else {
-            System.out.println("Failed to create transaction");
+            System.out.println("Failed to create transaction 7\n");
         }
 
+        System.out.println("Attempting to mine block3...");
         if (userC.mineBlock(block3)) {
             blockchain.addBlock(block3);
-            System.out.println("User C mined third block");
-            System.out.println("Hash ID: " + block3.getHashID());
-            System.out.println("After second block is added to the chain, the balances are: ");
+            System.out.println("User C mined block 3");
+            System.out.println("Block hash ID: " + block3.getHashID());
+            System.out.println("Current balances on the blockchain");
             displayBalanceAfterBlock(block3, genesisMiner, userA, userB, userC);
         }
 

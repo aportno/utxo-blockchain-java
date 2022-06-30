@@ -5,6 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/chapter5/BlockchainPlatform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter5/BlockchainPlatform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter5/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter5/Wallet.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,13 +142,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00062" summary="update">
-      <created>1656212860056</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1656212860056</updated>
     </task>
     <task id="LOCAL-00063" summary="update">
       <created>1656213692336</created>
@@ -485,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656555066781</updated>
     </task>
-    <option name="localTasksCounter" value="111" />
+    <task id="LOCAL-00111" summary="update">
+      <created>1656556135785</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1656556135785</updated>
+    </task>
+    <option name="localTasksCounter" value="112" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -510,8 +511,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/chapter5/BlockchainPlatform.java</url>
-          <line>113</line>
-          <option name="timeStamp" value="26" />
+          <line>128</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/chapter5/BlockchainPlatform.java</url>
+          <line>161</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

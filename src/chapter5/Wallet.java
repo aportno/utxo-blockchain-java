@@ -84,7 +84,8 @@ public class Wallet {
         }
 
         if (available < totalNeeded) {
-            System.out.println(this.walletName + "balance=" + available + ", not enough to make the transfer of " + totalNeeded);
+            System.out.println(this.walletName + " balance=" + available);
+            System.out.println("Not enough funds available to complete the transfer of " + totalNeeded);
             return null;
         }
 

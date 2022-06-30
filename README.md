@@ -1520,7 +1520,104 @@ It should be pointed out that the miner balance was initially 20,000. It then tr
 to user A followed by 200 + 1 transaction fee = 201 to user B for a total of 302 transferred. The mining balance is now
 20,000 - 302 = 19,698.
 
+For our 3rd block, we test our failure functions. We first try to transfer 200 from `userA` to `userB` in our 4th transaction.
+The `transaction` fails because `userA` only has a balance of `100.0`:
 
+```
+   Transaction transaction4 = userA.transferFund(userB.getPublicKey(), 200.0);
+   if (transaction4 != null) {
+      if (transaction4.verifySignature() && block3.addTransaction(transaction4)) {
+          System.out.println("Transaction 4 added to block 3");
+      } else {
+          System.out.println("Failed to add transaction to block 3");
+      }
+   } else {
+      System.out.println("Failed to create transaction");
+   }
+```
+
+Failure message:
+```
+Miner A balance=100.0
+Not enough funds available to complete the transfer of 201.0
+Failed to create transaction 4
+```
+
+We then try to transfer 300 from `userA` to `userC` for our 5th transaction, generating the same error:
+
+```
+   Transaction transaction5 = userA.transferFund(userC.getPublicKey(), 300.0);
+   if (transaction5 != null) {
+      if (transaction5.verifySignature() && block3.addTransaction(transaction5)) {
+          System.out.println("Transaction 5 added to block 3");
+      } else {
+          System.out.println("Failed to add transaction 5 to block\5");
+      }
+   } else {
+      System.out.println("Failed to create transaction 5\n");
+   }
+```
+
+Failure message:
+```
+Miner A balance=100.0
+Not enough funds available to complete the transfer of 301.0
+Failed to create transaction 5
+```
+
+The 6th transaction will be successful because we're transferring an amount of `20` from `userA` that is less than their balance of
+`100`:
+
+```
+   Transaction transaction6 = userA.transferFund(userC.getPublicKey(), 20.0);
+   if (transaction6 != null) {
+      if (transaction6.verifySignature() && block3.addTransaction(transaction6)) {
+          System.out.println("Transaction 6 added to block 3...");
+      } else {
+          System.out.println("Failed to add transaction to block");
+      }
+   } else {
+      System.out.println("Failed to create transaction");
+   }
+```
+
+Success message:
+```
+Transaction 6 added to block 3
+```
+
+Our final test is to try and successfully transfer funds from `userB` to `userC`:
+
+```
+   Transaction transaction7 = userB.transferFund(userC.getPublicKey(), 80.0);
+   if (transaction7 != null) {
+      if (transaction7.verifySignature() && block3.addTransaction(transaction7)) {
+          System.out.println("Transaction 7 added to block 3...\n");
+      } else {
+          System.out.println("Failed to add transaction 7 to block\n");
+      }
+   } else {
+      System.out.println("Failed to create transaction 7\n");
+   }
+```
+
+Success message:
+
+```
+Transaction 7 added to block 3
+```
+
+Our test program is complete once we confirm `block3` is added on-chain:
+
+```
+   if (userC.mineBlock(block3)) {
+      blockchain.addBlock(block3);
+      System.out.println("User C mined block 3");
+      System.out.println("Block hash ID: " + block3.getHashID());
+      System.out.println("Current balances on the blockchain");
+      displayBalanceAfterBlock(block3, genesisMiner, userA, userB, userC);
+   }
+```
 
 ___
 ## Chapter 6 :: Blockchain Improved
