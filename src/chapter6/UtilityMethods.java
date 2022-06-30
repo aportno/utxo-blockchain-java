@@ -301,26 +301,6 @@ public class UtilityMethods {
         displayTab(out, level, "}");
     }
 
-    public static String computeMerkleTreeRootHash(String[] hashes) {
-        // applies a recursive algorithm to generate the root hash starting from the tree leaves
-        return computeMerkleTreeRootHash(hashes, 0, hashes.length - 1);
-    }
-
-    private static String computeMerkleTreeRootHash(String[] hashes, int from, int to) {
-        // recursively builds up root hash
-        if (to - from + 1 == 1) {
-            return hashes[to];
-        } else if (to - from + 1 == 2) {
-            // compute the hashID from the two nodes below
-            return messageDigestSHA256_toString(hashes[from] + hashes[to]);
-        } else {
-            // continue dividing the array into two parts to reach the leaves
-            int mid = (from + to) / 2;
-            String message = computeMerkleTreeRootHash(hashes, from, mid) + computeMerkleTreeRootHash(hashes, mid + 1, to);
-            return messageDigestSHA256_toString(message);
-        }
-    }
-
     public static void displayBlock(Block block, PrintStream out, int level) {
         displayTab(out, level, "Block{");
         displayTab(out, level, "\tID: " + block.getHashID());
@@ -346,5 +326,25 @@ public class UtilityMethods {
         }
 
         displayTab(out, level, "}");
+    }
+
+    public static String computeMerkleTreeRootHash(String[] hashes) {
+        // applies a recursive algorithm to generate the root hash starting from the tree leaves
+        return computeMerkleTreeRootHash(hashes, 0, hashes.length - 1);
+    }
+
+    private static String computeMerkleTreeRootHash(String[] hashes, int from, int to) {
+        // recursively builds up root hash
+        if (to - from + 1 == 1) {
+            return hashes[to];
+        } else if (to - from + 1 == 2) {
+            // compute the hashID from the two nodes below
+            return messageDigestSHA256_toString(hashes[from] + hashes[to]);
+        } else {
+            // continue dividing the array into two parts to reach the leaves
+            int mid = (from + to) / 2;
+            String message = computeMerkleTreeRootHash(hashes, from, mid) + computeMerkleTreeRootHash(hashes, mid + 1, to);
+            return messageDigestSHA256_toString(message);
+        }
     }
 }
