@@ -39,7 +39,7 @@ public class BlockchainPlatform {
         boolean isMinedBlock = genesisMiner.mineBlock(genesisBlock);
         if (isMinedBlock) {
             System.out.println("Genesis block successfully mined\n");
-            System.out.println("Hash ID: " + genesisBlock.getHashID() + "\n");
+            System.out.println("Block hash ID: " + genesisBlock.getHashID() + "\n");
         } else {
             System.out.println("Failed to mine genesis block. System exit");
             System.exit(1);
@@ -102,15 +102,16 @@ public class BlockchainPlatform {
             System.out.println("Failed to create transaction");
         }
 
+        System.out.println("Attempting to mine block2...");
         if (userA.mineBlock(block2)) {
             blockchain.addBlock(block2);
             System.out.println("User A mined block2");
-            System.out.println("Hash ID: " + block2.getHashID());
-            System.out.println("The current balances on the blockchain are: ");
+            System.out.println("Block hash ID: " + block2.getHashID() + "\n");
+            System.out.println("Current balances on the blockchain");
             displayBalanceAfterBlock(block2, genesisMiner, userA, userB, userC);
         }
 
-        System.out.println("Creating block...");
+        System.out.println("\nCreating block...");
         Block block3 = new Block(block2.getHashID(), difficultyLevel);
         System.out.println("Block created successfully");
 
@@ -178,9 +179,10 @@ public class BlockchainPlatform {
         System.out.println("Genesis miner: " + genesisMiner.getCurrentBalance(blockchain));
         System.out.println("User A: " + walletA.getCurrentBalance(blockchain));
         System.out.println("User B: " + walletB.getCurrentBalance(blockchain));
-        System.out.println("User C: " + walletC.getCurrentBalance(blockchain));
+        System.out.println("User C: " + walletC.getCurrentBalance(blockchain) + "\n");
+        System.out.println("Blockchain data:");
         System.out.println("Total Cash: " + total);
         System.out.println("Transaction fee: " + transactionFee);
-        System.out.println("Blockchain length: " + blockchain.getBlockchainSize());
+        System.out.println("Number of blocks: " + blockchain.getBlockchainSize());
     }
 }

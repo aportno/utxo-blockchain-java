@@ -1503,6 +1503,23 @@ We add another test transaction, where the `genesisMiner` transfers 200 to `user
 `userA` is a `miner` object and will continue to compute hashes until the correct hash has been found. Once this occurs, 
 `block2` is added to the `blockchain` and the updated balances will reflect `transaction2` and `transaction3`"
 
+```
+Current balances on the blockchain
+Genesis miner: 19698.0
+User A: 100.0
+User B: 200.0
+User C: 0.0
+
+Blockchain data:
+Total Cash: 19998.0
+Transaction fee: 2.0
+Number of blocks: 2
+```
+
+It should be pointed out that the miner balance was initially 20,000. It then transferred 100 + 1 transaction fee = 101,
+to user A followed by 200 + 1 transaction fee = 201 to user B for a total of 302 transferred. The mining balance is now
+20,000 - 302 = 19,698.
+
 
 
 ___
