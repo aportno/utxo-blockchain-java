@@ -7,7 +7,7 @@ public class BlockchainPlatform {
     private static double transactionFee = 0.0;
 
     public static void main(String[] args) throws Exception {
-        int difficultyLevel = 25;
+        int difficultyLevel = 10;
         System.out.println("Starting blockchain platform...");
 
         Miner genesisMiner = new Miner("genesis", "genesis");
@@ -163,12 +163,12 @@ public class BlockchainPlatform {
         if (userC.mineBlock(block3)) {
             blockchain.addBlock(block3);
             System.out.println("User C mined block 3");
-            System.out.println("Block hash ID: " + block3.getHashID());
+            System.out.println("Block hash ID: " + block3.getHashID() + "\n");
             System.out.println("Current balances on the blockchain");
             displayBalanceAfterBlock(block3, genesisMiner, userA, userB, userC);
         }
 
-        System.out.println("==========Blockchain Platform Shutting Down==========");
+        System.out.println("\n==========Blockchain Platform Shutting Down==========");
     }
 
     private static void displayBalanceAfterBlock(Block block, Wallet genesisMiner, Wallet walletA, Wallet walletB, Wallet walletC) {
