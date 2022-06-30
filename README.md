@@ -1378,6 +1378,26 @@ the `receiver`. The `sender` will now need to provide a signature to authenticat
 
 *Note: surprisingly the program did not check to see if the transaction is verified before adding it to the block.
 
+As per protocol, the miner looks to mine the block. If complete, the genesis block will be finalized and ready to be added
+to the blockchain:
+
+```
+   boolean isMinedBlock = genesisMiner.mineBlock(genesisBlock);
+   if (isMinedBlock) {
+      System.out.println("Genesis block successfully mined");
+      System.out.println("Hash ID: " + genesisBlock.getHashID());
+   } else {
+      System.out.println("Failed to mine genesis block. System exit");
+      System.exit(1);
+   }
+```
+
+Bringing us to the next task of creating our `Blockchain` object:
+
+```
+   blockchain = new Blockchain(genesisBlock);
+```
+
 
 
 ___
