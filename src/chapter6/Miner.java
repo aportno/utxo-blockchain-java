@@ -7,6 +7,6 @@ public class Miner extends Wallet {
     }
 
     public boolean mineBlock(Block block) {
-        return (block.mineTheBlock());
+        return (block.isMinedBlock());
     }
 }
