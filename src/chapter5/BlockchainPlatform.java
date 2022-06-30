@@ -52,8 +52,8 @@ public class BlockchainPlatform {
         System.out.println("Genesis miner balance: " + genesisMiner.getCurrentBalance(genesisMiner.getLocalLedger()));
 
         Miner userA = new Miner("Miner A", "Miner A");
-        Wallet userB = new Wallet("Wallet A", "Wallet B");
-        Miner userC = new Miner("Miner C", "Miner C");
+        Wallet userB = new Wallet("Wallet A", "Wallet A");
+        Miner userC = new Miner("Miner B", "Miner B");
 
         userA.setLocalLedger(blockchain);
         userB.setLocalLedger(blockchain);

@@ -1368,6 +1368,9 @@ Since we are looking to transfer `10000.0` (plus a `1.0` fee) with `20001.0` in 
 remaining as "change" that will need to be remitted back to the `sender`. This additional output `UTXO` is added to the 
 `outputs` array.
 
+The `miner` wallet will record 2 output `UTXO` as the outcome of this `transaction`. It will receive `10000.0` as the `amountToTransfer`
+and then `10000.0` as the `change` for a total of `20000.0`
+
 We now have a `transaction` that's received a sufficient number of input `UTXO` from the `sender` to transfer an amount to
 the `receiver`. The `sender` will now need to provide a signature to authenticate the transaction, so it can be added to the block:
 
@@ -1396,6 +1399,65 @@ Bringing us to the next task of creating our `Blockchain` object:
 
 ```
    blockchain = new Blockchain(genesisBlock);
+```
+
+Followed by creating a copy of the ledger and localizing it in our `genesisMiner` object:
+
+```
+   genesisMiner.setLocalLedger(blockchain);
+```
+
+Now that the genesis block has been mined, we added additional users to start working on the next block on the chain:
+
+```
+   Miner userA = new Miner("Miner A", "Miner A");
+   Wallet userB = new Wallet("Wallet A", "Wallet A");
+   Miner userC = new Miner("Miner B", "Miner B");
+```
+
+All users should reference the same chain as their local ledgers:
+
+```
+   userA.setLocalLedger(blockchain);
+   userB.setLocalLedger(blockchain);
+   userC.setLocalLedger(blockchain);
+```
+
+Following our previous process, we build a block so transactions can be stored accordingly:
+
+```
+   Block block2 = new Block(blockchain.getLastBlock().getHashID(), difficultyLevel);
+```
+
+Our second transaction was a test for a much smaller amount. The genesis miner currently has a balance of `20000.0`. The looked
+to transfer `100.0` from the `genesisMiner` to `userA`:
+
+```
+   Transaction transaction2 = genesisMiner.transferFund(userA.getPublicKey(), 100);
+```
+
+I'm not particularly impressed with the logic of this line because it embeds crucial functions complicating the logic rather
+than simplifying the process. Specifically, the `transferFund()` method requires a signature to effectuate. However, in the setting
+of our test case, it looks as if the transfer can occur without signature. Maybe it will make more sense down the road but at the
+moment I'd rather the signature show some presence before triggering the verification boolean:
+
+```
+   if (transaction2 != null) {
+      if (transaction2.verifySignature() && block2.addTransaction(transaction2)) {
+          System.out.println("Current balances");
+          double total = genesisMiner.getCurrentBalance(blockchain)
+                  + userA.getCurrentBalance(blockchain)
+                  + userB.getCurrentBalance(blockchain)
+                  + userC.getCurrentBalance(blockchain);
+          System.out.println("Genesis miner: " + genesisMiner.getCurrentBalance(blockchain));
+          System.out.println("User A: " + userA.getCurrentBalance(blockchain));
+          System.out.println("User B: " + userB.getCurrentBalance(blockchain));
+          System.out.println("User C: " + userC.getCurrentBalance(blockchain));
+          System.out.println("Transaction added to second block...");
+      } else {
+          System.out.println("Failed to create transaction");
+      }
+   }
 ```
 
 
