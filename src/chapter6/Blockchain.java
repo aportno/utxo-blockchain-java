@@ -22,7 +22,8 @@ public class Blockchain implements java.io.Serializable {
         }
     }
 
-    public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent, ArrayList<UTXO> unspent, ArrayList<Transaction> sentTransactions) {
+    public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent,
+                                   ArrayList<UTXO> unspent, ArrayList<Transaction> sentTransactions, ArrayList<UTXO> rewards) {
         // counter to track UTXO received (gain) and UTXO sent (spent)
         double gain = 0.0, spending = 0.0;
 
@@ -91,6 +92,18 @@ public class Blockchain implements java.io.Serializable {
                     }
                 }
             }
+
+            if (block.getCreator().equals(publicKey)) {
+                Transaction rewardTx = block.getRewardTransaction();
+                if (rewardTx != null && rewardTx.getNumberOfOutputUTXOs() > 0) {
+                    UTXO outputUTXO = rewardTx.getOutputUTXO(0);
+                    if (outputUTXO.getReceiver().equals(publicKey)) {
+                        rewards.add(outputUTXO);
+                        all.add(outputUTXO);
+                        gain += outputUTXO.getAmountTransferred();
+                    }
+                }
+            }
         }
 
         // loop through each output UTXO in the all arrayList
@@ -108,10 +121,11 @@ public class Blockchain implements java.io.Serializable {
         return (gain - spending);
     }
 
-    public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent, ArrayList<UTXO> unspent) {
-        ArrayList<Transaction> sendingTransactions = new ArrayList<>();
+    public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent,
+                                   ArrayList<UTXO> unspent, ArrayList<Transaction> sentTransactions) {
+        ArrayList<UTXO> rewards = new ArrayList<>();
 
-        return findRelatedUTXOs(publicKey, all, spent, unspent, sendingTransactions);
+        return findRelatedUTXOs(publicKey, all, spent, unspent, sentTransactions, rewards);
     }
 
     public ArrayList<UTXO> findUnspentUTXOs(PublicKey publicKey) {
@@ -136,6 +150,60 @@ public class Blockchain implements java.io.Serializable {
         ArrayList<UTXO> unspent = new ArrayList<>();
 
         return findRelatedUTXOs(key, all, spent, unspent);
+    }
+
+    public static boolean validateBlockchain(Blockchain ledger) {
+        int limit = ledger.getBlockchainSize() - 1;
+        for (int i = limit; i > 0; i--) {
+            Block currentBlock = ledger.getBlock(i);
+            boolean isVerifiedBlock = currentBlock.isVerifiedSignature(currentBlock.getCreator());
+            if (!isVerifiedBlock) {
+                System.out.println("validateBlockCHain(): block " + (i+1) + " signature is invalid.");
+                return false;
+            }
+
+            isVerifiedBlock = UtilityMethods.hashMeetsDifficultyLevel(currentBlock.getHashID(), currentBlock.getDifficultyLevel()) && currentBlock.computeHashID().equals(currentBlock.getHashID()));
+            if (!isVerifiedBlock) {
+                System.out.println("validateBlockChain(): block " + (i+1) + " had a bad hash");
+            }
+
+            Block previousBlock = ledger.getBlock(i-1);
+            isVerifiedBlock = currentBlock.getPreviousBlockHashID().equals(previousBlock.getHashID());
+            if (!isVerifiedBlock) {
+                System.out.println("validateBlockChain(): block " + (i+1) + " previous block hash is invalid");
+            }
+        }
+
+        Block genesisBlock = ledger.getGenesisBlock();
+        boolean isVerifiedBlock = genesisBlock.isVerifiedSignature(genesisBlock.getCreator());
+        if (!isVerifiedBlock) {
+            System.out.println("validateBlockChain(): genesis block " + "has incorrect signature");
+            return false;
+        }
+
+        isVerifiedBlock = UtilityMethods.hashMeetsDifficultyLevel(genesisBlock.getHashID(), genesisBlock.getDifficultyLevel()) && genesisBlock.computeHashID().equals(genesisBlock.getHashID());
+        if (!isVerifiedBlock) {
+            System.out.println("validateBlockChain(): genesis block's " + (i+1) + " had a bad hash");
+        }
+    }
+
+    protected boolean isTransactionExist (Transaction transaction) {
+        int limit = this.blockchain.size() - 1;
+        for (int i = limit; i > 0; i--) {
+            Block block = this.blockchain.findByIndex(i);
+            int numberTx = block.getTotalNumberOfTransactions();
+            for (int j = 0; j < numberTx; j++) {
+                Transaction transaction2 = block.getTransaction(j);
+                if (transaction.equals(transaction2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public PublicKey getGenesisMiner() {
+        return this.getGenesisBlock().getCreator();
     }
 
     public Block getGenesisBlock() {
