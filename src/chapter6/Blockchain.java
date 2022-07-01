@@ -24,9 +24,15 @@ public class Blockchain implements java.io.Serializable {
         this.blockchain.add(genesisBlock);
     }
 
-    public synchronized void addBlock(Block block) {
-        if (block.getPreviousBlockHashID().equals(this.getLastBlock().getHashID())) {
+    public synchronized boolean isAddedBlock(Block block) {
+        if (this.getBlockchainSize() == 0) {
             this.blockchain.add(block);
+            return true;
+        } else if (block.getPreviousBlockHashID().equals(this.getLastBlock().getHashID())) {
+            this.blockchain.add(block);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -140,6 +146,11 @@ public class Blockchain implements java.io.Serializable {
         return findRelatedUTXOs(publicKey, all, spent, unspent, sentTransactions, rewards);
     }
 
+    public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent, ArrayList<UTXO> unspent) {
+        ArrayList<Transaction> sendingTransactions = new ArrayList<>();
+        return findRelatedUTXOs(publicKey, all, spent, unspent, sendingTransactions);
+    }
+
     public ArrayList<UTXO> findUnspentUTXOs(PublicKey publicKey) {
         ArrayList<UTXO> all = new ArrayList<>();
         ArrayList<UTXO> spent = new ArrayList<>();
@@ -156,12 +167,12 @@ public class Blockchain implements java.io.Serializable {
         return findRelatedUTXOs(publicKey, all, spent, unspent);
     }
 
-    public double checkBalance(PublicKey key) {
+    public double checkBalance(PublicKey publicKey) {
         ArrayList<UTXO> all = new ArrayList<>();
         ArrayList<UTXO> spent = new ArrayList<>();
         ArrayList<UTXO> unspent = new ArrayList<>();
 
-        return findRelatedUTXOs(key, all, spent, unspent);
+        return findRelatedUTXOs(publicKey, all, spent, unspent);
     }
 
     public static boolean isValidatedBlockchain(Blockchain ledger) {
@@ -174,7 +185,7 @@ public class Blockchain implements java.io.Serializable {
                 return false;
             }
 
-            isVerifiedBlock = UtilityMethods.hashMeetsDifficultyLevel(currentBlock.getHashID(), currentBlock.getDifficultyLevel()) && currentBlock.computeHashID().equals(currentBlock.getHashID()));
+            isVerifiedBlock = UtilityMethods.hashMeetsDifficultyLevel(currentBlock.getHashID(), currentBlock.getDifficultyLevel()) && currentBlock.computeHashID().equals(currentBlock.getHashID());
             if (!isVerifiedBlock) {
                 System.out.println("validateBlockChain(): block " + (i+1) + " had a bad hash");
             }
@@ -195,7 +206,7 @@ public class Blockchain implements java.io.Serializable {
 
         isVerifiedBlock = UtilityMethods.hashMeetsDifficultyLevel(genesisBlock.getHashID(), genesisBlock.getDifficultyLevel()) && genesisBlock.computeHashID().equals(genesisBlock.getHashID());
         if (!isVerifiedBlock) {
-            System.out.println("validateBlockChain(): genesis block " + (i+1) + " had a bad hash");
+            System.out.println("validateBlockChain(): genesis block has bad hash");
             return false;
         }
         return true;

@@ -28,17 +28,6 @@ public class Block implements java.io.Serializable {
         this.creator = creator;
     }
 
-    public boolean addTransaction (Transaction transaction, PublicKey publicKey) {
-        if (this.getTotalNumberOfTransactions() >= Block.TRANSACTION_UPPER_LIMIT) {
-            return false;
-        } else if (publicKey.equals(this.getCreator()) && !this.isMined() && !this.isSigned()) {
-            this.transactions.add(transaction);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     protected String computeHashID() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.previousBlockHashID).append(Long.toHexString(this.timestamp)).append(this.computeMerkleRoot()).append(nonce);
@@ -84,6 +73,17 @@ public class Block implements java.io.Serializable {
         }
     }
 
+    public boolean isAddedTransaction(Transaction transaction, PublicKey publicKey) {
+        if (this.getTotalNumberOfTransactions() >= Block.TRANSACTION_UPPER_LIMIT) {
+            return false;
+        } else if (publicKey.equals(this.getCreator()) && !this.isMined() && !this.isSigned()) {
+            this.transactions.add(transaction);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     protected boolean isMinedBlock(PublicKey publicKey) {
         if (!this.isMined && publicKey.equals(this.getCreator())) {
             this.hashID = this.computeHashID();
@@ -105,7 +105,7 @@ public class Block implements java.io.Serializable {
         }
     }
 
-    public boolean isVerifiedSignature(PublicKey publicKey, byte[] signature) {
+    public boolean isSignedBlock(PublicKey publicKey, byte[] signature) {
         // Verify signatures before wallet/miner adds block to its local chain. Requires creator public key
         if (!isSigned()) {
             if (publicKey.equals(this.creator)) {
@@ -116,6 +116,10 @@ public class Block implements java.io.Serializable {
             }
         }
         return false;
+    }
+
+    public boolean isVerifiedSignature(PublicKey publicKey) {
+        return UtilityMethods.verifySignature(publicKey, this.signature, this.getHashID());
     }
 
     public boolean isMined() {

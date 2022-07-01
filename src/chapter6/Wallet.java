@@ -6,6 +6,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 
+
 public class Wallet {
     private KeyPair keyPair;
     private String walletName;
@@ -25,6 +26,11 @@ public class Wallet {
                 throw new RuntimeException(ioe);
             }
         }
+    }
+
+    public Wallet(String walletName) {
+        this.keyPair = UtilityMethods.generateKeyPair();
+        this.walletName = walletName;
     }
 
     private void prepareWallet(String password) throws IOException {
@@ -202,7 +208,7 @@ public class Wallet {
 
     public synchronized boolean isUpdatedLocalLedger(Block block) {
         if (isVerifiedGuestBlock(block)) {
-            return this.localLedger.addBlock(block);
+            return this.localLedger.isAddedBlock(block);
         }
         return false;
     }
@@ -220,7 +226,7 @@ public class Wallet {
 
         int totalNumTx = block.getTotalNumberOfTransactions();
         for (int i = 0; i < totalNumTx; i++) {
-            Transaction tx = block.getTransaction(tx);
+            Transaction tx = block.getTransaction(i);
             if (!isValidatedTransaction(tx)) {
                 System.out.println("\tWarning: block(" + block.getHashID() +") transaction " + i + " is invalid");
                 return false;
