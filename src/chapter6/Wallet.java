@@ -224,6 +224,11 @@ public class Wallet {
             return false;
         }
 
+        if (!ledger.getLastBlock().getHashID().equals(block.getPreviousBlockHashID())) {
+            System.out.println("\tWarning: block(" + block.getHashID() + ") is not linked to previous block");
+            return false;
+        }
+
         int totalNumTx = block.getTotalNumberOfTransactions();
         for (int i = 0; i < totalNumTx; i++) {
             Transaction tx = block.getTransaction(i);
@@ -249,6 +254,7 @@ public class Wallet {
         if (transaction == null) {
             return false;
         }
+
         if (!transaction.verifySignature()) {
             System.out.println("WARNING: transaction ID=" + transaction.getHashID() + " from " + " is invalid. It has been tampered");
             return false;

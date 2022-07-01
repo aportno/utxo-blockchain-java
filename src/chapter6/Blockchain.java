@@ -24,18 +24,6 @@ public class Blockchain implements java.io.Serializable {
         this.blockchain.add(genesisBlock);
     }
 
-    public synchronized boolean isAddedBlock(Block block) {
-        if (this.getBlockchainSize() == 0) {
-            this.blockchain.add(block);
-            return true;
-        } else if (block.getPreviousBlockHashID().equals(this.getLastBlock().getHashID())) {
-            this.blockchain.add(block);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public synchronized Blockchain copy_NotDeepCopy() {
         return new Blockchain(this.blockchain);
     }
@@ -175,6 +163,18 @@ public class Blockchain implements java.io.Serializable {
         return findRelatedUTXOs(publicKey, all, spent, unspent);
     }
 
+    public synchronized boolean isAddedBlock(Block block) {
+        if (this.getBlockchainSize() == 0) {
+            this.blockchain.add(block);
+            return true;
+        } else if (block.getPreviousBlockHashID().equals(this.getLastBlock().getHashID())) {
+            this.blockchain.add(block);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static boolean isValidatedBlockchain(Blockchain ledger) {
         int limit = ledger.getBlockchainSize() - 1;
         for (int i = limit; i > 0; i--) {
@@ -211,18 +211,6 @@ public class Blockchain implements java.io.Serializable {
         }
         return true;
 
-    }
-
-    public synchronized boolean isBlockAdded(Block block) {
-        if (this.getBlockchainSize() == 0) {
-            this.blockchain.add(block);
-            return true;
-        } else if (block.getPreviousBlockHashID().equals(this.getLastBlock().getHashID())) {
-            this.blockchain.add(block);
-            return true;
-        } else {
-            return false;
-        }
     }
 
     protected boolean isTransactionExist (Transaction transaction) {
