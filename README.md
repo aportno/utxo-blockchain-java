@@ -1727,7 +1727,5 @@ Eventually, there will be only one hash left at the root, while the root hash is
 can be computed from the previous block's hash, nonce, timestamp, and transactions' root hash which is computed via a merkle
 tree algorithm from all transactions' hashes.
 
-@TODO
-* add blockchain platform class
-* add simulator class
-* provide walk through of blockchain platform class
+---
+## Chapter 7 :: Network and Network messaging

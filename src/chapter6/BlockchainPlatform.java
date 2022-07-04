@@ -7,7 +7,7 @@ public class BlockchainPlatform {
     public static Blockchain ledger;
     public static void main(String[] args) {
         ArrayList<Wallet> users = new ArrayList<>();
-        int difficultyLevel = 22;
+        int difficultyLevel = 20;
 
         System.out.println("Starting blockchain platform...");
         System.out.println("Creating genesis miner, genesis transaction and genesis block");
