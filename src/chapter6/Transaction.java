@@ -130,7 +130,7 @@ public class Transaction implements java.io.Serializable {
         return this.inputs.get(i);
     }
 
-    public boolean prepareOutputUTXOs() {
+    public boolean isPreparedOutputUTXOs() {
         if (this.receivers.length != this.amountToTransfer.length) {
             return false;
         }

@@ -108,7 +108,7 @@ public class Wallet {
         Transaction transaction = new Transaction(this.getPublicKey(), receivers, amountToTransfer, inputUTXOs);
 
         // Prepare output UTXO
-        boolean isPreparedOutputUTXO = transaction.prepareOutputUTXOs();
+        boolean isPreparedOutputUTXO = transaction.isPreparedOutputUTXOs();
         if (isPreparedOutputUTXO) {
             transaction.signTheTransaction(this.getPrivateKey());
             return transaction;
