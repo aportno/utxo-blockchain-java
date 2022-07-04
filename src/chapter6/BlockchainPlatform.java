@@ -104,14 +104,176 @@ public class BlockchainPlatform {
             displayAllBalances(users);
         }
 
+        System.out.println("Total should equal:");
+        System.out.println(20000 + Blockchain.MINING_REWARD);
+        System.out.println("Total of all wallets:");
+        System.out.println(genesisMiner.getCurrentBalance(ledger)
+                + minerA.getCurrentBalance(ledger)
+                + walletA.getCurrentBalance(ledger)
+                + minerB.getCurrentBalance(ledger)
+        );
+
+        Block block3 = minerA.createNewBlock(ledger, difficultyLevel);
+        System.out.println("Genesis miner attempting to funds to:");
+        System.out.println("Wallet A: 500+200=700");
+        System.out.println("Miner B: 300+100=400");
+        Transaction tx2 = genesisMiner.transferFund(receiver, amounts);
+
+        if (minerA.isAddedTransaction(tx1, block3)) {
+            System.out.println("Transaction 1 added into block 3");
+        } else {
+            System.out.println("Warning: transaction 1 cannot be added into block 3. Transaction 1 already exists");
+        }
+
+        if (minerA.isAddedTransaction(tx2, block3)) {
+            System.out.println("Transaction 2 added into block 3");
+        } else {
+            System.out.println("Warning: transaction 2 cannot be added into block 3");
+        }
+
+        System.out.println("Miner A is collecting transactions");
+        System.out.println("Miner A is generating reward");
+        if (minerA.isGeneratedRewardTransaction(block3)) {
+            System.out.println("Rewarding transaction successfully added to block 3");
+        } else {
+            System.out.println("Reward transaction cannot be added to block 3");
+        }
+
+        if (minerB.isMinedBlock(block3)) {
+            System.out.println("Block 3 is mined and signed by miner B");
+        } else {
+            System.out.println("Miner B cannot mine block 3");
+        }
+
+        System.out.println("Test: miner C attempting to change the block");
+        if (minerB.isDeletedTransaction(block3.getTransaction(0), block3)) {
+            System.out.println("Miner B deleted the first transaction from block 3");
+        } else {
+            System.out.println("Error: miner B cannot delete the first transaction from block 3 ");
+        }
+
+        if (minerA.isMinedBlock(block3)) {
+            System.out.println("Block 3 is mined and signed by miner A");
+        } else {
+            System.out.println("Error: block 3 is created by miner A");
+        }
+
+        System.out.println("Test: miner A attempting to change the block");
+        if (minerA.isDeletedTransaction(block3.getTransaction(0), block3)) {
+            System.out.println("Miner A deleted the first transaction from block 3");
+        } else {
+            System.out.println("Miner A cannot delete the first transaction from block 3. Block is already signed");
+        }
+
+        isVerifiedBlock = isVerifiedBlock(minerB, block3, "block3");
+        if (isVerifiedBlock) {
+            System.out.println("All blockchain users begin to update their local blockchain now with block 3");
+            synchronizeLocalLedgers(users, block3);
+            System.out.println("Current balances:");
+            displayAllBalances(users);
+        }
+
+        System.out.println("Total should equal:");
+        System.out.println(20000 + (Blockchain.MINING_REWARD * 2));
+        System.out.println("Total of all wallets:");
+        System.out.println(genesisMiner.getCurrentBalance(ledger)
+                + minerA.getCurrentBalance(ledger)
+                + walletA.getCurrentBalance(ledger)
+                + minerB.getCurrentBalance(ledger)
+        );
+
+        Transaction tx5 = minerB.transferFund(minerB.getPublicKey(), 20);
+        if (minerA.isAddedTransaction(tx5, block3)) {
+            System.out.println("Miner A added transaction 5 into block 3");
+        } else {
+            System.out.println("Miner A cannot add transaction 5 into block 3. Block is already signed.");
+        }
+
+        System.out.println();
+        Block block4 = minerB.createNewBlock(ledger, difficultyLevel);
+        System.out.println("Miner B created block 4");
+
+        if (minerB.isAddedTransaction(tx5, block4)) {
+            System.out.println("Miner B added transaction 5 into block 4");
+        } else {
+            System.out.println("Miner B failed to add transaction 5 into block 4");
+        }
+
+        Transaction tx6 = minerB.transferFund(minerA.getPublicKey(), 100);
+        Transaction tx7 = walletA.transferFund(minerA.getPublicKey(), 100);
+        Transaction tx8 = minerB.transferFund(walletA.getPublicKey(), 100);
+
+        if (minerB.isAddedTransaction(tx6, block4)) {
+            System.out.println("Miner B added transaction 6 into block 4");
+        } else {
+            System.out.println("Miner B failed to add transaction 6 into block 4");
+        }
+
+        if (minerB.isAddedTransaction(tx7, block4)) {
+            System.out.println("Miner B added transaction 7 into block 4");
+        } else {
+            System.out.println("Miner B failed to add transaction 7 into block 4");
+        }
+
+        if (minerB.isAddedTransaction(tx8, block4)) {
+            System.out.println("Miner B added transaction 8 into block 4");
+        } else {
+            System.out.println("Miner B failed to add transaction 8 into block 4");
+        }
+
+        if (minerB.isGeneratedRewardTransaction(block4)) {
+            System.out.println("Miner B generated reward for block 4");
+        } else {
+            System.out.println("Miner B cannot generate reward for block 4");
+        }
+
+        if (minerB.isMinedBlock(block4)) {
+            System.out.println("Miner B mined block 4");
+            System.out.println("Hash ID: " + block4.getHashID());
+
+            isVerifiedBlock = isVerifiedBlock(minerB, block4, "block 4");
+            if (isVerifiedBlock) {
+                System.out.println("All blockchain users begin to update their local blockchain now with block 4");
+                synchronizeLocalLedgers(users, block4);
+                System.out.println("Current balances:");
+                displayAllBalances(users);
+            }
+        }
+
+        System.out.println("Test: try to add block 4 into the ledger again");
+        boolean isAddedBlock = ledger.isAddedBlock(block4);
+        if (isAddedBlock) {
+            System.out.println("Error: block 4 is already in the ledger");
+        } else {
+            System.out.println("Block 4 cannot be re-added into the ledger");
+        }
+
+        System.out.println("Current balances after block 4:");
+        displayAllBalances(users);
+
+        System.out.println("Total should equal:");
+        System.out.println(20000 + (Blockchain.MINING_REWARD * 3));
+        System.out.println("Total of all wallets:");
+        System.out.println(genesisMiner.getCurrentBalance(ledger)
+                + minerA.getCurrentBalance(ledger)
+                + walletA.getCurrentBalance(ledger)
+                + minerB.getCurrentBalance(ledger)
+        );
+
+        System.out.println();
+        System.out.println("=====================================================");
+        System.out.println("Displaying blockchain");
+        System.out.println();
+        UtilityMethods.displayBlockchain(ledger, System.out, 0);
+        System.out.println("==========Blockchain platform shutting down==========");
     }
 
-    public static boolean isVerifiedBlock(Wallet wallet, Block block, String blockname) {
+    public static boolean isVerifiedBlock(Wallet wallet, Block block, String name) {
         if (wallet.isVerifiedGuestBlock(block)) {
-            System.out.println(wallet.getName() + " accepted block " + blockname);
+            System.out.println(wallet.getName() + " accepted block " + name);
             return true;
         } else {
-            System.out.println(wallet.getName() + " rejected block " + blockname);
+            System.out.println(wallet.getName() + " rejected block " + name);
             return false;
         }
     }

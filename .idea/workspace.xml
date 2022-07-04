@@ -4,8 +4,6 @@
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/chapter6/BlockchainPlatform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter6/BlockchainPlatform.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter6/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter6/Transaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter6/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter6/Wallet.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +57,7 @@
       <recent name="chapter3" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.BlockchainPlatform">
+  <component name="RunManager" selected="Application.chapter6.BlockchainPlatform">
     <configuration name="BlockchainPlatform" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chapter5.BlockchainPlatform" />
       <module name="learn_blockchain_in_java_zhou" />
@@ -99,19 +97,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestXOR" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter4.TestXOR" />
-      <module name="learn_blockchain_in_java_zhou" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="chapter4.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="chapter4.TestTransaction" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chapter4.TestTransaction" />
       <module name="learn_blockchain_in_java_zhou" />
@@ -125,13 +110,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="chapter6.BlockchainPlatform" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.BlockchainPlatform" />
+      <module name="learn_blockchain_in_java_zhou" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chapter6.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.chapter6.BlockchainPlatform" />
         <item itemvalue="Application.BlockchainPlatform" />
         <item itemvalue="Application.chapter4.TestTransaction" />
         <item itemvalue="Application.TestWallet_1" />
         <item itemvalue="Application.TestEncryptionDecryptionWithAES" />
-        <item itemvalue="Application.TestXOR" />
       </list>
     </recent_temporary>
   </component>
@@ -143,13 +141,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00076" summary="update">
-      <created>1656375185100</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1656375185100</updated>
     </task>
     <task id="LOCAL-00077" summary="update">
       <created>1656377083339</created>
@@ -487,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656641012742</updated>
     </task>
-    <option name="localTasksCounter" value="125" />
+    <task id="LOCAL-00125" summary="update">
+      <created>1656957968964</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1656957968964</updated>
+    </task>
+    <option name="localTasksCounter" value="126" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
