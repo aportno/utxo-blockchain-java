@@ -1832,3 +1832,21 @@ The server will be listening in at port 8888.
 A stream can be defined as a sequence of data. The `InputStream` is used to read data from a source and the `OutputStream`
 is used for writing data to a destination
 
+Some key code blocks within our `TestTCPServer` class:
+
+```
+   MessageManagerTCP messageManagerTCP = new MessageManagerTCP(socket, userTo);
+   messageManagerTCP.start();
+   System.out.println("Message manager started");
+```
+
+The `MessageManagerTCP` instance is dedicated to sending and receiving messages to and from the client
+
+```
+     CommunicationChannel communicationChannel = new CommunicationChannel(messageManagerTCP);
+     communicationChannel.start();
+```
+
+The `CommunicationChannel` object is a thread dedicated to receiving inputs from `System.in`. The inputs are messages entered
+by users.
+

@@ -32,6 +32,5 @@ public class TestTCPServer {
 
         System.out.println("Communication channel is ready");
         serverSocket.close();
-
     }
 }
