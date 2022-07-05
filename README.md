@@ -1755,12 +1755,21 @@ Class variables:
 network messages. The only difference is that, a server `DatagramSocket` is always bound to a specific port, while a client
 `DatagramSocket` is not.
 
- `private boolean isRunServer = true;`
-` private Scanner userInput;`
+ `private boolean isServerRunning = true;` is self-explanatory. It is a variable used to terminate the server when needed
 
+` private Scanner userInput;` is self-explanatory. It stores a users input
+
+**What is a socket?**
 
 A socket is one end-point of a two-way communication link between two programs running on the network. Socket classes 
 are used to represent the connection between a client program and a server program.
 
+**What is a DatagramPacket and DatagramSocket?**
+
 A `DatagramPacket` object is a data container. A `DatagramSocket` object is a type of network socket which provides 
 connection-less point for sending and receiving `DatagramPacket` -- it is the mechanism used to send or receive `DatagramPackets`.
+
+We use `DatagramPacket` to accept incoming messages. Upon receiving a message from the client `serverUDPSocket.receive(datagramPacket)`,
+we display the client's information including client socket's IP address and listening port number, and fetch the data from
+the `DatagramPacket` object.
+
