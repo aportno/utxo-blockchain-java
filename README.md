@@ -1850,3 +1850,11 @@ The `MessageManagerTCP` instance is dedicated to sending and receiving messages 
 The `CommunicationChannel` object is a thread dedicated to receiving inputs from `System.in`. The inputs are messages entered
 by users.
 
+**What is a thread?**
+
+A thread enables multiprocessing in Java. For example, in our `UDP` network, messaging operated in a walkie-talkie like function
+where one user sends a message and must wait for an incoming message before the user can send another. This wouldn't be the case
+if we utilized threads. All Java programs have at least one thread, known as the main thread which is created by the JVM at
+the programs start. A single-threaded application has only one Java thread and can handle only one task at a time. To handle 
+multiple tasks in parallel, multi-threading is used: multiple Java threads are created, each performing a different task.
+
