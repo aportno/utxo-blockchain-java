@@ -1853,8 +1853,23 @@ by users.
 **What is a thread?**
 
 A thread enables multiprocessing in Java. For example, in our `UDP` network, messaging operated in a walkie-talkie like function
-where one user sends a message and must wait for an incoming message before the user can send another. This wouldn't be the case
-if we utilized threads. All Java programs have at least one thread, known as the main thread which is created by the JVM at
-the programs start. A single-threaded application has only one Java thread and can handle only one task at a time. To handle 
-multiple tasks in parallel, multi-threading is used: multiple Java threads are created, each performing a different task.
+where one user sends a message and must wait for an incoming message before the user can send another. This wouldn't be the case if we utilized threads
+like we do in `TCP`. Using `TCP`, the client or server can send consecutive messages without having to wait for a response. In other
+words, `UDP` allows one message at a time (i.e., message from A -> message from B -> message from A) whereas `TCP` allows for sequential messages (i.e,
+message from user A -> message from user A -> message from user B). This closely replicates the traditional "chat" applications
 
+
+All Java programs have at least one thread, known as the main thread which is created by the JVM at the programs start. 
+A single-threaded application has only one Java thread and can handle only one task at a time. To handle multiple tasks in parallel,
+multi-threading is used: multiple Java threads are created, each performing a different task.
+
+**Our network going forward**
+
+TCP will our chosen protocol because it is the better choice when conducting business transactions with zero fault tolerance.
+Blockchain can implement both TCP and UDP, just for different functions. Bitcoin, for example, started with TCP, but bitcoin's Fast
+Internet Relay Engine (FIBRE) is a UDP-based relay network
+
+**Building a P2P Environment**
+
+In a P2P environment, each peer is a server and a client. In our first example, we will have a 2 user P2P chat program, each server
+is dedicated to message receiving and each client is dedicated to sending messages.
