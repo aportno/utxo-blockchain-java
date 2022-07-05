@@ -1873,3 +1873,30 @@ Internet Relay Engine (FIBRE) is a UDP-based relay network
 
 In a P2P environment, each peer is a server and a client. In our first example, we will have a 2 user P2P chat program, each server
 is dedicated to message receiving and each client is dedicated to sending messages.
+
+The class `PeerTCP` contains three parts:
+* the driver class `PeerTCP` itself
+* `PeerTCPIncomingMessageManager`
+* `PeerTCPOutgoingMessageManager`
+
+`PeerTCP` starts an instance of `PeerTCPOutgoingMessageManager` before creating a TCP server socket. This is to avoid being blocked
+by the server socket. `PeerTCPOutgoingMessageManager` wraps around a client socket and is dedicated to sending messages. `PeerTCPIncomingMessageManager`
+wraps a server side socket connection to manage incoming messages. Not that `PeerTCPIncomingMessageManager` does not
+send messages and `PeerTCPOutgoingMessageManager` does not receive messages.
+
+**UDP and TCP chat programs**
+
+The two chat programs we created above have the disadvantage of only allowing messaging between two users. Since blockchain has
+a prominent broadcasting feature, we need to write another chat program in which more than two users can share their message on
+a discussion board. For this multiuser chat program, we will have a central server that acts like a message routing center, accepting multiple connections
+simultaneously and forwarding messages to all users. The central server is critical. Without it, no communication among the
+users is available.
+
+We create `SimpleTextMessage` class to unify the messages in the network. Every message received and sent is a `SimpleTextMessage`
+containing the name of the sender and the message from the sender.
+
+There's 3 classes needed on the server side:
+1) a driver class which is also responsible for accepting incoming connection requests
+2) a `UserChannelInfo` class to wrap the socket from the driver class and manage all socket-to-socket communication
+3) a `ServerMessageManager` polls the queue from time to time, forwards messages to participating clients i.e., broadcasting
+
