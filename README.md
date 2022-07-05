@@ -1741,10 +1741,7 @@ UDP (User Datagram Protocol) requires no such connection and therefore is more e
 however. UDP wraps data into datagrams, and these datagrams can take different routes and arrive in different orders. If the
 order is important, then the application layer must take care of it instead.
 
-
 Our new `TestUDPServer` class:
-
-Class variables:
 
  `private int serverPort;` - this is the port number that the server will be listening (expecting incoming messages) at it.
  It's akin to a TV chanel. Information targeting a specific port is sorted by the network card to the proper port, the 
@@ -1816,4 +1813,22 @@ Server listening for incoming messages...
 If you want to test this message system between two different computers, then:
 1) Run the server side on computer A like explained above
 2) Run the client side on computer B. When prompted to enter the IP address, enter the IP address of computer A instead of `localhost`
+
+Java differentiates the socket for a server from the socket for a client in TCP. Servers run full time but client sockets
+can be on and off. When a server socket is on, it keeps listening for connection requests from clients and upon obtaining a request,
+the server socket forks a socket dedicated to that particular connection. From then on, all communication between the server
+and the client is facilitated through this socket-to-socket connection.
+
+Our new `TestTCPServer` class:
+
+```
+    public static final int port = 8888;
+```
+
+The server will be listening in at port 8888.
+
+**What is a stream?**
+
+A stream can be defined as a sequence of data. The `InputStream` is used to read data from a source and the `OutputStream`
+is used for writing data to a destination
 
