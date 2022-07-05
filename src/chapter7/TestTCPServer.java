@@ -24,6 +24,14 @@ public class TestTCPServer {
         System.out.println("Connected, start chat!");
 
         MessageManagerTCP messageManagerTCP = new MessageManagerTCP(socket, userTo);
+        messageManagerTCP.start();
+        System.out.println("Message manager started");
+
+        CommunicationChannel communicationChannel = new CommunicationChannel(messageManagerTCP);
+        communicationChannel.start();
+
+        System.out.println("Communication channel is ready");
+        serverSocket.close();
 
     }
 }
