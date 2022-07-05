@@ -1773,3 +1773,47 @@ We use `DatagramPacket` to accept incoming messages. Upon receiving a message fr
 we display the client's information including client socket's IP address and listening port number, and fetch the data from
 the `DatagramPacket` object.
 
+The new `TestUDPClient` class is very similar to `TestUDPServer` but with two major differences. First, the client program's
+`DatagramSocket` does not need to bind to a port. If we wanted to bind it to a port, the port should be different from the
+one the server is bound to. The second difference lies in the `main()` method. This method requires the server's IP address
+because the client needs to locate the server.
+
+A network server starts automatically on the local computer with IP address "localhost". Therefore, when a server starts, it does
+not need to be given an IP address.
+
+Executing a test case is relatively straight forward. To execute on the same computer:
+1) Start the program `TestUDPServer` on computer A. The server should be up and running before the client to prevent the client's messages from getting lost
+2) Start the program `TestUDPClient` on computer A
+
+The user will receive the following prompt in the client terminal. Enter `localhost`
+```
+What is the IP address of the server?:
+localhost
+```
+
+Then enter a message to send to the server:
+
+```
+IP: localhost
+UDP client starting now, server is listening at port 8888
+Please enter your response: 
+That's one small step for man. One giant leap for mankind
+```
+
+Toggle to the server side terminal, and you will see the incoming message!
+
+```
+Client:
+port=
+IP=127.0.0.1
+Client:
+ That's one small step for man. One giant leap for mankind
+Please enter your response: 
+Roger that
+Server listening for incoming messages...
+```
+
+If you want to test this message system between two different computers, then:
+1) Run the server side on computer A like explained above
+2) Run the client side on computer B. When prompted to enter the IP address, enter the IP address of computer A instead of `localhost`
+
