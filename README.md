@@ -1728,4 +1728,37 @@ can be computed from the previous block's hash, nonce, timestamp, and transactio
 tree algorithm from all transactions' hashes.
 
 ---
-## Chapter 7 :: Network and Network messaging
+## Chapter 7 :: Network and Network Messaging
+
+Our blockchain system is still not distributed despite the significant improvements made in the prior chapter. We must 
+incorporate network components into our system to make it distributed. Java provides a network package with classes supporting
+TCP and UDP protocols. 
+
+TCP (Transmission Control Protocol) requires establishing a connection before two entities can communicate. Once the connection
+is set up, communication is bidirectional and messages between the two entities are guaranteed to arrive and arrive in order.
+
+UDP (User Datagram Protocol) requires no such connection and therefore is more efficient. It does not guarantee the arrival of messages,
+however. UDP wraps data into datagrams, and these datagrams can take different routes and arrive in different orders. If the
+order is important, then the application layer must take care of it instead.
+
+
+Our new `TestUDPServer` class:
+
+Class variables:
+
+ `private int serverPort;` - this is the port number that the server will be listening (expecting incoming messages) at it.
+ It's akin to a TV chanel. Information targeting a specific port is sorted by the network card to the proper port, the 
+ same way a signal for a specific TV channel can be viewed only when you switch that chanel. Port numbers 1-1024 are 
+ reserved for special purposes, so applications should use other port numbers.
+
+` private DatagramSocket serverUDPSocket;` - 
+
+ `private boolean isRunServer = true;`
+` private Scanner userInput;`
+
+
+A socket is one end-point of a two-way communication link between two programs running on the network. Socket classes 
+are used to represent the connection between a client program and a server program.
+
+A `DatagramPacket` object is a data container. A `DatagramSocket` object is a type of network socket which provides 
+connection-less point for sending and receiving `DatagramPacket` -- it is the mechanism used to send or receive `DatagramPackets`.
