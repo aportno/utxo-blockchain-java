@@ -10,10 +10,10 @@ public class TestTCPServer {
     public static final int port = 8888;
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Who do you want to chat?");
+        System.out.println("Enter username:");
 
-        Scanner userInput = new Scanner(System.in);
-        String userTo = userInput.nextLine();
+        Scanner scanner = new Scanner(System.in);
+        String userInput = scanner.nextLine();
         ServerSocket serverSocket = new ServerSocket(port);
 
         System.out.println("Server is listening at port=" + port);
@@ -23,7 +23,7 @@ public class TestTCPServer {
         System.out.println(userInput + " is from " + clientAddress.getHostName());
         System.out.println("Connected, start chat!");
 
-        MessageManagerTCP messageManagerTCP = new MessageManagerTCP(socket, userTo);
+        MessageManagerTCP messageManagerTCP = new MessageManagerTCP(socket, userInput);
         messageManagerTCP.start();
         System.out.println("Message manager started");
 

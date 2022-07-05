@@ -34,7 +34,7 @@ public class MessageManagerTCP extends Thread {
         while (isServerRunning) {
             try {
                 String inputMsg = (String)(this.objectInputStream.readObject());
-                System.out.println(this.userName + "]: " + inputMsg);
+                System.out.println(this.userName + ": " + inputMsg);
                 if (inputMsg.trim().startsWith("END")) {
                     isServerRunning = false;
                 }

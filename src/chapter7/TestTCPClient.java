@@ -9,11 +9,11 @@ public class TestTCPClient {
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Please enter the serve's IP address");
+        System.out.println("Please enter the server's IP address");
         String ipAddress = scanner.nextLine();
         Socket socket = new Socket(ipAddress, port);
 
-        System.out.println("What is the users name?");
+        System.out.println("Enter username?");
         String userName = scanner.nextLine();
 
         System.out.println("Connected, ready to go!");
