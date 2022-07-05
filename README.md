@@ -1751,7 +1751,9 @@ Class variables:
  same way a signal for a specific TV channel can be viewed only when you switch that chanel. Port numbers 1-1024 are 
  reserved for special purposes, so applications should use other port numbers.
 
-` private DatagramSocket serverUDPSocket;` - 
+` private DatagramSocket serverUDPSocket;` - in Java UDP, both the server and the client make sure of `DatagramSocket` to send and receive
+network messages. The only difference is that, a server `DatagramSocket` is always bound to a specific port, while a client
+`DatagramSocket` is not.
 
  `private boolean isRunServer = true;`
 ` private Scanner userInput;`

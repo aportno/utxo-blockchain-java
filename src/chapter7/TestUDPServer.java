@@ -9,7 +9,7 @@ import java.io.IOException;
 public class TestUDPServer {
     private final int serverPort;
     private final DatagramSocket serverUDPSocket;
-    private boolean isRunServer = true;
+    private boolean isServerRunning = true;
     private final Scanner userInput;
 
     public TestUDPServer(int serverPort) {
@@ -24,7 +24,7 @@ public class TestUDPServer {
 
     public void start() {
         System.out.println("UDP server starting at port " + this.serverPort);
-        while (isRunServer) {
+        while (isServerRunning) {
             byte[] buf = new byte[2048];
             DatagramPacket datagramPacket = new DatagramPacket(buf, buf.length);
 
@@ -36,7 +36,7 @@ public class TestUDPServer {
                 String trimDp = (new String(datagramPacket.getData())).trim();
                 if (trimDp.startsWith("END")) {
                     System.out.println("Ending now...");
-                    isRunServer = false;
+                    isServerRunning = false;
                     userInput.close();
                     continue;
                 } else {
@@ -51,7 +51,7 @@ public class TestUDPServer {
                 serverUDPSocket.send(datagramPacket1);
 
                 if (userResponse.startsWith("END")) {
-                    isRunServer = false;
+                    isServerRunning = false;
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
