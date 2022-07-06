@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change afterPath="$PROJECT_DIR$/src/chapter7/TestTCPServerCenter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter7/TestTCPClientFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,9 +57,22 @@
       <recent name="chapter3" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.TestTCPClient">
+  <component name="RunManager" selected="Application.TestTCPClientFrame">
     <configuration name="TestTCPClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chapter7.TestTCPClient" />
+      <module name="learn_blockchain_in_java_zhou" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chapter7.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestTCPClientFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter7.TestTCPClientFrame" />
       <module name="learn_blockchain_in_java_zhou" />
       <extension name="coverage">
         <pattern>
@@ -110,26 +123,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="chapter6.BlockchainPlatform" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter6.BlockchainPlatform" />
-      <module name="learn_blockchain_in_java_zhou" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="chapter6.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.TestTCPClientFrame" />
         <item itemvalue="Application.TestTCPClient" />
         <item itemvalue="Application.TestTCPServer" />
         <item itemvalue="Application.TestUDPClient" />
         <item itemvalue="Application.TestUDPServer" />
-        <item itemvalue="Application.chapter6.BlockchainPlatform" />
       </list>
     </recent_temporary>
   </component>
@@ -141,13 +141,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00091" summary="update">
-      <created>1656447017641</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1656447017641</updated>
     </task>
     <task id="LOCAL-00092" summary="update">
       <created>1656452757015</created>
@@ -485,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657064923084</updated>
     </task>
-    <option name="localTasksCounter" value="140" />
+    <task id="LOCAL-00140" summary="update">
+      <created>1657067521018</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1657067521018</updated>
+    </task>
+    <option name="localTasksCounter" value="141" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
