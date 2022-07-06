@@ -1900,3 +1900,8 @@ There's 3 classes needed on the server side:
 2) a `UserChannelInfo` class to wrap the socket from the driver class and manage all socket-to-socket communication
 3) a `ServerMessageManager` polls the queue from time to time, forwards messages to participating clients i.e., broadcasting
 
+To test the TCP multiple-users chat program:
+1) Compile the `TestTCPServerCenter` and `TestTCPClientFrame` classes
+2) Execute the `TestTCPServerCenter` on computer A
+3) Execute the `TestTCPClientFrame` on any computer
+4) Start chatting
