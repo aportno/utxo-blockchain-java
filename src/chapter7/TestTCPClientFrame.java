@@ -22,15 +22,36 @@ public class TestTCPClientFrame extends JFrame {
     private JTextArea textInput;
     private JButton sentButton;
     private JTextArea displayArea;
-    private GridBagLayout gridBagLayout;
-    private GridBagConstraints gridBagConstraints;
+    private GridBagLayout gridBagLayout = null;
+    private GridBagConstraints gridBagConstraints = null;
     private MessageManagerTCP_x messenger;
-    private ObjectOutputStream objectOutputStream;
-    private ObjectInputStream objectInputStream;
+    private final ObjectOutputStream objectOutputStream;
+    private final ObjectInputStream objectInputStream;
 
     public TestTCPClientFrame(String userName, String ipAddress) throws Exception {
         super(userName);
         setUp();
+        Socket socket = new Socket(ipAddress, 8888);
+        this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+        this.sendMsg(userName);
+
+        MessageManagerTCP_x messenger = new MessageManagerTCP_x(objectInputStream, this.displayArea);
+        Thread thread = new Thread(messenger);
+        thread.start();
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                try {
+                    messenger.close();
+                } catch (Exception e1) {}
+                try {
+                    sendMsg("END");
+                } catch (Exception e2) {}
+                dispose();
+                System.exit(2);
+            }
+        });
     }
 
     protected void sendMsg(String msg) {
