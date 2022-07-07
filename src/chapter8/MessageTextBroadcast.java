@@ -9,15 +9,13 @@ public class MessageTextBroadcast extends MessageSigned {
     private static final long serialVersionUID = 1L;
     private final byte[] signature;
     private final PublicKey senderKey;
-    private final PublicKey receiver;
     private final String senderName;
     private final String info;
 
-    public MessageTextBroadcast(String info, PrivateKey privateKey, PublicKey senderKey, String senderName, PublicKey receiverKey) {
+    public MessageTextBroadcast(String info, PrivateKey privateKey, PublicKey senderKey, String senderName) {
         this.info = info;
         signature = UtilityMethods.generateSignature(privateKey, this.info);
         this.senderKey = senderKey;
-        this.receiver = receiverKey;
         this.senderName = senderName;
     }
 
@@ -27,10 +25,6 @@ public class MessageTextBroadcast extends MessageSigned {
 
     public int getMessageType() {
         return Message.TEXT_BROADCAST;
-    }
-
-    public PublicKey getReceiver() {
-        return receiver;
     }
 
     public PublicKey getSenderKey() {

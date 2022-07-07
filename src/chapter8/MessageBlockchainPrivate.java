@@ -9,7 +9,7 @@ public class MessageBlockchainPrivate extends Message implements java.io.Seriali
     private final Blockchain ledger;
     private final PublicKey sender;
     private final PublicKey receiver;
-    private int initialSize = 0;
+    private final int initialSize;
 
     public MessageBlockchainPrivate(Blockchain ledger, PublicKey sender, PublicKey receiver) {
         this.ledger = ledger;
@@ -41,5 +41,4 @@ public class MessageBlockchainPrivate extends Message implements java.io.Seriali
     public boolean isForBroadcast() {
         return false;
     }
-
 }
