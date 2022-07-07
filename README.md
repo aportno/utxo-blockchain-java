@@ -2009,3 +2009,8 @@ Our last message type is `MessageAddressPrivate`. A wallet that wants a list of 
 in the blockchain system can send a private query for this message. In most cases this isn't necessary because each wallet is constantly
 and automatically updating its local wallet list whenever it receives a message from other wallets.
 
+A wallet node is composed of 3 classes:
+1) `WalletSimulator` for the GUI
+2) `WalletConnectionAgent` for network connection including message receiving and sending
+3) `WalletMessageTaskManager` that processes incoming messages including updating local blockchain and displaying chat messages
+
