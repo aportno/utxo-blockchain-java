@@ -1996,6 +1996,12 @@ method set to `true` while also adjusting our message type:
    }
 ```
 
+Every node in the blockchain is a wallet. When a wallet starts a transaction, this transaction is broadcast to all other nodes as
+a public message. The class `MessageTransactionBroadcast` implements this functionality.
 
+A transaction message does not need to be signed because the transaction itself is signed, and it is broadcast
+publicly across the network. The same logic applies to block messages in our `MessageBlockBroadcast` class. 
 
+The blockchain, the ledger itself, should not be broadcast, but only sent to wallets who request it. Broadcasting a blockchain
+is actually very inefficient and difficult because the chain can grow to fairly large sizes.
 
