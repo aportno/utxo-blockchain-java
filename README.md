@@ -1956,6 +1956,7 @@ minimum functionalities, the network messages should include:
 * Private messages containing available addresses upon request
 * Private messages asking to close network connection
 
+<a href="https://ibb.co/KssdjLH"><img src="https://i.ibb.co/X551Z3T/PlsFix.png" alt="PlsFix" border="0"></a>
 
-![Architecture of our blockchain application system](blockchain-network-architecture.png)
+
 
