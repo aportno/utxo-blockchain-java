@@ -1906,6 +1906,8 @@ To test the TCP multiple-users chat program:
 3) Execute the `TestTCPClientFrame` on any computer
 4) Start chatting
 
+---
 ## Chapter 8 :: Distributed Blockchain System
+
 
 
