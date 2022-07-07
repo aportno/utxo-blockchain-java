@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class Wallet {
     private KeyPair keyPair;
     private String walletName;
-    private static final String keyLocation = "keys";
     private Blockchain localLedger;
 
     public Wallet(String walletName, String password) {
@@ -39,13 +38,13 @@ public class Wallet {
         objectOutputStream.writeObject(this.keyPair);
 
         byte[] keyBytes = UtilityMethods.encryptionByXOR(byteArrayOutputStream.toByteArray(), password);
-        File file = new File(Wallet.keyLocation);
+        File file = new File(Configuration.getKeyLocation());
 
         if (!file.exists()) {
             file.mkdir();
         }
 
-        FileOutputStream fileOutputStream = new FileOutputStream(Wallet.keyLocation
+        FileOutputStream fileOutputStream = new FileOutputStream(Configuration.getKeyLocation()
                 + "/"
                 + this.getName().replace(' ', '_')
                 + "_keys");
@@ -57,7 +56,7 @@ public class Wallet {
 
     private void populateExistingWallet(String walletName, String password) {
         try {
-            FileInputStream fileInputStream = new FileInputStream(Wallet.keyLocation
+            FileInputStream fileInputStream = new FileInputStream(Configuration.getKeyLocation()
                     + "/"
                     + walletName.replace(' ', '_') + "_keys");
 
