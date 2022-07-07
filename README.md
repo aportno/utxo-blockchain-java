@@ -1923,5 +1923,38 @@ function. Each node is supposed to have 8 outgoing connections and can accept ar
 and their connections make up the "backbone" of bitcoin, but the extended bitcoin network also involves nodes running the
 P2P protocol and other specialized protocols.
 
+Our next step is to adopt the star network model. Once we understand how a blockchain system can be implemented via the network
+star model, we can then start implementing our P2P network.
+
+The core of the star model is the server. Our server starts with 2 components:
+* a genesis miner
+* a message routing service provider
+
+The genesis miner begins byb constructing a genesis block and jumpstarting the blockchain. Having formed the genesis blockchain, 
+the genesis miner hands it over to the message routing service provider and ceases direct contract. From now on the genesis
+miner behaves like any other wallet, forming a normal network connection with the message routing service provider.
+
+By now, the message routing service provider becomes the only component in the server. The message routing service provider
+(or just message service provider for short) is in charge of managing all incoming messages. It is composed of a network server
+a collection of network connections and a message task manager.
+
+Every node in our blockchain system is either a wallet or a miner and each connects to the message service provider (similar to
+our `TestTCPServerCenter` class) through the network.
+
+Except for the genesis miner, each wallet has 3 major components:
+1) an agent dedicated to network connection
+2) a task manager dedicated to processing messages
+3) a GUI that facilitates contact between the user and the connection agent or the message task manager
+
+Both the network connection agent and the message processing task manager are independent working threads. For a blockchain with
+minimum functionalities, the network messages should include:
+* Private and broadcast chat messages
+* Block broadcast messages (broadcast a mined block)
+* Transaction broadcast messages (broadcast a transaction)
+* Private blockchain messages upon request
+* Private messages paging available participants (addresses)
+* Private messages containing available addresses upon request
+* Private messages asking to close network connection
+
 
 
