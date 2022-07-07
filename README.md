@@ -2005,3 +2005,7 @@ publicly across the network. The same logic applies to block messages in our `Me
 The blockchain, the ledger itself, should not be broadcast, but only sent to wallets who request it. Broadcasting a blockchain
 is actually very inefficient and difficult because the chain can grow to fairly large sizes.
 
+Our last message type is `MessageAddressPrivate`. A wallet that wants a list of all participating wallets (including the genesis miner)
+in the blockchain system can send a private query for this message. In most cases this isn't necessary because each wallet is constantly
+and automatically updating its local wallet list whenever it receives a message from other wallets.
+
