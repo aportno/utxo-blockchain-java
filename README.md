@@ -1960,5 +1960,23 @@ minimum functionalities, the network messages should include:
 
 <a href="https://ibb.co/KssdjLH"><img src="https://i.ibb.co/X551Z3T/PlsFix.png" alt="PlsFix" border="0"></a>
 
+All messages in our system will be a subclass of the `Message` class. They all need to implement the 3 abstract methods:
+* `getMessageType()`
+* `getMessageBody()`
+* `isForBroadcast()`
+
+The `Message` class is an abstract class, meaning the objects cannot be directly created from it, and instead they can only be
+constructed from its subclasses. The `Message` class is to define a standard applying to all message types used within the
+system. 
+
+**Why aren't we using interface instead?**
+
+Both the abstract class and the interface allow polymorphisms in OOO states or other implemented methods. An abstract class,
+on the other hand, is a perfect choice for the super class which is partially completed except for the part that different
+subclasses can have different implementations.
+
+For example, an equity option contract in finance is characterized by 5 parameters (strike, spot, vol, interest rate, time).
+All equity options must contain these attributes, therefor `EquityOption` could be an abstract class, which is then extended
+by say a `Put` class or a `Call` class.
 
 
