@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.security.*;
 import java.security.spec.KeySpec;
 import java.util.Base64;
+import java.util.Scanner;
 
 public class UtilityMethods {
     public static long uniqueNumber = 0;
@@ -22,8 +23,7 @@ public class UtilityMethods {
         try {
             KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
             keyPairGen.initialize(2048);
-            KeyPair keyPair = keyPairGen.generateKeyPair();
-            return keyPair;
+            return keyPairGen.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -117,8 +117,7 @@ public class UtilityMethods {
     public static String toBinaryString(byte[] hash) {
         StringBuilder sb = new StringBuilder();
         for (byte b : hash) {
-            int num = b;
-            StringBuilder str = new StringBuilder(Integer.toBinaryString(num));
+            StringBuilder str = new StringBuilder(Integer.toBinaryString(b));
             while (str.length() < 8) {
                 str.insert(0, "0");
             }
@@ -257,21 +256,19 @@ public class UtilityMethods {
         return j;
     }
 
-    public static void displayTab(PrintStream out, int level, String str) {
-        for (int i = 0; i < level; i++) {
-            out.print("\t");
-        }
-        out.println(str);
+    public static void displayTab(StringBuilder out, int level, String str) {
+        out.append("\t".repeat(Math.max(0, level)));
+        out.append(str).append(System.getProperty("line.separator"));
     }
 
-    public static void displayUTXO(UTXO utxo, PrintStream out, int level) {
+    public static void displayUTXO(UTXO utxo, StringBuilder out, int level) {
         displayTab(out, level, "fund: "
                 + utxo.getAmountTransferred()
                 + ", receiver: "
                 + UtilityMethods.getKeyString(utxo.getReceiver()));
     }
 
-    public static void displayTransaction(Transaction transaction, PrintStream out, int level) {
+    public static void displayTransaction(Transaction transaction, StringBuilder out, int level) {
         displayTab(out, level, "Transaction{");
         displayTab(out, level + 1, "ID: " + transaction.getHashID());
         displayTab(out, level + 1, "Sender: " + UtilityMethods.getKeyString(transaction.getSender()));
@@ -301,7 +298,7 @@ public class UtilityMethods {
         displayTab(out, level, "}");
     }
 
-    public static void displayBlock(Block block, PrintStream out, int level) {
+    public static void displayBlock(Block block, StringBuilder out, int level) {
         displayTab(out, level, "Block{");
         displayTab(out, level, "\tID: " + block.getHashID());
 
@@ -317,7 +314,7 @@ public class UtilityMethods {
         displayTab(out, level, "}");
     }
 
-    public static void displayBlockchain(Blockchain ledger, PrintStream out, int level) {
+    public static void displayBlockchain(Blockchain ledger, StringBuilder out, int level) {
         displayTab(out, level, "Blockchain{ number of blocks: " + ledger.getBlockchainSize());
 
         for (int i = 0; i < ledger.getBlockchainSize(); i++) {
@@ -326,6 +323,27 @@ public class UtilityMethods {
         }
 
         displayTab(out, level, "}");
+    }
+
+    public static int guaranteeIntegerInputByScanner(java.util.Scanner in, int lowerBound, int upperBound) {
+        int x;
+        try {
+            x = in.nextInt();
+        } catch (java.util.InputMismatchException e) {
+            x = lowerBound -1;
+        }
+        while (x < lowerBound || x > upperBound) {
+            System.out.println("You selected " + x + ", please only enter an integer between " + lowerBound + " and "
+            + upperBound + " inclusively");
+            try {
+                x = in.nextInt();
+            } catch (java.util.InputMismatchException e) {
+                in.nextLine();
+                x = lowerBound - 1;
+            }
+        }
+        in.nextLine();
+        return x;
     }
 
     public static String computeMerkleTreeRootHash(String[] hashes) {

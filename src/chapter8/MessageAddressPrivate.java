@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class MessageAddressPrivate extends Message {
     @Serial
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private final ArrayList<KeyNamePair> addresses;
 
     public MessageAddressPrivate(ArrayList<KeyNamePair> addresses) {
