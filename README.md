@@ -1909,5 +1909,19 @@ To test the TCP multiple-users chat program:
 ---
 ## Chapter 8 :: Distributed Blockchain System
 
+In an ideal peer-to-peer (P2P) network, all nodes are equal. The crucial concept of P2P is to decentralize, i.e., there 
+should not be a central server that controls everything. In an ideal environment, each peer is a server and a client.
+Individuals can share their resources as a "server" and access the resources of others as a "client". We can essentially
+abstract away the difference between these two terms as their definitions are implicit within the idea of a "peer". Instead,
+the proper terminologies would be "outgoing/outbound" connections and "incoming/inbound" connections.
+
+Depending on the architecture and implementation of the P2P network, an incoming connection could be a TCP client socket connection,
+or it could be the responding socket connection from the server socket. The latter choice is not very common, however.
+
+Bitcoin network is built upon a collection of nodes running the bitcoin P2P protocol. These peer nodes maintain the network routing
+function. Each node is supposed to have 8 outgoing connections and can accept around 100 incoming connections. These nodes
+and their connections make up the "backbone" of bitcoin, but the extended bitcoin network also involves nodes running the
+P2P protocol and other specialized protocols.
+
 
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update" />
+    <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,11 +40,12 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "jdk.selected.JAVA_MODULE": "openjdk-18",
-    "last_opened_file_path": "C:/Users/nomura/Desktop/aportno/Developer/learning-blockchain-in-java-zhou/Learning-Blockchain-in-Java-e2-Chapter8-src"
+    "last_opened_file_path": "C:/Users/nomura/IdeaProjects/learn-blockchain-in-java-zhou/src/chapter8"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\nomura\IdeaProjects\learn-blockchain-in-java-zhou\src\chapter8" />
       <recent name="C:\Users\nomura\IdeaProjects\learn_blockchain_in_java_zhou\src\chapter6" />
       <recent name="C:\Users\nomura\IdeaProjects\learn_blockchain_in_java_zhou\src\chapter5" />
       <recent name="C:\Users\nomura\IdeaProjects\learn_blockchain_in_java_zhou\src\chapter4" />
@@ -139,13 +142,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00097" summary="update">
-      <created>1656468583055</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1656468583055</updated>
     </task>
     <task id="LOCAL-00098" summary="update">
       <created>1656468933580</created>
@@ -483,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657072583517</updated>
     </task>
-    <option name="localTasksCounter" value="146" />
+    <task id="LOCAL-00146" summary="update">
+      <created>1657158942459</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1657158942459</updated>
+    </task>
+    <option name="localTasksCounter" value="147" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
