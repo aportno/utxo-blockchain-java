@@ -2014,3 +2014,15 @@ A wallet node is composed of 3 classes:
 2) `WalletConnectionAgent` for network connection including message receiving and sending
 3) `WalletMessageTaskManager` that processes incoming messages including updating local blockchain and displaying chat messages
 
+The class `WalletConnectionAgent` controls a wallet's network connection. It is responsible for:
+1) Constructing a network connection between the wallet and the message service provider
+2) Accepting messages from the message service provider and placing them in a queue for the `WalletMessageTaskManager` to process
+3) Sending messages out
+4) Properly closing the network connection
+
+The `WalletMessageTaskManager` class major task is to poll the queue for available messages. If messages exist, the task manager
+will process them based on the message types. There is a method written specifically for every message type except for
+`MessageBlockchainBroadcast`. The reason is that `WalletMessageTaskManager` is a super class with two subclasses:
+`MinerMessageTaskManager` and `MinerGenesisMessageTaskManager`. These two subclasses need to take different actions upon some
+messages, which require them to override corresponding methods.
+

@@ -21,7 +21,7 @@ public class UtilityMethods {
 
     public static KeyPair generateKeyPair() {
         try {
-            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(Configuration.getKeypairAlgorithm());
             keyPairGen.initialize(2048);
             return keyPairGen.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
@@ -31,7 +31,7 @@ public class UtilityMethods {
 
     public static byte[] generateSignature(PrivateKey privateKey, String message) {
         try {
-            Signature first_signature = Signature.getInstance("SHA256withRSA");
+            Signature first_signature = Signature.getInstance(Configuration.getSignatureAlgorithm());
 
             try {
                 first_signature.initSign(privateKey);
@@ -57,7 +57,7 @@ public class UtilityMethods {
 
     public static boolean verifySignature(PublicKey publicKey, byte[] signature, String message) {
         try {
-            Signature second_signature = Signature.getInstance("SHA256withRSA");
+            Signature second_signature = Signature.getInstance(Configuration.getSignatureAlgorithm());
 
             try {
                 second_signature.initVerify(publicKey);
@@ -92,7 +92,7 @@ public class UtilityMethods {
 
     public static byte[] messageDigestSHA256_toBytes(String msg) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance(Configuration.getHashAlgorithm());
             md.update(msg.getBytes());
             return md.digest();
         } catch (NoSuchAlgorithmException e) {
