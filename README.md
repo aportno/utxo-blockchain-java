@@ -1956,5 +1956,5 @@ minimum functionalities, the network messages should include:
 * Private messages containing available addresses upon request
 * Private messages asking to close network connection
 
-
+![Architecture of our blockchain application system](https://ibb.co/MkCBTWG)
 
