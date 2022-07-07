@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/src/chapter8/MessageID.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/MessageID.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter8/MessageTextPrivate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter8/KeyNamePair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/KeyNamePair.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,13 +144,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00107" summary="update">
-      <created>1656549724526</created>
-      <option name="number" value="00107" />
-      <option name="presentableId" value="LOCAL-00107" />
-      <option name="project" value="LOCAL" />
-      <updated>1656549724526</updated>
     </task>
     <task id="LOCAL-00108" summary="update">
       <created>1656549871616</created>
@@ -486,7 +481,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657211968551</updated>
     </task>
-    <option name="localTasksCounter" value="156" />
+    <task id="LOCAL-00156" summary="update">
+      <created>1657212005705</created>
+      <option name="number" value="00156" />
+      <option name="presentableId" value="LOCAL-00156" />
+      <option name="project" value="LOCAL" />
+      <updated>1657212005705</updated>
+    </task>
+    <option name="localTasksCounter" value="157" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

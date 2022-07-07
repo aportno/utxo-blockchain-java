@@ -1980,3 +1980,10 @@ All equity options must contain these attributes, therefor `EquityOption` could 
 by say a `Put` class or a `Call` class.
 
 
+For a private chat, a class named `MessageTextPrivate` is defined. When the message service provider (i.e., server) forwards
+a private chat message, it needs to know who is the receiver, and the receiver needs to know the identity of the sender.
+`MessageTextPrivate` must include:
+* the text message
+* the sender's public key and name
+* the receiver's public key
+
