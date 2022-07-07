@@ -10,10 +10,10 @@ public class MessageID extends MessageSigned {
      */
     @Serial
     private static final long serialVersionUID = 1L;
-    private final String info;
     private final byte[] signature;
     private final PublicKey sender;
     private final String walletName;
+    private final String info;
 
     public MessageID(PrivateKey privateKey, PublicKey sender, String walletName) {
         this.info = Message.JCOIN_MESSAGE;
