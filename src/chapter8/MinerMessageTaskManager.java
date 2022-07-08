@@ -60,4 +60,8 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
             MinerTheWorker worker = new MinerTheWorker(myWallet(), this, this.agent, this.existingTransactions);
         }
     }
+
+    protected Miner myWallet() {
+        return (Miner) (super.myWallet());
+    }
 }
