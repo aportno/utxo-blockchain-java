@@ -1,12 +1,9 @@
 package chapter8;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.awt.event.*;
+import java.security.PublicKey;
+import java.util.*;
 import javax.swing.*;
 
 public class WalletSimulator extends JFrame {
@@ -50,6 +47,12 @@ public class WalletSimulator extends JFrame {
 
     public boolean showPublicKeyInBalance() {
         return this.balanceShowPublicKey;
+    }
+
+    protected void appendMessageLineOnBoard(String message) {
+        String timeStamp = calendar.getTime().toString();
+        this.displayArea.append("(" + timeStamp + ") " + message + System.getProperty("line.separator"));
+        this.displayArea.setCaretPosition(this.displayArea.getText().length());
     }
 
     private void setBalanceShowPublicKey(boolean bool) {
@@ -99,13 +102,69 @@ public class WalletSimulator extends JFrame {
         this.gbc.gridy = 1;
         this.gbc.gridheight = 9;
 
-        JScrollPane scroll = new JScrollPane(this.displayArea);
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        this.gbl.setConstraints(scroll, this.gbc);
-        container.add(scroll);
+        JScrollPane displayAreaScroll = new JScrollPane(this.displayArea);
+        displayAreaScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        displayAreaScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        this.gbl.setConstraints(displayAreaScroll, this.gbc);
+        container.add(displayAreaScroll);
 
+        this.displayArea.setEditable(false);
+        this.displayArea.setBackground(Color.LIGHT_GRAY);
+        this.displayArea.setLineWrap(true);
+        this.displayArea.setWrapStyleWord(true);
 
+        this.gbc.weighty = 0.0;
+        this.gbc.gridx = 0;
+        this.gbc.gridy = 11;
+        this.gbc.gridheight = 1;
+        this.gbl.setConstraints(this.sentButton, this.gbc);
+        container.add(this.sentButton);
+
+        this.gbc.weighty = 0.1;
+        this.gbc.gridx = 0;
+        this.gbc.gridy = 12;
+        this.gbc.gridheight = 2;
+        JScrollPane textInputScroll = new JScrollPane(this.textInput);
+        textInputScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        textInputScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        this.gbl.setConstraints(textInputScroll, this.gbc);
+        container.add(textInputScroll);
+
+        this.textInput.setLineWrap(true);
+        this.textInput.setWrapStyleWord(true);
+        this.textInput.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // do nothing
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_ENTER) {
+                    if (e.isShiftDown() || e.isControlDown()) {
+                        textInput.append(System.getProperty("line.separator"));
+                    } else {
+                        try {
+                            MessageTextBroadcast mtb = new MessageTextBroadcast(textInput.getText(), wallet.getPrivateKey(),
+                                    wallet.getPublicKey(), wallet.getName());
+                            connectionAgent.isSendMessage(mtb);
+                        } catch (Exception e1) {
+                            System.out.println("Error: " + e1.getMessage());
+                            throw new RuntimeException(e1);
+                        }
+                        e.consume();
+                        textInput.setText("");
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // do nothing
+            }
+        });
+        this.setVisible(true);
     }
 
     private void setBar() {
@@ -113,8 +172,8 @@ public class WalletSimulator extends JFrame {
         setJMenuBar(bar);
         JMenu askMenu = new JMenu("Ask");
 
-        JMenuItem helpItem = new JMenuItem("Help");
-        helpItem.addActionListener(new ActionListener() {
+        JMenuItem askMenuHelpItem = new JMenuItem("Help");
+        askMenuHelpItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 showHelpMessage("1. Update blockchain -> a broadcast message is sent retrieve the latest blockchain from the network to update your local copy with the most recent state.\n"
@@ -150,6 +209,63 @@ public class WalletSimulator extends JFrame {
                 displayBalance(wallet);
             }
         });
+
+        JMenuItem displayBlockchain = new JMenuItem("Display blockchain");
+        displayBlockchain.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayBlockchain(wallet);
+            }
+        });
+
+        askMenu.add(askMenuHelpItem);
+        askMenu.add(askBlockchainItem);
+        askMenu.add(askAddressesItem);
+        askMenu.add(askBalanceItem);
+        askMenu.add(displayBlockchain);
+        bar.add(askMenu);
+
+        JMenu sendMenu = new JMenu("Send");
+        JMenuItem sendMenuHelpItem = new JMenuItem("Help");
+        sendMenuHelpItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showHelpMessage("1. Start a transaction -> choose recipient(s) and amount to transfer.\n"
+                        + "2. Private message -> broadcast to message board but only visible by intended recipient.");
+            }
+        });
+
+        JMenuItem sendTransactionItem = new JMenuItem("Start a transaction");
+        sendTransactionItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FrameTransaction ft = new FrameTransaction(connectionAgent.getAllStoredAddresses(), connectionAgent);
+            }
+        });
+
+        JMenuItem sendPrivateMessageItem = new JMenuItem("Send a private message");
+        sendPrivateMessageItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FramePrivateMessage fpm = new FramePrivateMessage(connectionAgent.getAllStoredAddresses(),
+                        connectionAgent, WalletSimulator.this);
+            }
+        });
+
+        sendMenu.add(sendMenuHelpItem);
+        sendMenu.add(sendTransactionItem);
+        sendMenu.add(sendPrivateMessageItem);
+        bar.add(sendMenu);
+    }
+
+    protected static void showHelpMessage(String message) {
+        help.setMessage(message);
+    }
+
+    protected void displayBlockchain(Wallet wallet) {
+        StringBuilder sb = new StringBuilder();
+        UtilityMethods.displayBlockchain(wallet.getLocalLedger(), sb, 0);
+        messageFrame.setMessage(sb.toString());
     }
 
     protected void displayBalance(Wallet wallet) {
@@ -192,6 +308,65 @@ public class WalletSimulator extends JFrame {
         sb.append("\t".repeat(Math.max(0, level)));
         sb.append(msg);
         sb.append(System.getProperty("line.separator"));
+    }
+
+    private static boolean isInvalidIPLength(String ipAddress) {
+        return ipAddress.length() < 5;
+    }
+
+    public static void main(String[] args) throws Exception {
+        Random randNumGenerator = new Random();
+        int randOutcome = randNumGenerator.nextInt(4);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Provide a name");
+        String providedName = scanner.nextLine();
+        System.out.println("Provide a password");
+        String providedPassword = scanner.nextLine();
+        System.out.println("View public key as address?");
+        String providedPkChoice = scanner.nextLine();
+        boolean isShowPkAsAddress = providedPkChoice.toUpperCase(Locale.ROOT).startsWith("Y");
+        System.out.println("Enter the service provider IP address to join the network");
+        String ipAddress = scanner.nextLine();
+        if (isInvalidIPLength(ipAddress)) {
+            ipAddress = "localhost";
+        }
+        if (randOutcome == 0) {
+            System.out.println("");
+            System.out.println("==========Wallet created==========");
+            Wallet wallet = new Wallet(providedName);
+            System.out.println("");
+            System.out.println(providedName + " wallet initialized on blockchain");
+            System.out.println();
+
+            WalletConnectionAgent agent = new WalletConnectionAgent(ipAddress, Configuration.getPORT(), wallet);
+            Thread agentThread = new Thread(agent);
+
+            WalletMessageTaskManager walletTaskManager = new WalletMessageTaskManager(agent, wallet, agent.getMessageConcurrentLinkedQueue());
+            Thread walletTaskManagerThread = new Thread(walletTaskManager);
+
+            WalletSimulator simulator = new WalletSimulator(wallet, agent, walletTaskManager);
+            walletTaskManager.setSimulator(simulator);
+
+            agentThread.start();
+            System.out.println("Wallet connection agent started...");
+
+            walletTaskManagerThread.start();
+            System.out.println("Wallet task manager started");
+
+            simulator.setBalanceShowPublicKey(isShowPkAsAddress);
+        } else {
+            System.out.println("");
+            System.out.println("===========Miner created==========");
+            System.out.println("");
+
+            Miner miner = new Miner(providedName, providedPassword);
+            System.out.println(providedName + " miner initialized on blockchain");
+
+            WalletConnectionAgent agent = new WalletConnectionAgent(ipAddress, Configuration.getPORT(), miner);
+            Thread agentThread = new Thread(agent);
+
+            Miner
+        }
     }
 }
 
@@ -245,5 +420,176 @@ class FrameHelp extends javax.swing.JFrame {
         message.setText(msg);
         this.validate();
         this.setVisible(true);
+    }
+}
+
+class FrameTransaction extends javax.swing.JFrame implements ActionListener {
+    private final ArrayList<KeyNamePair> users;
+    private final WalletConnectionAgent agent;
+
+    public FrameTransaction(ArrayList<KeyNamePair> users, WalletConnectionAgent agent) throws HeadlessException {
+        this.users = users;
+        this.agent = agent;
+        setUp();
+    }
+
+    private void setUp() {
+        Container container = this.getContentPane();
+        this.setSize(300, 120);
+        GridLayout gl = new GridLayout(3, 2, 5, 5);
+        JLabel selectUser = new JLabel("Select a user");
+        JLabel selectTxAmount = new JLabel("Select transaction amount");
+        JButton submitButton = new JButton("Submit");
+        JButton cancelButton = new JButton("Cancel");
+
+        container.setLayout(gl);
+        container.add(selectUser);
+        container.add(selectTxAmount);
+
+        JComboBox<String> candidates = new JComboBox<>();
+        for (KeyNamePair each : users) {
+            candidates.addItem(each.getWalletName());
+        }
+        container.add(candidates);
+
+        JTextField input = new JTextField();
+        container.add(input);
+        container.add(submitButton);
+        container.add(cancelButton);
+
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = candidates.getSelectedIndex();
+                double amount = -1.0;
+                String inputText = input.getText();
+                if (inputText != null && inputText.length() > 10) {
+                    try {
+                        amount = Double.parseDouble(inputText);
+                    } catch (Exception e1) {
+                        amount = -1;
+                    }
+                    if (amount <= 0.0) {
+                        input.setText("Must be a positive number");
+                        return;
+                    }
+                    boolean isSendTransaction = agent.isSendTransaction(users.get(selectedIndex).getPublicKey(), amount);
+                    if (!isSendTransaction) {
+                        input.setText("Failed to send");
+                    } else {
+                        input.setText("Transaction sent");
+                    }
+                }
+            }
+        });
+        cancelButton.addActionListener(this);
+        this.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        this.dispose();
+    }
+}
+
+class FramePrivateMessage extends javax.swing.JFrame implements ActionListener {
+    private ArrayList<KeyNamePair> users;
+    private WalletConnectionAgent agent;
+    private JTextArea messageBoard;
+    private WalletSimulator walletSimulator;
+
+    public FramePrivateMessage(ArrayList<KeyNamePair> users, WalletConnectionAgent agent, WalletSimulator walletSimulator) throws HeadlessException {
+        super("Send a private message");
+        this.users = users;
+        this.agent = agent;
+        this.walletSimulator = walletSimulator;
+        setUp();
+    }
+
+    private void setUp() {
+        Container container = getContentPane();
+        this.setSize(300, 200);
+        GridBagLayout gbl = new GridBagLayout();
+        GridBagConstraints gbc = new GridBagConstraints();
+        container.setLayout(gbl);
+
+        JLabel selectLabel = new JLabel("Please select:");
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 0.5;
+        gbc.weighty = 0.0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbl.setConstraints(selectLabel, gbc);
+        container.add(selectLabel);
+
+        JComboBox<String> candidates = new JComboBox<>();
+        for (KeyNamePair each: users) {
+            candidates.addItem(each.getWalletName());
+        }
+
+        gbc.weightx = 0.5;
+        gbc.weighty = 0.0;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbl.setConstraints(candidates, gbc);
+        container.add(candidates);
+
+        gbc.weighty = 0.9;
+        gbc.weightx = 1.0;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridheight = 2;
+        gbc.gridwidth = 2;
+        JTextArea input = new JTextArea(2, 30);
+        input.setLineWrap(true);
+        input.setWrapStyleWord(true);
+        gbl.setConstraints(input, gbc);
+        container.add(input);
+
+        gbc.weighty = 0.0;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 1;
+        JButton sendButton = new JButton("Send");
+        gbl.setConstraints(sendButton, gbc);
+        container.add(sendButton);
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = candidates.getSelectedIndex();
+                String inputText = input.getText();
+                if (inputText != null && inputText.length() > 0) {
+                    PublicKey publicKey = users.get(selectedIndex).getPublicKey();
+                    boolean isSendPrivateMessage = agent.isSendPrivateMessage(publicKey, inputText);
+                    if (isSendPrivateMessage) {
+                        input.setText("Message sent");
+                        walletSimulator.appendMessageLineOnBoard("Private -> " + agent.getNameFromAddress(publicKey)
+                                + ":" + inputText);
+                    } else {
+                        input.setText("Error: message failed");
+                    }
+                }
+            }
+        });
+
+        gbc.weighty = 0.0;
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 1;
+        JButton cancelButton = new JButton("Cancel");
+        gbl.setConstraints(cancelButton, gbc);
+        container.add(cancelButton);
+        cancelButton.addActionListener(this);
+        this.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        this.dispose();
     }
 }

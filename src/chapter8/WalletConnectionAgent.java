@@ -150,4 +150,11 @@ public class WalletConnectionAgent implements Runnable {
             return false;
         }
     }
+
+    protected boolean isSendPrivateMessage(PublicKey receiver, String message) {
+        MessageTextPrivate mtp = new MessageTextPrivate(message, this.wallet.getPrivateKey(), this.wallet.getPublicKey(),
+                this.wallet.getName(), receiver);
+        this.isSendMessage(mtp);
+        return true;
+    }
 }
