@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change afterPath="$PROJECT_DIR$/src/chapter8/WalletConnectionAgent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter8/WalletMessageTaskManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter8/WalletSimulator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter8/UtilityMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/UtilityMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter8/WalletConnectionAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/WalletConnectionAgent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,13 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00116" summary="update">
-      <created>1656607156183</created>
-      <option name="number" value="00116" />
-      <option name="presentableId" value="LOCAL-00116" />
-      <option name="project" value="LOCAL" />
-      <updated>1656607156183</updated>
     </task>
     <task id="LOCAL-00117" summary="update">
       <created>1656607195832</created>
@@ -489,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657224039308</updated>
     </task>
-    <option name="localTasksCounter" value="165" />
+    <task id="LOCAL-00165" summary="update">
+      <created>1657229368630</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
+      <option name="project" value="LOCAL" />
+      <updated>1657229368630</updated>
+    </task>
+    <option name="localTasksCounter" value="166" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

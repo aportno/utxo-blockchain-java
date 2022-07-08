@@ -2026,3 +2026,7 @@ will process them based on the message types. There is a method written specific
 `MinerMessageTaskManager` and `MinerGenesisMessageTaskManager`. These two subclasses need to take different actions upon some
 messages, which require them to override corresponding methods.
 
+The `WalletSimulator` is the driver class for a wallet. It makes use of the `WalletConnectionAgent` and `WalletMessageTaskManager`
+to mimic a wallets' functions. If it has the `MinerMessageTaskManager` instance, it will simulate a miner instead. The `WalletSimulator`
+class contains four inner classes, each displaying a unique GUI.
+

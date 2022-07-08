@@ -1,6 +1,5 @@
 package chapter8;
 
-import java.security.Key;
 import java.security.PublicKey;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
@@ -81,7 +80,7 @@ public class WalletConnectionAgent implements Runnable {
     public void activeClose() {
         MessageTextPrivate messageTextPrivate = new MessageTextPrivate(Message.TEXT_CLOSE, this.wallet.getPrivateKey(),
                 this.wallet.getPublicKey(), this.wallet.getName(), this.getServerAddress());
-        this.sendMessage(messageTextPrivate);
+        this.isSendMessage(messageTextPrivate);
         try {
             Thread.sleep(sleepTime);
         } catch (Exception e) {
@@ -126,7 +125,7 @@ public class WalletConnectionAgent implements Runnable {
         return A;
     }
 
-    public synchronized boolean sendMessage(Message msg) {
+    public synchronized boolean isSendMessage(Message msg) {
         if (msg == null) {
             System.out.println("Message is empty -> cannot send");
             return false;
@@ -141,11 +140,11 @@ public class WalletConnectionAgent implements Runnable {
         }
     }
 
-    protected boolean sendTransaction(PublicKey receiver, double amountToTransfer) {
+    protected boolean isSendTransaction(PublicKey receiver, double amountToTransfer) {
         Transaction tx = this.wallet.transferFund(receiver, amountToTransfer);
         if (tx != null && tx.verifySignature()) {
             MessageTransactionBroadcast msg = new MessageTransactionBroadcast(tx);
-            this.sendMessage(msg);
+            this.isSendMessage(msg);
             return true;
         } else {
             return false;
