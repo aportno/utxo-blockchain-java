@@ -15,10 +15,10 @@ public class WalletSimulator extends JFrame {
     private JButton sentButton;
     private GridBagLayout gbl;
     private GridBagConstraints gbc;
-    private Wallet wallet;
-    private WalletConnectionAgent connectionAgent;
-    private WalletMessageTaskManager taskManager;
-    private Calendar calendar = Calendar.getInstance();
+    private final Wallet wallet;
+    private final WalletConnectionAgent connectionAgent;
+    private final WalletMessageTaskManager taskManager;
+    private final Calendar calendar = Calendar.getInstance();
 
     public WalletSimulator(Wallet wallet, WalletConnectionAgent agent, WalletMessageTaskManager manager) {
         super(wallet.getName());
@@ -31,11 +31,11 @@ public class WalletSimulator extends JFrame {
             public void windowClosing(WindowEvent e) {
                 try {
                     connectionAgent.isSendMessage(new MessageTextPrivate(Message.TEXT_CLOSE, wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName(), connectionAgent.getServerAddress()));
-                } catch (Exception e) {
+                } catch (Exception e1) {
                     try {
                         connectionAgent.activeClose();
                         taskManager.close();
-                    } catch (Exception e1) {
+                    } catch (Exception e2) {
                         // do nothing
                     }
                     dispose();
@@ -73,18 +73,15 @@ public class WalletSimulator extends JFrame {
         this.displayArea = new JTextArea(50, 100);
         this.textInput = new JTextArea(5, 100);
         this.sentButton = new JButton("Send message");
-        this.sentButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    MessageTextBroadcast mtb = new MessageTextBroadcast(textInput.getText(), wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName());
-                    connectionAgent.isSendMessage(mtb);
-                } catch (Exception e1) {
-                    System.out.println("Error: " + e1.getMessage());
-                    throw new RuntimeException(e1);
-                }
-                textInput.setText("");
+        this.sentButton.addActionListener(e -> {
+            try {
+                MessageTextBroadcast mtb = new MessageTextBroadcast(textInput.getText(), wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName());
+                connectionAgent.isSendMessage(mtb);
+            } catch (Exception e1) {
+                System.out.println("Error: " + e1.getMessage());
+                throw new RuntimeException(e1);
             }
+            textInput.setText("");
         });
 
         this.gbc.fill = GridBagConstraints.BOTH;
@@ -173,50 +170,31 @@ public class WalletSimulator extends JFrame {
         JMenu askMenu = new JMenu("Ask");
 
         JMenuItem askMenuHelpItem = new JMenuItem("Help");
-        askMenuHelpItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showHelpMessage("1. Update blockchain -> a broadcast message is sent retrieve the latest blockchain from the network to update your local copy with the most recent state.\n"
-                    + "2. Update users -> the service provider will update your user list.\n"
-                    + "3. Show balance -> displays your balance in the display board\n"
-                    + "4. Display blockchain -> displays your local blockchain in the display board.");
-            }
-        });
+        askMenuHelpItem.addActionListener(e -> showHelpMessage(
+                """
+                        1. Update blockchain -> a broadcast message is sent retrieve the latest blockchain from the network to update your local copy with the most recent state.
+                        2. Update users -> the service provider will update your user list.
+                        3. Show balance -> displays your balance in the display board
+                        4. Display blockchain -> displays your local blockchain in the display board."""));
 
         JMenuItem askBlockchainItem = new JMenuItem("Update blockchain");
-        askBlockchainItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MessageAskForBlockchainBroadcast mabb = new MessageAskForBlockchainBroadcast("Ask request",
-                        wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName());
-                connectionAgent.isSendMessage(mabb);
-            }
+        askBlockchainItem.addActionListener(e -> {
+            MessageAskForBlockchainBroadcast mabb = new MessageAskForBlockchainBroadcast("Ask request",
+                    wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName());
+            connectionAgent.isSendMessage(mabb);
         });
 
         JMenuItem askAddressesItem = new JMenuItem("Update users");
-        askAddressesItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MessageTextPrivate mtp = new MessageTextPrivate(Message.TEXT_ASK_ADDRESSES, wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName(), connectionAgent.getServerAddress());
-                connectionAgent.isSendMessage(mtp);
-            }
+        askAddressesItem.addActionListener(e -> {
+            MessageTextPrivate mtp = new MessageTextPrivate(Message.TEXT_ASK_ADDRESSES, wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName(), connectionAgent.getServerAddress());
+            connectionAgent.isSendMessage(mtp);
         });
 
         JMenuItem askBalanceItem = new JMenuItem("Display balance");
-        askBalanceItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                displayBalance(wallet);
-            }
-        });
+        askBalanceItem.addActionListener(e -> displayBalance(wallet));
 
         JMenuItem displayBlockchain = new JMenuItem("Display blockchain");
-        displayBlockchain.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                displayBlockchain(wallet);
-            }
-        });
+        displayBlockchain.addActionListener(e -> displayBlockchain(wallet));
 
         askMenu.add(askMenuHelpItem);
         askMenu.add(askBlockchainItem);
@@ -227,29 +205,18 @@ public class WalletSimulator extends JFrame {
 
         JMenu sendMenu = new JMenu("Send");
         JMenuItem sendMenuHelpItem = new JMenuItem("Help");
-        sendMenuHelpItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showHelpMessage("1. Start a transaction -> choose recipient(s) and amount to transfer.\n"
-                        + "2. Private message -> broadcast to message board but only visible by intended recipient.");
-            }
-        });
+        sendMenuHelpItem.addActionListener(e -> showHelpMessage("1. Start a transaction -> choose recipient(s) and amount to transfer.\n"
+                + "2. Private message -> broadcast to message board but only visible by intended recipient."));
 
         JMenuItem sendTransactionItem = new JMenuItem("Start a transaction");
-        sendTransactionItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FrameTransaction ft = new FrameTransaction(connectionAgent.getAllStoredAddresses(), connectionAgent);
-            }
+        sendTransactionItem.addActionListener(e -> {
+            FrameTransaction ft = new FrameTransaction(connectionAgent.getAllStoredAddresses(), connectionAgent);
         });
 
         JMenuItem sendPrivateMessageItem = new JMenuItem("Send a private message");
-        sendPrivateMessageItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FramePrivateMessage fpm = new FramePrivateMessage(connectionAgent.getAllStoredAddresses(),
-                        connectionAgent, WalletSimulator.this);
-            }
+        sendPrivateMessageItem.addActionListener(e -> {
+            FramePrivateMessage fpm = new FramePrivateMessage(connectionAgent.getAllStoredAddresses(),
+                    connectionAgent, WalletSimulator.this);
         });
 
         sendMenu.add(sendMenuHelpItem);
@@ -280,10 +247,9 @@ public class WalletSimulator extends JFrame {
 
         double balance = ledger.findRelatedUTXOs(wallet.getPublicKey(), all, spent, unspent, sentTx, rewards);
         ArrayList<UTXO> receivedOutputUTXO = new ArrayList<>();
-        for (int i = 0; i < sentTx.size(); i++) {
-            Transaction tx = sentTx.get(i);
-            for (int j = 0; j < tx.getNumberOfOutputUTXOs(); j++) {
-                UTXO outputUTXO = tx.getOutputUTXO(j);
+        for (Transaction each : sentTx) {
+            for (int j = 0; j < each.getNumberOfOutputUTXOs(); j++) {
+                UTXO outputUTXO = each.getOutputUTXO(j);
                 if (!outputUTXO.getReceiver().equals(wallet.getPublicKey())) {
                     receivedOutputUTXO.add(outputUTXO);
                 }
@@ -292,6 +258,25 @@ public class WalletSimulator extends JFrame {
 
         int level = 0;
         displayTab(sb, level, wallet.getName() + ":");
+        displayTab(sb, level + 1, "All UTXOs");
+        displayUTXOs(sb, all, level + 2);
+        displayTab(sb, level + 1, "Spent UTXOs");
+        displayUTXOs(sb, spent, level + 2);
+        displayTab(sb, level + 1, "Unspent UTXOs");
+        displayUTXOs(sb, unspent, level + 2);
+
+        if (wallet instanceof Miner) {
+            displayTab(sb, level + 1, "Mining Rewards:");
+            displayUTXOs(sb, rewards, level + 2);
+        }
+
+        displayTab(sb, level + 1, "Paid UTXOs");
+        displayUTXOs(sb, receivedOutputUTXO, level + 2);
+        displayTab(sb, level + 1, "Paid Transaction Fee:");
+        displayTab(sb, level + 2, "" + (sentTx.size() * Transaction.TRANSACTION_FEE));
+        displayTab(sb, level + 1, "Balance: " + balance);
+        String msgStr = sb.toString();
+        messageFrame.setMessage(msgStr);
     }
 
     private void displayUTXOs(StringBuilder sb, ArrayList<UTXO> utxos, int level) {
@@ -325,16 +310,18 @@ public class WalletSimulator extends JFrame {
         System.out.println("View public key as address?");
         String providedPkChoice = scanner.nextLine();
         boolean isShowPkAsAddress = providedPkChoice.toUpperCase(Locale.ROOT).startsWith("Y");
+
         System.out.println("Enter the service provider IP address to join the network");
         String ipAddress = scanner.nextLine();
         if (isInvalidIPLength(ipAddress)) {
             ipAddress = "localhost";
         }
+
+        System.out.println();
         if (randOutcome == 0) {
-            System.out.println("");
             System.out.println("==========Wallet created==========");
             Wallet wallet = new Wallet(providedName);
-            System.out.println("");
+            System.out.println();
             System.out.println(providedName + " wallet initialized on blockchain");
             System.out.println();
 
@@ -355,9 +342,8 @@ public class WalletSimulator extends JFrame {
 
             simulator.setBalanceShowPublicKey(isShowPkAsAddress);
         } else {
-            System.out.println("");
             System.out.println("===========Miner created==========");
-            System.out.println("");
+            System.out.println();
 
             Miner miner = new Miner(providedName, providedPassword);
             System.out.println(providedName + " miner initialized on blockchain");
@@ -365,7 +351,19 @@ public class WalletSimulator extends JFrame {
             WalletConnectionAgent agent = new WalletConnectionAgent(ipAddress, Configuration.getPORT(), miner);
             Thread agentThread = new Thread(agent);
 
-            Miner
+            MinerMessageTaskManager manager = new MinerGenesisMessageTaskManager(agent, miner, agent.getMessageConcurrentLinkedQueue());
+            Thread managerThread = new Thread(manager);
+
+            WalletSimulator simulator = new WalletSimulator(miner, agent, manager);
+            manager.setSimulator(simulator);
+
+            agentThread.start();
+            System.out.println("Miner connection agent -> started");
+
+            managerThread.start();
+            System.out.println("Miner task manager -> started");
+
+            simulator.setBalanceShowPublicKey(isShowPkAsAddress);
         }
     }
 }
@@ -457,28 +455,25 @@ class FrameTransaction extends javax.swing.JFrame implements ActionListener {
         container.add(submitButton);
         container.add(cancelButton);
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = candidates.getSelectedIndex();
-                double amount = -1.0;
-                String inputText = input.getText();
-                if (inputText != null && inputText.length() > 10) {
-                    try {
-                        amount = Double.parseDouble(inputText);
-                    } catch (Exception e1) {
-                        amount = -1;
-                    }
-                    if (amount <= 0.0) {
-                        input.setText("Must be a positive number");
-                        return;
-                    }
-                    boolean isSendTransaction = agent.isSendTransaction(users.get(selectedIndex).getPublicKey(), amount);
-                    if (!isSendTransaction) {
-                        input.setText("Failed to send");
-                    } else {
-                        input.setText("Transaction sent");
-                    }
+        submitButton.addActionListener(e -> {
+            int selectedIndex = candidates.getSelectedIndex();
+            double amount;
+            String inputText = input.getText();
+            if (inputText != null && inputText.length() > 10) {
+                try {
+                    amount = Double.parseDouble(inputText);
+                } catch (Exception e1) {
+                    amount = -1;
+                }
+                if (amount <= 0.0) {
+                    input.setText("Must be a positive number");
+                    return;
+                }
+                boolean isSendTransaction = agent.isSendTransaction(users.get(selectedIndex).getPublicKey(), amount);
+                if (!isSendTransaction) {
+                    input.setText("Failed to send");
+                } else {
+                    input.setText("Transaction sent");
                 }
             }
         });
@@ -492,10 +487,10 @@ class FrameTransaction extends javax.swing.JFrame implements ActionListener {
 }
 
 class FramePrivateMessage extends javax.swing.JFrame implements ActionListener {
-    private ArrayList<KeyNamePair> users;
-    private WalletConnectionAgent agent;
+    private final ArrayList<KeyNamePair> users;
+    private final WalletConnectionAgent agent;
     private JTextArea messageBoard;
-    private WalletSimulator walletSimulator;
+    private final WalletSimulator walletSimulator;
 
     public FramePrivateMessage(ArrayList<KeyNamePair> users, WalletConnectionAgent agent, WalletSimulator walletSimulator) throws HeadlessException {
         super("Send a private message");
@@ -557,21 +552,18 @@ class FramePrivateMessage extends javax.swing.JFrame implements ActionListener {
         JButton sendButton = new JButton("Send");
         gbl.setConstraints(sendButton, gbc);
         container.add(sendButton);
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = candidates.getSelectedIndex();
-                String inputText = input.getText();
-                if (inputText != null && inputText.length() > 0) {
-                    PublicKey publicKey = users.get(selectedIndex).getPublicKey();
-                    boolean isSendPrivateMessage = agent.isSendPrivateMessage(publicKey, inputText);
-                    if (isSendPrivateMessage) {
-                        input.setText("Message sent");
-                        walletSimulator.appendMessageLineOnBoard("Private -> " + agent.getNameFromAddress(publicKey)
-                                + ":" + inputText);
-                    } else {
-                        input.setText("Error: message failed");
-                    }
+        sendButton.addActionListener(e -> {
+            int selectedIndex = candidates.getSelectedIndex();
+            String inputText = input.getText();
+            if (inputText != null && inputText.length() > 0) {
+                PublicKey publicKey = users.get(selectedIndex).getPublicKey();
+                boolean isSendPrivateMessage = agent.isSendPrivateMessage(publicKey, inputText);
+                if (isSendPrivateMessage) {
+                    input.setText("Message sent");
+                    walletSimulator.appendMessageLineOnBoard("Private -> " + agent.getNameFromAddress(publicKey)
+                            + ":" + inputText);
+                } else {
+                    input.setText("Error: message failed");
                 }
             }
         });
