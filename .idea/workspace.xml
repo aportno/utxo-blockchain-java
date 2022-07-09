@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/src/chapter8/BlockchainMessageServiceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/BlockchainMessageServiceProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter8/BlockchainPlatform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/BlockchainPlatform.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,13 +142,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00126" summary="update">
-      <created>1656962483237</created>
-      <option name="number" value="00126" />
-      <option name="presentableId" value="LOCAL-00126" />
-      <option name="project" value="LOCAL" />
-      <updated>1656962483237</updated>
     </task>
     <task id="LOCAL-00127" summary="update">
       <created>1656972657917</created>
@@ -486,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657331941904</updated>
     </task>
-    <option name="localTasksCounter" value="175" />
+    <task id="LOCAL-00175" summary="update">
+      <created>1657332350251</created>
+      <option name="number" value="00175" />
+      <option name="presentableId" value="LOCAL-00175" />
+      <option name="project" value="LOCAL" />
+      <updated>1657332350251</updated>
+    </task>
+    <option name="localTasksCounter" value="176" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
