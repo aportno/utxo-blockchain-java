@@ -73,6 +73,10 @@ public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager impl
     }
 
     protected void receiveMessageBlockBroadcast(MessageBlockBroadcast mbb) {
+        /*
+        This describes how a genesis Miner acts when receiving a block
+         */
+
         Block block = mbb.getMessageBody();
         boolean isVerifiedGuestBlock = myWallet().isVerifiedGuestBlock(block, myWallet().getLocalLedger());
         boolean isUpdatedLocalLedger = false;
@@ -83,7 +87,50 @@ public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager impl
         if (isVerifiedGuestBlock && isUpdatedLocalLedger) {
             System.out.println("New block added to local blockchain -> block size is now " + this.myWallet().getLocalLedger().getBlockchainSize());
             displayWallet_MinerBalance(myWallet());
+        } else {
+            System.out.println("New block rejected");
+
+            if (block.getCreator().equals(myWallet().getPublicKey())) {
+                System.out.println("Genesis miner needs to re-mine sign-in bonus block");
+                String id = UtilityMethods.getKeyString(block.getTransaction(0).getOutputUTXO(0).getReceiver());
+                KeyNamePair keyNamePair = users.get(id);
+                if (keyNamePair != null) {
+                    waitingListForSignInBonus.add(0, keyNamePair);
+                } else {
+                    System.out.println();
+                    System.out.println("Error: existing user for sign-in bonus is not found");
+                }
+            }
         }
+    }
+
+    protected void receiveMessageAddressPrivate(MessageAddressPrivate map) {
+        ArrayList<KeyNamePair> all = map.getMessageBody();
+        for (KeyNamePair each : all) {
+            String id = UtilityMethods.getKeyString(each.getPublicKey());
+            if(!each.getPublicKey().equals(myWallet().getPublicKey()) && !users.containsKey(id)) {
+                users.put(id, each);
+                if (users.size() <= SIGN_IN_BONUS_USERS_LIMIT) {
+                    this.waitingListForSignInBonus.add(each);
+                }
+            }
+        }
+    }
+
+    protected void receiveMessageTransactionBroadcast(MessageTransactionBroadcast mtb) {
+        // do nothing
+    }
+
+    protected void receivePrivateChatMessage(MessageTextPrivate mtp) {
+        // do nothing for the genesis miner
+    }
+
+    protected void receiveMessageTextBroadcast(MessageTextBroadcast mtb) {
+        // do nothing for the genesis miner
+    }
+
+    protected void askForLatestBlockchain() {
+        // do nothing for the genesis miner
     }
 
     public static final void displayWallet_MinerBalance(Wallet miner) {
