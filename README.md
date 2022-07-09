@@ -2030,3 +2030,20 @@ The `WalletSimulator` is the driver class for a wallet. It makes use of the `Wal
 to mimic a wallets' functions. If it has the `MinerMessageTaskManager` instance, it will simulate a miner instead. The `WalletSimulator`
 class contains four inner classes, each displaying a unique GUI.
 
+The `WalletSimulator` class references the `MinerMessageTaskManager` class which is a subclass of the `WalletMessageTaskManager` class.
+The `MinerMessageTaskManager` delineates the actions a miner should take upon receiving various message types -- actions different
+from those of the wallets. However, both miners and wallets use the same `WalletSimulator` to start the application.
+When mining a block, the miner should simultaneously be able to manage incoming messages, for example, continue with collecting transactions.
+Thus, the mining process should be an independent thread, and therefore we need to have the `MinerTheWorker` class that is dedicated
+to block mining only.
+
+The class `MinerTheWorker` has two check points to decide whether to continue or terminate the mining. These check points are to
+simulate the following scenario:
+* in the middle of mining, the miner finds out that someone else has already successfully mined a block
+* at this point, the mining process should stop right away so that the miner can move on and start mining the next block
+
+Class `MinerGenesisMessageTaskManager` is a subclass of `MinerMessageTaskManager` (it could be designed as a subclass of
+`MinerMessageTaskManager` instead). It overrides some methods so that a genesis miner can act differently than a common miner.
+For example, a genesis miner does not chat, collect public transactions, or participate in mining competition. The genesis miner
+has the added function of sending out sign-in bonuses.
+

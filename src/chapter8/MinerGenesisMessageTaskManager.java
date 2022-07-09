@@ -61,7 +61,63 @@ public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager impl
                 minedTx.add(transaction);
                 MinerTheWorker worker = new MinerTheWorker(myWallet(), this, this.agent, minedTx);
                 Thread miningThread = new Thread(worker);
+                miningThread.start();
+            } else {
+                System.out.println(myWallet().getName() + " is broadcasting the sign-in bonus transaction for " + keyNamePair.getWalletName());
+                MessageTransactionBroadcast mtb = new MessageTransactionBroadcast(transaction);
+                this.agent.isSendMessage(mtb);
             }
+        } else {
+            waitingListForSignInBonus.add(0, keyNamePair);
         }
+    }
+
+    protected void receiveMessageBlockBroadcast(MessageBlockBroadcast mbb) {
+        Block block = mbb.getMessageBody();
+        boolean isVerifiedGuestBlock = myWallet().isVerifiedGuestBlock(block, myWallet().getLocalLedger());
+        boolean isUpdatedLocalLedger = false;
+        if (isVerifiedGuestBlock) {
+            isUpdatedLocalLedger = this.myWallet().isUpdatedLocalLedger(block);
+        }
+
+        if (isVerifiedGuestBlock && isUpdatedLocalLedger) {
+            System.out.println("New block added to local blockchain -> block size is now " + this.myWallet().getLocalLedger().getBlockchainSize());
+            displayWallet_MinerBalance(myWallet());
+        }
+    }
+
+    public static final void displayWallet_MinerBalance(Wallet miner) {
+        ArrayList<UTXO> all = new ArrayList<>();
+        ArrayList<UTXO> spent = new ArrayList<>();
+        ArrayList<UTXO> unspent = new ArrayList<>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        double balance = miner.getLocalLedger().findRelatedUTXOs(miner.getPublicKey(), all, spent, unspent, transactions);
+        System.out.println("\t" + miner.getName() + ": balance=" + balance + ", local blockchain size=" + miner.getLocalLedger().getBlockchainSize());
+
+        double income = 0;
+        System.out.println("\tAll UTXOs:");
+        for (UTXO each : all) {
+            System.out.println("\t\t" + each.getAmountTransferred() + "|" + each.getHashID());
+            income += each.getAmountTransferred();
+        }
+        System.out.println("\tTotal income -> " + income);
+
+        System.out.println("\tSpent UTXOs:");
+        income = 0;
+        for (UTXO each : spent) {
+            System.out.println("\t\t" + each.getAmountTransferred() + "|" + each.getHashID() + "|from=" + UtilityMethods.getKeyString(each.getSender()) + "|to=" + UtilityMethods.getKeyString(each.getReceiver()));
+            income += each.getAmountTransferred();
+        }
+        System.out.println("\tTotal spending -> " + income);
+
+        double txFee = transactions.size() * Transaction.TRANSACTION_FEE;
+        System.out.println("\tUnspent UTXOs:");
+        income = 0;
+        for (UTXO each : unspent) {
+            System.out.println("\t\t" + each.getAmountTransferred() + "|" + each.getHashID() + "|from=" + UtilityMethods.getKeyString(each.getSender()) + "|to=" + UtilityMethods.getKeyString(each.getReceiver()));
+            income += each.getAmountTransferred();
+        }
+        System.out.println("\tTotal spent -> " + income);
     }
 }

@@ -26,6 +26,10 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
         this.isMiningAction = false;
     }
 
+    protected Miner myWallet() {
+        return (Miner) (super.myWallet());
+    }
+
     protected void receiveQueryForBlockchainBroadcast(MessageAskForBlockchainBroadcast mabb) {
         PublicKey receiver = mabb.getSenderKey();
         Blockchain ledger = myWallet().getLocalLedger().copy_NotDeepCopy();
@@ -58,10 +62,10 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
             this.raiseMiningAction();
             System.out.println(myWallet().getName() + "transaction limit reached -> mining block");
             MinerTheWorker worker = new MinerTheWorker(myWallet(), this, this.agent, this.existingTransactions);
-        }
-    }
 
-    protected Miner myWallet() {
-        return (Miner) (super.myWallet());
+            Thread miningThread = new Thread(worker);
+            miningThread.start();
+            this.existingTransactions = new ArrayList<Transaction>();
+        }
     }
 }
