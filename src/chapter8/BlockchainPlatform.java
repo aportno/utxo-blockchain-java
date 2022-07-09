@@ -45,7 +45,46 @@ final class MinerGenesisSimulator implements Runnable {
     private Miner genesisMiner;
     synchronized Blockchain getGenesisLedger() {
         if (genesisLedger == null) {
+            System.out.println("Blockchain platform starting...");
+            System.out.println("Creating genesis miner, genesis transaction, and genesis block...");
 
+            genesisMiner = getGenesisMiner();
+            Block genesisBlock = new Block("0", Configuration.getBlockMiningDifficultyLevel(), genesisMiner.getPublicKey());
+            UTXO u1 = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10000001.0);
+            UTXO u2 = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10000000.0);
+
+            ArrayList<UTXO> inputUTXOs = new ArrayList<>();
+            inputUTXOs.add(u1);
+            inputUTXOs.add(u2);
+            Transaction genesisTx = new Transaction(genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 10000000.0, inputUTXOs);
+            boolean isPreparedOutputUTXOs = genesisTx.isPreparedOutputUTXOs();
+            if (!isPreparedOutputUTXOs) {
+                System.out.println("Genesis transaction failed");
+                System.exit(1);
+            }
+
+            genesisTx.signTheTransaction(genesisMiner.getPrivateKey());
+            boolean isAddedTransaction = genesisBlock.isAddedTransaction(genesisTx, genesisMiner.getPublicKey());
+            if (!isAddedTransaction) {
+                System.out.println("Failed to add the genesis transaction to the genesis block -> exiting");
+                System.exit(2);
+            }
+
+            System.out.println("Genesis miner is mining the genesis block...");
+            boolean isMinedBlock = genesisMiner.isMinedBlock(genesisBlock);
+            if (isMinedBlock) {
+                System.out.println("Genesis block is successfully mined with hash ID:");
+                System.out.println(genesisBlock.getHashID());
+            } else {
+                System.out.println("Failed to mine genesis block -> exiting");
+                System.exit(3);
+            }
+
+            Blockchain ledger = new Blockchain(genesisBlock);
+            System.out.println("Blockchain genesis successfully completed");
+            genesisMiner.setLocalLedger(ledger);
+            this.genesisLedger = ledger.copy_NotDeepCopy();
+            System.out.println("Genesis miner balance: " + genesisMiner.getCurrentBalance(genesisMiner.getLocalLedger()));
         }
         return this.genesisLedger;
     }
