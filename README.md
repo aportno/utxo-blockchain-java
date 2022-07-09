@@ -2047,3 +2047,22 @@ Class `MinerGenesisMessageTaskManager` is a subclass of `MinerMessageTaskManager
 For example, a genesis miner does not chat, collect public transactions, or participate in mining competition. The genesis miner
 has the added function of sending out sign-in bonuses.
 
+The message routing services are provided in the program `BlockchainMessageServiceProvider`. The services include:
+* accepting network connection requests
+* relaying messages to proper receivers
+* keeping a list of wallets (both name and public key)
+* rendering each new, incoming wallet a genesis blockchain
+* providing a name discovery service
+
+It includes 3 classes:
+1) `BlockchainMessageServiceProvider` provides the network server.
+2) `ConnectionChannelTaskManager` manages a connection channel and the messages received and sent through this connection channel
+3) `MessageCheckingTaskManager` constantly scrutinizes the message queue to process messages based on their origins, destinations, and types
+
+The `BlockchainMessageServiceProvider` accepts incoming connections, and then creates a `ConnectionChannelTaskManager` thread to
+specifically manage the connection between the server and the client. It also provides some storage and lookup services. There
+is only one instance of `BlockchainMessageServiceProvider` on the server side.
+
+Upon receiving a message, the `ConnectionChannelTaskManger` places the message into the designated queue. Every network connection has a dedicated instance
+of `ConnectionChannelTaskManager` so there are multiple instances of it on the server side.
+
