@@ -100,7 +100,7 @@ public class WalletSimulator extends JFrame {
         this.gbc.gridheight = 9;
 
         JScrollPane displayAreaScroll = new JScrollPane(this.displayArea);
-        displayAreaScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        displayAreaScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         displayAreaScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         this.gbl.setConstraints(displayAreaScroll, this.gbc);
         container.add(displayAreaScroll);
