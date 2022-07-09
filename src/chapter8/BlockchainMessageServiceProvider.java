@@ -5,7 +5,6 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.net.Socket;
 import java.net.ServerSocket;
@@ -17,17 +16,17 @@ public class BlockchainMessageServiceProvider {
      */
 
     private ServerSocket serverSocket;
-    private boolean isServerRunning = true;
-    private Hashtable<String, ConnectionChannelTaskManager> connections;
-    private ConcurrentLinkedQueue<Message> messageQueue;
-    private Hashtable<String, KeyNamePair> allAddresses;
+    private final boolean isServerRunning = true;
+    private final Hashtable<String, ConnectionChannelTaskManager> connections;
+    private final ConcurrentLinkedQueue<Message> messageQueue;
+    private final Hashtable<String, KeyNamePair> allAddresses;
     private static Blockchain genesisBlockchain;
 
     public BlockchainMessageServiceProvider() {
         System.out.println("BlockchainMessageServiceProvider is starting");
-        connections = new Hashtable<String, ConnectionChannelTaskManager>();
+        connections = new Hashtable<>();
         this.messageQueue = new ConcurrentLinkedQueue<>();
-        this.allAddresses = new Hashtable<String, KeyNamePair>();
+        this.allAddresses = new Hashtable<>();
         try {
             serverSocket = new ServerSocket(Configuration.getPORT());
         } catch (Exception e) {
@@ -88,8 +87,7 @@ public class BlockchainMessageServiceProvider {
 
     protected synchronized KeyNamePair removeConnectionChannel(String channelId) {
         this.connections.remove(channelId);
-        KeyNamePair keyNamePair = this.removeAddress(channelId);
-        return keyNamePair;
+        return this.removeAddress(channelId);
     }
 
     protected synchronized KeyNamePair removeAddress(String id) {
@@ -101,14 +99,11 @@ public class BlockchainMessageServiceProvider {
     }
 
     protected synchronized ArrayList<ConnectionChannelTaskManager> getAllConnectionChannelTaskManager() {
-        ArrayList<ConnectionChannelTaskManager> connectChannels = new ArrayList<>();
-        connectChannels.addAll(this.connections.values());
-        return connectChannels;
+        return new ArrayList<>(this.connections.values());
     }
 
     protected synchronized ArrayList<KeyNamePair> getAllAddresses() {
-        ArrayList<KeyNamePair> address = new ArrayList<>();
-        address.addAll(this.allAddresses.values());
+        return new ArrayList<>(this.allAddresses.values());
     }
 
     protected synchronized ConnectionChannelTaskManager findConnectionChannelTaskManager(String connectionId) {
@@ -118,13 +113,13 @@ public class BlockchainMessageServiceProvider {
 }
 
 class ConnectionChannelTaskManager implements Runnable {
-    private Socket socket;
+    private final Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
     boolean isServerRunning = true;
     private String connectionID;
-    private BlockchainMessageServiceProvider server;
-    private KeyPair keyPair;
+    private final BlockchainMessageServiceProvider server;
+    private final KeyPair keyPair;
     private PublicKey delegatePublicKey;
     private String name;
 
@@ -236,10 +231,10 @@ class ConnectionChannelTaskManager implements Runnable {
 
 class MessageCheckingTaskManager implements Runnable {
     private boolean isServerRunning = true;
-    private long sleepTime = 100;
-    private BlockchainMessageServiceProvider server;
-    private ConcurrentLinkedQueue<Message> messageQueue;
-    private KeyPair keyPair;
+    private final long sleepTime = 100;
+    private final BlockchainMessageServiceProvider server;
+    private final ConcurrentLinkedQueue<Message> messageQueue;
+    private final KeyPair keyPair;
 
     public MessageCheckingTaskManager(BlockchainMessageServiceProvider server, ConcurrentLinkedQueue<Message> messageQueue, KeyPair keyPair) {
         this.server = server;
@@ -259,11 +254,13 @@ class MessageCheckingTaskManager implements Runnable {
                         processMessage(msg);
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
-    private void processMessage(Message msg) throws Exception {
+    private void processMessage(Message msg) {
         if (msg == null) {
             return;
         }
