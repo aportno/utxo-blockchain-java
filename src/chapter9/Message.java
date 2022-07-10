@@ -31,9 +31,5 @@ public abstract class Message implements java.io.Serializable {
     public abstract long getTimeStamp();
     public abstract PublicKey getSenderKey();
     public abstract boolean isForBroadcast();
-    protected boolean isSelfMessageAllowed() {
-        return false;
-    }
-
-
+    protected boolean isSelfMessageAllowed() { return false; }
 }
