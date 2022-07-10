@@ -13,6 +13,14 @@ public final class Configuration {
     private static final int BLOCK_TRANSACTION_LOWER_LIMIT = 2;
     private static final int BLOCK_MINING_DIFFICULTY_LEVEL = 20;
     private static final int THREAD_SLEEP_TIME_SHORT = 100;
+    private static final int THREAD_SLEEP_TIME_MEDIUM = 250;
+    private static final int THREAD_SLEEP_TIME_LONG = 1000;
+    private static final int LOG_BAR = 0;
+    private static final int LOG_BAR_MAX = 10;
+    private static final int LOG_BAR_MED = 5;
+    private static final int LOG_BAR_MIN = 0;
+    private static final int OUTGOING_CONNECTIONS_LIMIT = 6;
+    private static final int INCOMING_CONNECTIONS_LIMIT = 20;
     private static final long MESSAGE_BURIED_TIME_LIMIT = 864_000_000;
 
     public static String getKeyLocation() {
@@ -67,4 +75,35 @@ public final class Configuration {
         return THREAD_SLEEP_TIME_SHORT;
     }
 
+    public static int getThreadSleepTimeMedium() {
+        return THREAD_SLEEP_TIME_MEDIUM;
+    }
+
+    public static int getThreadSleepTimeLong() {
+        return THREAD_SLEEP_TIME_LONG;
+    }
+
+    public static int getLogBar() {
+        return LOG_BAR;
+    }
+
+    public static int getLogBarMax() {
+        return LOG_BAR_MAX;
+    }
+
+    public static int getLogBarMin() {
+        return LOG_BAR_MIN;
+    }
+
+    public static int getLogBarMed() {
+        return LOG_BAR_MED;
+    }
+
+    public static int getOutgoingConnectionsLimit() {
+        return OUTGOING_CONNECTIONS_LIMIT;
+    }
+
+    public static int getIncomingConnectionsLimit() {
+        return INCOMING_CONNECTIONS_LIMIT;
+    }
 }
