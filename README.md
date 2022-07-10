@@ -2078,3 +2078,10 @@ A, C, and Y, and peer C has direct connection to A, X, and Y:
 
 <a href="https://imgbb.com/"><img src="https://i.ibb.co/f2kLKR7/p2p-network.png" alt="p2p-network" border="0"></a>
 
+When X sends a message to A, A will forward it to B, C, D and X. Then C will forward the same message to A, X, Y. Now Y would
+forward it to X and C. The same message is repeatedly sent and received, and this becomes a serious unnecessary overheard.
+
+A solution to this problem is to tag every message with a unique ID, timestamp, and a sender. Upon receiving, messages too
+old will be discarded, messages that have already been processed by a peer will be discarded, and by default, the sender 
+of a message will discard the same message forwarded back to him.
+
