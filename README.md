@@ -2066,13 +2066,6 @@ is only one instance of `BlockchainMessageServiceProvider` on the server side.
 Upon receiving a message, the `ConnectionChannelTaskManger` places the message into the designated queue. Every network connection has a dedicated instance
 of `ConnectionChannelTaskManager` so there are multiple instances of it on the server side.
 
-**Starting the network**
-1. Run `BlockchainPlatform`
-   1. Once blockchain is initialized, enter `1`
-   2. Enter the IP address of the server
-2. Run `WalletSimulator`
-   1. Provide a name
-   2. Provide a password
-   3. Choose to view public key as address (respond with yes or no)
-   4. Enter the server IP address
-3. 
+---
+## Chapter 9 :: Peer-to-Peer Blockchain System
+
