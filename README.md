@@ -2069,3 +2069,11 @@ of `ConnectionChannelTaskManager` so there are multiple instances of it on the s
 ---
 ## Chapter 9 :: Peer-to-Peer Blockchain System
 
+In our P2P implementation, a peer finds other peers through its directly-connected neighbor(s). A peer sends out messages 
+periodically to search for other peers in the network. The receiving peers are required to forward such messages to their
+directly-connected peers. Clearly, messages will be sent and received repeatedly.
+
+For example, assume peer A has direct connection with peers B, C, and D, while peer X has direction connection with peers
+A, C, and Y, and C has direct connection to A, X, and Y.
+
+<a href="https://imgbb.com/"><img src="https://i.ibb.co/f2kLKR7/p2p-network.png" alt="p2p-network" border="0"></a>
