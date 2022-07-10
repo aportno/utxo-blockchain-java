@@ -10,10 +10,10 @@ public class MessageAskForBlockchainBroadcast extends MessageTextBroadcast {
     private final String uniqueHashID;
     private final long timeStamp;
 
-    public MessageAskForBlockchainBroadcast(String info, PrivateKey privateKey, PublicKey sender, String walletName) {
-        super(info, privateKey, sender, walletName);
+    public MessageAskForBlockchainBroadcast(String info, PrivateKey privateKey, PublicKey senderName, String walletName) {
+        super(info, privateKey, senderName, walletName);
         timeStamp = UtilityMethods.getTimeStamp();
-        String msg = UtilityMethods.getKeyString(sender) + walletName + timeStamp + UtilityMethods.getUniqueNumber();
+        String msg = UtilityMethods.getKeyString(senderName) + walletName + timeStamp + UtilityMethods.getUniqueNumber();
         uniqueHashID = UtilityMethods.messageDigestSHA256_toString(msg);
     }
 
