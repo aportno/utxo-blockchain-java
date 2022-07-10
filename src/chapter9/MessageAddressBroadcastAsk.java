@@ -6,10 +6,10 @@ import java.security.PublicKey;
 public class MessageAddressBroadcastAsk extends Message {
     @Serial
     private static final long serialVersionUID = 1L;
+    private final long timeStamp;
     private final PublicKey sender;
     private final String walletName;
     private final String uniqueHashID;
-    private final long timeStamp;
 
     public MessageAddressBroadcastAsk(PublicKey sender, String walletName) {
         this.sender = sender;
