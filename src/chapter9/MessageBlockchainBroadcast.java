@@ -9,11 +9,31 @@ public class MessageBlockchainBroadcast extends Message {
     private final Blockchain ledger;
     private final PublicKey sender;
     private final int initialSize;
+    private final String uniqueHashID;
+    private final long timeStamp;
 
     public MessageBlockchainBroadcast(Blockchain ledger, PublicKey sender) {
         this.ledger = ledger;
         this.sender = sender;
         this.initialSize = ledger.getBlockchainSize();
+        timeStamp = UtilityMethods.getTimeStamp();
+        String msg = UtilityMethods.getKeyString(sender) + timeStamp + UtilityMethods.getUniqueNumber();
+        uniqueHashID = UtilityMethods.messageDigestSHA256_toString(msg);
+    }
+
+    @Override
+    public String getMessageHashID() {
+        return uniqueHashID;
+    }
+
+    @Override
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    @Override
+    public PublicKey getSenderKey() {
+        return sender;
     }
 
     public Blockchain getMessageBody() {
