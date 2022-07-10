@@ -11,7 +11,6 @@ public class MessageAddressBroadcastAsk extends Message {
     private final String walletName;
     private final String uniqueHashID;
 
-
     public MessageAddressBroadcastAsk(PublicKey sender, String walletName) {
         this.sender = sender;
         this.walletName = walletName;
