@@ -1,5 +1,6 @@
 package chapter9;
 
+import java.security.Key;
 import java.security.PublicKey;
 import java.util.*;
 
@@ -111,8 +112,101 @@ public class PeerConnectionManager implements Runnable {
         return false;
     }
 
+    public ArrayList<KeyNamePair> getAllStoredAddresses() {
+        Iterator<KeyNamePair> allAddr = this.allAddresses.values().iterator();
+        ArrayList<KeyNamePair> holder = new ArrayList<>();
+        while (allAddr.hasNext()) {
+            holder.add(allAddr.next());
+        }
+        return holder;
+    }
 
+    public String getNameFromAddress(PublicKey publicKey) {
+        if (publicKey.equals(wallet.getPublicKey())) {
+            return wallet.getName();
+        }
 
+        String address = UtilityMethods.getKeyString(publicKey);
+        KeyNamePair keyNamePair = allAddresses.get(address);
+
+        if (keyNamePair != null) {
+            return keyNamePair.getWalletName();
+        } else {
+            return address;
+        }
+    }
+
+    public void addAddress(KeyNamePair address) {
+        if (!isExistingUserByPublicKey(address.getPublicKey())) {
+            allAddresses.put(UtilityMethods.getKeyString(address.getPublicKey()), address);
+        }
+    }
+
+    protected synchronized void closeAllPeerConnectionsActively() {
+        Enumeration<PeerOutgoingConnection> Eo = outgoingConnections.elements();
+        while (Eo.hasMoreElements()) {
+            PeerOutgoingConnection poc = Eo.nextElement();
+            poc.activeClose();
+            removePeerConnection(poc);
+        }
+
+        Enumeration<PeerIncomingConnection> Ei = incomingConnections.elements();
+        while (Ei.hasMoreElements()) {
+            PeerIncomingConnection pic = Ei.nextElement();
+            pic.activeClose();
+            removePeerConnection(pic);
+        }
+    }
+
+    protected synchronized void shutdownAll() {
+        closeAllPeerConnectionsActively();
+        isServerRunning = false;
+    }
+
+    protected boolean sendTransaction(PublicKey receiver, double amountToTransfer) {
+        Transaction tx = wallet.transferFund(receiver, amountToTransfer);
+        if (tx != null && tx.verifySignature()) {
+            MessageTransactionBroadcast mtb = new MessageTransactionBroadcast(tx);
+            sendMessageByAll(mtb);
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean sendPrivateMessage(PublicKey receiver, String text) {
+        MessageTextPrivate mtp = new MessageTextPrivate(text, wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName(), receiver);
+        if (!sendMessageByKey(receiver, mtp)) {
+            sendMessageByAll(mtp);
+        }
+        return true;
+    }
+
+    protected void broadcastRequestForBlockchainUpdate() {
+        MessageAskForBlockchainBroadcast mabb = new MessageAskForBlockchainBroadcast("update blockchain", wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName());
+        LogManager.log(Configuration.getLogBarMin(), "Sending message for updating local blockchain of " + wallet.getName());
+        sendMessageByAll(mabb);
+    }
+
+    protected  int hasDirectConnection(PublicKey publicKey) {
+        int n = 0;
+        String msg = UtilityMethods.getKeyString(publicKey);
+        if (incomingConnections.get(msg) != null && outgoingConnections.get(msg) != null) {
+            n = 3;
+        } else if (outgoingConnections.get(msg) != null) {
+            n = 2;
+        } else if (incomingConnections.get(msg) != null) {
+            n = 1;
+        }
+        return n;
+    }
+
+    protected int numberOfExistingIncomingConnections() {
+        return incomingConnections.size();
+    }
+
+    public boolean isExistingUserByPublicKey(PublicKey publicKey) {
+        return allAddresses.containsKey(UtilityMethods.getKeyString(publicKey));
+    }
 
     @Override
     public void run() {
