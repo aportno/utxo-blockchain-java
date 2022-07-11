@@ -10,8 +10,10 @@ public class MessageBlockBroadcast extends Message {
     private PublicKey sender;
     private long timeStamp;
 
-    public MessageBlockBroadcast(Block block) {
+    public MessageBlockBroadcast(Block block, PublicKey sender) {
         this.block = block;
+        this.timeStamp = UtilityMethods.getTimeStamp();
+        this.sender = sender;
     }
 
     public int getMessageType() {

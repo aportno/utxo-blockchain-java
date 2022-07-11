@@ -57,6 +57,15 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
         return isReceivedMsgBlockBroadcast;
     }
 
+    protected void receiveMessageForBlockchainBroadcast(MessageAskForBlockchainBroadcast mabb) {
+        PublicKey receiver = mabb.getSenderKey();
+        Blockchain ledger = miner.getLocalLedger().copy_NotDeepCopy();
+        MessageBlockchainPrivate mbp = new MessageBlockchainPrivate(ledger, miner.getPublicKey(), receiver);
+        if (!connectionManager.sendMessageByKey(receiver, mbp)) {
+            connectionManager.sendMessageByAll(mabb);
+        }
+    }
+
     protected void receiveMessageTransactionBroadcast(MessageTransactionBroadcast mtb) {
         connectionManager.sendMessageByAll(mtb);
         Transaction transaction = mtb.getMessageBody();
@@ -66,7 +75,7 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
             }
         }
 
-        if (!myWallet().isValidatedTransaction(transaction)) {
+        if (!miner.isValidatedTransaction(transaction)) {
             System.out.println("Miner " + myWallet().getName() + " found an invalid transaction. Broadcasting to network");
             return;
         }

@@ -1,7 +1,5 @@
 package chapter9;
 
-import chapter8.WalletConnectionAgent;
-
 import java.util.ArrayList;
 
 /*
@@ -11,12 +9,12 @@ already been finished by another miner and broadcast to the network.
 
 public class MinerTheWorker implements Runnable {
     private Miner miner;
-    private WalletConnectionAgent agent;
+    private PeerConnectionManager agent;
     private MinerMessageTaskManager manager;
     private boolean isKeepMining = true;
     private ArrayList<Transaction> existingTransactions;
 
-    public MinerTheWorker(Miner miner, MinerMessageTaskManager manager, WalletConnectionAgent agent, ArrayList<Transaction> existingTransaction) {
+    public MinerTheWorker(Miner miner, MinerMessageTaskManager manager, PeerConnectionManager agent, ArrayList<Transaction> existingTransaction) {
         this.miner = miner;
         this.manager = manager;
         this.agent = agent;
@@ -49,10 +47,10 @@ public class MinerTheWorker implements Runnable {
             System.out.println(miner.getName() + " mined and signed the block -> hash ID: " + block.getHashID());
         } else {
             System.out.println(miner.getName() + " block completed by another miner -> miner abandoning current job");
-            this.existingTransactions.clear();
             manager.resetMiningAction();
             return;
         }
+
         try {
             Thread.sleep(breakTime);
         } catch (Exception e2) {
@@ -64,8 +62,8 @@ public class MinerTheWorker implements Runnable {
             return;
         }
 
-        MessageBlockBroadcast mbb = new MessageBlockBroadcast(block);
-        this.agent.isSendMessage(mbb);
+        MessageBlockBroadcast mbb = new MessageBlockBroadcast(block, miner.getPublicKey());
+        this.agent.sendMessageByAll(mbb);
         manager.resetMiningAction();
     }
 
