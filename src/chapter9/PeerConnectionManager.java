@@ -1,15 +1,14 @@
 package chapter9;
 
-import java.security.Key;
 import java.security.PublicKey;
 import java.util.*;
 
 public class PeerConnectionManager implements Runnable {
-    private Wallet wallet;
+    private final Wallet wallet;
     private WalletMessageTaskManager messageTaskManager;
-    private Hashtable<String, KeyNamePair> allAddresses = new Hashtable<>();
-    private Hashtable<String, PeerOutgoingConnection> outgoingConnections = new Hashtable<>();
-    private Hashtable<String, PeerIncomingConnection> incomingConnections = new Hashtable<>();
+    private final Hashtable<String, KeyNamePair> allAddresses = new Hashtable<>();
+    private final Hashtable<String, PeerOutgoingConnection> outgoingConnections = new Hashtable<>();
+    private final Hashtable<String, PeerIncomingConnection> incomingConnections = new Hashtable<>();
     private int autoMakingFriends;
     private int idleTime;
     private boolean isServerRunning = true;
@@ -32,7 +31,7 @@ public class PeerConnectionManager implements Runnable {
 
     protected synchronized boolean createOutgoingConnection(String peerServerIP) {
         if (outgoingConnections.size() >= Configuration.getOutgoingConnectionsLimit()) {
-            LogManager.log(Configuration.getLogBarMax(), "Cannot create the outgoing connection to " + peerServerIP + " because the current size " + outgoingConnections.size() + " has already reached the limit of " + Configuration.getOutgoingConnectionsLimit();
+            LogManager.log(Configuration.getLogBarMax(), "Cannot create the outgoing connection to " + peerServerIP + " because the current size " + outgoingConnections.size() + " has already reached the limit of " + Configuration.getOutgoingConnectionsLimit());
             return false;
         }
 
@@ -51,7 +50,7 @@ public class PeerConnectionManager implements Runnable {
 
                 outgoingConnections.put(UtilityMethods.getKeyString(client.getConnectionPeerPublicKey()), client);
                 outgoingConnections.put(peerServerIP, client);
-                this.addAddress(client.getConnectionPeerName());
+                this.addAddress(client.getConnectionPeerNamePair());
                 LogManager.log(Configuration.getLogBarMax(), "Created an outgoing connection to " + peerServerIP);
                 return true;
             }
@@ -210,6 +209,28 @@ public class PeerConnectionManager implements Runnable {
 
     @Override
     public void run() {
+        while (isServerRunning) {
+            try {
+                Thread.sleep(Configuration.getThreadSleepTimeLong());
+            } catch (InterruptedException ie) {
+                LogManager.log(Configuration.getLogBarMin(), "Exception in PeerConnectionManager.run() " + ie.getMessage());
+            }
 
+            if ((idleTime + 2) % 10 == 0 && autoMakingFriends < 3) {
+                makingFriends();
+                autoMakingFriends++;
+            }
+
+            try {
+                Thread.sleep(Configuration.getThreadSleepTimeLong());
+                idleTime++;
+            } catch (InterruptedException ie) {
+                LogManager.log(Configuration.getLogBarMin(), "Exception in PeerConnectionManager.run() " + ie.getMessage());
+            }
+
+            if (idleTime % 100 == 0) {
+                idleTime = 0;
+            }
+        }
     }
 }

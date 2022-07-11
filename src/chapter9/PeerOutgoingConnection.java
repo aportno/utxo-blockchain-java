@@ -6,15 +6,15 @@ import java.net.Socket;
 import java.security.PublicKey;
 
 public class PeerOutgoingConnection implements Runnable {
-    private Wallet wallet;
-    private Socket socket;
-    private String connectionIPAddress;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    private PublicKey connectionPeerPublicKey;
-    private String connectionPeerName;
+    private final Wallet wallet;
+    private final Socket socket;
+    private final String connectionIPAddress;
+    private final ObjectInputStream in;
+    private final ObjectOutputStream out;
+    private final PublicKey connectionPeerPublicKey;
+    private final String connectionPeerName;
     private PeerConnectionManager connectionManager;
-    private WalletMessageTaskManager messageTaskManager;
+    private final WalletMessageTaskManager messageTaskManager;
     private boolean isServerRunning = true;
 
     protected PeerOutgoingConnection(String serverIPAddress, Wallet wallet, WalletMessageTaskManager messageTaskManager, PeerConnectionManager connectionManager) throws Exception {

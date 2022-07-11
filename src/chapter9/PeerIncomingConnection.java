@@ -7,17 +7,17 @@ import java.io.IOException;
 import java.security.PublicKey;
 
 public class PeerIncomingConnection implements Runnable {
-    private Wallet wallet;
-    private Socket socket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    private PublicKey connectionPeerPublicKey;
-    private String connectionPeerName;
-    private peerConnectionManager connectionManager;
-    private WalletMessageTaskManager messageTaskManager;
+    private final Wallet wallet;
+    private final Socket socket;
+    private final ObjectInputStream in;
+    private final ObjectOutputStream out;
+    private final PublicKey connectionPeerPublicKey;
+    private final String connectionPeerName;
+    private final PeerConnectionManager connectionManager;
+    private final WalletMessageTaskManager messageTaskManager;
     private boolean isServerRunning = true;
 
-    public PeerIncomingConnection(Wallet wallet, Socket socket, peerConnectionManager connectionManager, WalletMessageTaskManager messageTaskManager)  throws Exception {
+    public PeerIncomingConnection(Wallet wallet, Socket socket, PeerConnectionManager connectionManager, WalletMessageTaskManager messageTaskManager)  throws Exception {
         this.wallet = wallet;
         this.socket = socket;
         this.connectionManager = connectionManager;
@@ -102,7 +102,7 @@ public class PeerIncomingConnection implements Runnable {
         } catch (Exception e) {
             LogManager.log(Configuration.getLogBarMin(), "Exception in PeerIncomingConnection.close()" + e.getMessage());
         }
-        connectionPeerName.removePeerConnection(this);
+        connectionManager.removePeerConnection(this);
         LogManager.log(Configuration.getLogBarMin(), "IncomingConnection from " + getConnectionIP() + "/" + connectionPeerName + " is closed");
     }
 
