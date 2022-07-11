@@ -1,19 +1,18 @@
 package chapter9;
 
-import chapter8.WalletConnectionAgent;
-
 import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MinerMessageTaskManager extends WalletMessageTaskManager implements Runnable {
     private boolean isMiningAction = true;
-    private ArrayList<Transaction> existingTransactions = new ArrayList<>();
-    private WalletConnectionAgent agent;
+    private final ArrayList<Transaction> existingTransactions = new ArrayList<>();
+    private final Miner miner;
+    private final PeerConnectionManager connectionManager;
 
-    public MinerMessageTaskManager(WalletConnectionAgent agent, Miner miner, ConcurrentLinkedQueue<Message> messageConcurrentLinkedQueue) {
-        super(agent, miner, messageConcurrentLinkedQueue);
-        this.agent = agent;
+    public MinerMessageTaskManager(Miner miner, PeerConnectionManager connectionManager) {
+        super(miner, connectionManager);
+        this.miner = miner;
+        this.connectionManager = connectionManager;
     }
 
     protected synchronized  void resetMiningAction() {
@@ -21,6 +20,10 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
     }
 
     protected synchronized boolean isMiningAction() {
+        return this.isMiningAction;
+    }
+
+    protected synchronized boolean getMiningAction() {
         return this.isMiningAction;
     }
 
@@ -36,17 +39,26 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
         PublicKey receiver = mabb.getSenderKey();
         Blockchain ledger = myWallet().getLocalLedger().copy_NotDeepCopy();
         MessageBlockchainPrivate mbp = new MessageBlockchainPrivate(ledger, myWallet().getPublicKey(), receiver);
-        boolean isSendMessage = this.agent.isSendMessage(mbp);
 
-        if (isSendMessage) {
-            System.out.println(myWallet().getName() + ": local chain sent to requester -> chain size=" + mbp.getMessageBody().getBlockchainSize() +
-                    "|" + mbp.getInfoSize());
-        } else {
-            System.out.println(myWallet().getName() + ": failed to send local blockchain to requester");
+        if (!connectionManager.sendMessageByKey(receiver, mbp)) {
+            connectionManager.sendMessageByAll(mbp);
         }
     }
 
+    protected boolean receiveMessageBlockBroadcast(MessageBlockBroadcast mbb) {
+        boolean isReceivedMsgBlockBroadcast = super.receiveMessageBlockBroadcast(mbb);
+        if (isReceivedMsgBlockBroadcast) {
+            Block block = mbb.getMessageBody();
+            for (int i = 0; i < block.getTotalNumberOfTransactions(); i++) {
+                Transaction tx = block.getTransaction(i);
+                existingTransactions.removeIf(tx::equals);
+            }
+        }
+        return isReceivedMsgBlockBroadcast;
+    }
+
     protected void receiveMessageTransactionBroadcast(MessageTransactionBroadcast mtb) {
+        connectionManager.sendMessageByAll(mtb);
         Transaction transaction = mtb.getMessageBody();
         for (Transaction each : existingTransactions) {
             if (transaction.equals(each)) {
@@ -60,14 +72,19 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
         }
         this.existingTransactions.add(transaction);
 
-        if (this.existingTransactions.size() >= Block.TRANSACTION_LOWER_LIMIT && this.isMiningAction()) {
+        if (this.existingTransactions.size() >= Configuration.getBlockTransactionLowerLimit() && this.getMiningAction()) {
             this.raiseMiningAction();
-            System.out.println(myWallet().getName() + "transaction limit reached -> mining block");
-            MinerTheWorker worker = new MinerTheWorker(myWallet(), this, this.agent, this.existingTransactions);
+            LogManager.log(Configuration.getLogBarMax(), miner.getName() + " gathered enough transactions to mine block");
+            ArrayList<Transaction> txs = new ArrayList<>();
+            for (int i = 0, j = 0; i < existingTransactions.size() && j < Configuration.getBlockTransactionUpperLimit(); i++, j++) {
+                txs.add(existingTransactions.get(i));
+                existingTransactions.remove(i);
+                i--;
+            }
 
+            MinerTheWorker worker = new MinerTheWorker(miner, this, connectionManager, txs);
             Thread miningThread = new Thread(worker);
             miningThread.start();
-            this.existingTransactions = new ArrayList<Transaction>();
         }
     }
 }
