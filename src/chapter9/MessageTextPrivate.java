@@ -12,6 +12,8 @@ public class MessageTextPrivate extends MessageSigned {
     private final PublicKey receiver;
     private final String senderName;
     private final String info;
+    private final String uniqueHashID;
+    private final long timeStamp;
 
     public MessageTextPrivate(String info, PrivateKey privateKey, PublicKey senderKey, String senderName, PublicKey receiverKey) {
         this.info = info;
@@ -19,6 +21,9 @@ public class MessageTextPrivate extends MessageSigned {
         this.senderKey = senderKey;
         this.receiver = receiverKey;
         this.senderName = senderName;
+        timeStamp = UtilityMethods.getTimeStamp();
+        String msg = UtilityMethods.getKeyString(senderKey) + senderName + timeStamp + UtilityMethods.getUniqueNumber();
+        uniqueHashID = UtilityMethods.messageDigestSHA256_toString(msg);
     }
 
     public String getMessageBody() {
@@ -51,5 +56,14 @@ public class MessageTextPrivate extends MessageSigned {
 
     public boolean isForBroadcast() {
         return false;
+    }
+
+    public String getMessageHashID() {
+        return uniqueHashID;
+    }
+
+    @Override
+    public long getTimeStamp() {
+        return timeStamp;
     }
 }
