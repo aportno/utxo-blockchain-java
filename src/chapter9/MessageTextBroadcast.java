@@ -11,12 +11,17 @@ public class MessageTextBroadcast extends MessageSigned {
     private final PublicKey senderKey;
     private final String senderName;
     private final String info;
+    private final String uniqueHashID;
+    private final long timeStamp;
 
     public MessageTextBroadcast(String info, PrivateKey privateKey, PublicKey senderKey, String senderName) {
         this.info = info;
         signature = UtilityMethods.generateSignature(privateKey, this.info);
         this.senderKey = senderKey;
         this.senderName = senderName;
+        timeStamp = UtilityMethods.getTimeStamp();
+        String msg = UtilityMethods.getKeyString(senderKey) + senderName + timeStamp + UtilityMethods.getUniqueNumber();
+        uniqueHashID = UtilityMethods.messageDigestSHA256_toString(msg);
     }
 
     public String getMessageBody() {
@@ -35,8 +40,14 @@ public class MessageTextBroadcast extends MessageSigned {
         return senderName;
     }
 
-    public KeyNamePair getSenderKeyNamePair() {
-        return new KeyNamePair(this.getSenderKey(), this.senderName);
+    @Override
+    public String getMessageHashID() {
+        return uniqueHashID;
+    }
+
+    @Override
+    public long getTimeStamp() {
+        return timeStamp;
     }
 
     public boolean isValid() {
