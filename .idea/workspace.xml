@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageTextPrivate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageTextPrivate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter9/PeerIncomingConnection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter9/PeerOutgoingConnection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chapter9/PeerServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,27 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00154" summary="update">
-      <created>1657209940895</created>
-      <option name="number" value="00154" />
-      <option name="presentableId" value="LOCAL-00154" />
-      <option name="project" value="LOCAL" />
-      <updated>1657209940895</updated>
-    </task>
-    <task id="LOCAL-00155" summary="update">
-      <created>1657211968551</created>
-      <option name="number" value="00155" />
-      <option name="presentableId" value="LOCAL-00155" />
-      <option name="project" value="LOCAL" />
-      <updated>1657211968551</updated>
-    </task>
-    <task id="LOCAL-00156" summary="update">
-      <created>1657212005705</created>
-      <option name="number" value="00156" />
-      <option name="presentableId" value="LOCAL-00156" />
-      <option name="project" value="LOCAL" />
-      <updated>1657212005705</updated>
     </task>
     <task id="LOCAL-00157" summary="update">
       <created>1657212776754</created>
@@ -485,7 +469,28 @@
       <option name="project" value="LOCAL" />
       <updated>1657498396032</updated>
     </task>
-    <option name="localTasksCounter" value="203" />
+    <task id="LOCAL-00203" summary="update">
+      <created>1657498549769</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
+      <option name="project" value="LOCAL" />
+      <updated>1657498549769</updated>
+    </task>
+    <task id="LOCAL-00204" summary="update">
+      <created>1657498577019</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
+      <option name="project" value="LOCAL" />
+      <updated>1657498577019</updated>
+    </task>
+    <task id="LOCAL-00205" summary="update">
+      <created>1657498795756</created>
+      <option name="number" value="00205" />
+      <option name="presentableId" value="LOCAL-00205" />
+      <option name="project" value="LOCAL" />
+      <updated>1657498795756</updated>
+    </task>
+    <option name="localTasksCounter" value="206" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
