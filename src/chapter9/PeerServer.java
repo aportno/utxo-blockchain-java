@@ -13,7 +13,7 @@ public class PeerServer implements Runnable {
     private WalletMessageTaskManager messageTaskManager;
     private boolean isServerRunning = true;
 
-    public PeerServer(Wallet wallet, PeerConnectionManager connectionManager, WalletMessageTaskManager messageTaskManager) throws IOException {
+    public PeerServer(Wallet wallet, WalletMessageTaskManager messageTaskManager, PeerConnectionManager connectionManager) throws IOException {
         this.wallet = wallet;
         this.connectionManager = connectionManager;
         this.messageTaskManager = messageTaskManager;

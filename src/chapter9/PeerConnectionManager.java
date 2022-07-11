@@ -162,7 +162,7 @@ public class PeerConnectionManager implements Runnable {
         isServerRunning = false;
     }
 
-    protected boolean sendTransaction(PublicKey receiver, double amountToTransfer) {
+    protected boolean isSendTransaction(PublicKey receiver, double amountToTransfer) {
         Transaction tx = wallet.transferFund(receiver, amountToTransfer);
         if (tx != null && tx.verifySignature()) {
             MessageTransactionBroadcast mtb = new MessageTransactionBroadcast(tx);
@@ -172,7 +172,7 @@ public class PeerConnectionManager implements Runnable {
         return false;
     }
 
-    protected boolean sendPrivateMessage(PublicKey receiver, String text) {
+    protected boolean isSendPrivateMessage(PublicKey receiver, String text) {
         MessageTextPrivate mtp = new MessageTextPrivate(text, wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName(), receiver);
         if (!sendMessageByKey(receiver, mtp)) {
             sendMessageByAll(mtp);
