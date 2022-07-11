@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/BlockchainPlatform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/BlockchainPlatform.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/chapter9/WalletSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/WalletSimulator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -143,13 +142,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00166" summary="update">
-      <created>1657246392827</created>
-      <option name="number" value="00166" />
-      <option name="presentableId" value="LOCAL-00166" />
-      <option name="project" value="LOCAL" />
-      <updated>1657246392827</updated>
     </task>
     <task id="LOCAL-00167" summary="update">
       <created>1657311342012</created>
@@ -487,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657573886316</updated>
     </task>
-    <option name="localTasksCounter" value="215" />
+    <task id="LOCAL-00215" summary="update">
+      <created>1657577229963</created>
+      <option name="number" value="00215" />
+      <option name="presentableId" value="LOCAL-00215" />
+      <option name="project" value="LOCAL" />
+      <updated>1657577229963</updated>
+    </task>
+    <option name="localTasksCounter" value="216" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

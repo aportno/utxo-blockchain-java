@@ -58,7 +58,7 @@ public class WalletSimulator extends JFrame {
         this.displayArea.setCaretPosition(this.displayArea.getText().length());
     }
 
-    private void setBalanceShowPublicKey(boolean bool) {
+    protected void setBalanceShowPublicKey(boolean bool) {
         this.balanceShowPublicKey = bool;
     }
 

@@ -1,41 +1,85 @@
 package chapter9;
 
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class BlockchainPlatform {
-    protected static Scanner keyboard;
     public static void main(String[] args) {
-        keyboard = new Scanner(System.in);
-        MinerGenesisSimulator genesisSimulator = new MinerGenesisSimulator();
-        Thread simulatorThread = new Thread(genesisSimulator);
-        simulatorThread.start();
+        Miner genesisMiner = new Miner("genesis", "genesis");
 
-        System.out.println("Genesis simulator running...");
-        System.out.println("Starting the blockchain message service provider...");
+        System.out.println("=========================");
+        System.out.println("Creating genesis block...");
+        System.out.println("=========================");
 
-        BlockchainMessageServiceProvider server = new BlockchainMessageServiceProvider();
-        Blockchain ledger = genesisSimulator.getGenesisLedger();
-        BlockchainMessageServiceProvider.updateGenesisBlock(ledger);
-        Blockchain checkLedger = genesisSimulator.getGenesisMiner().getLocalLedger();
+        Block genesisBlock = new Block("0", Configuration.getBlockMiningDifficultyLevel(), genesisMiner.getPublicKey());
 
-        if (ledger.getBlockchainSize() != checkLedger.getBlockchainSize()) {
-            System.out.println("Error: genesis ledger initialization failed due to block size -> exiting");
+        UTXO u1 = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 1_000_001.0);
+        UTXO u2 = new UTXO("0", genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 1_000_000.0);
+        ArrayList<UTXO> inputUTXOs = new ArrayList<>();
+        inputUTXOs.add(u1);
+        inputUTXOs.add(u2);
+
+        Transaction genesisTx = new Transaction(genesisMiner.getPublicKey(), genesisMiner.getPublicKey(), 1_000_000, inputUTXOs);
+
+        boolean isPreparedOutputUTXOs = genesisTx.isPreparedOutputUTXOs();
+        if (!isPreparedOutputUTXOs) {
+            LogManager.log(Configuration.getLogBarMin(), "Genesis transaction failed -> exiting");
             System.exit(1);
         }
+        genesisTx.signTheTransaction(genesisMiner.getPrivateKey());
 
-        if (!ledger.getLastBlock().getHashID().equals(checkLedger.getLastBlock().getHashID())) {
-            System.out.println("Error: genesis ledger initialization failed due to bad hash code -> exiting");
-            System.out.println(ledger.getLastBlock().getPreviousBlockHashID() + "\n" + checkLedger.getLastBlock().getPreviousBlockHashID());
+        boolean isAddedTx = genesisBlock.isAddedTransaction(genesisTx, genesisMiner.getPublicKey());
+        if (!isAddedTx) {
+            LogManager.log(Configuration.getLogBarMin(), "Failed to add genesis transaction to genesis block -> exiting");
             System.exit(2);
         }
 
-        System.out.println("**********************************************");
-        System.out.println("Genesis blockchain ready for service provider");
-        System.out.println("Server starting...");
-        System.out.println("**********************************************");
+        System.out.println("=======================");
+        System.out.println("Mining genesis block...");
+        System.out.println("=======================");
 
-        server.startWorking();
-        System.out.println("========Blockchain Network Terminating========");
+        boolean isMinedBlock = genesisMiner.isMinedBlock(genesisBlock);
+        if (isMinedBlock) {
+            LogManager.log(Configuration.getLogBarMin(), "Genesis block is successfully mined -> hashID: " +  genesisBlock.getHashID());
+        } else {
+            LogManager.log(Configuration.getLogBarMin(), "Failed to mine genesis block -> exiting");
+            System.exit(3);
+        }
+
+        System.out.println("=====================");
+        System.out.println("Forming blockchain...");
+        System.out.println("=====================");
+
+        Blockchain ledger = new Blockchain(genesisBlock);
+        genesisMiner.setLocalLedger(ledger);
+
+        try {
+            PeerConnectionManager agent = new PeerConnectionManager(genesisMiner, null);
+            MinerMessageTaskManager manager = new MinerGenesisMessageTaskManager(genesisMiner, agent);
+            agent.setMessageTaskManager(manager);
+            PeerServer peerServer = new PeerServer(genesisMiner, manager, agent);
+
+            Thread managerThread = new Thread(manager);
+            Thread agentThread = new Thread(agent);
+            Thread serverThread = new Thread(peerServer);
+
+            WalletSimulator simulator = new WalletSimulator(genesisMiner, agent, manager);
+            manager.setSimulator(simulator);
+
+            serverThread.start();
+            LogManager.log(Configuration.getLogBarMin(), "Peer server started...");
+
+            agentThread.start();
+            LogManager.log(Configuration.getLogBarMin(), "Peer clients manager started...");
+
+            managerThread.start();
+            LogManager.log(Configuration.getLogBarMin(), "Wallet task manager started...");
+
+            simulator.setBalanceShowPublicKey(false);
+            LogManager.log(Configuration.getLogBarMin(), "Genesis miner is running -> IP address: " + PeerServer.getIPAddress());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(4);
+        }
     }
 }
 
