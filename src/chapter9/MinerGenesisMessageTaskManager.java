@@ -1,26 +1,23 @@
 package chapter9;
 
-import chapter8.WalletConnectionAgent;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager implements Runnable {
-    public static final int SELF_BLOCKS_TO_MINE_LIMIT = 2;
-    public static final int SIGN_IN_BONUS_USERS_LIMIT = 1000;
     private int blocksMined = 0;
+    private int idleItem = 0;
     private final int signInBonus = 1000;
-    private HashMap<String, KeyNamePair> users = new HashMap<>();
-    private ArrayList<KeyNamePair> waitingListForSignInBonus = new ArrayList<>();
-    private WalletConnectionAgent agent;
+    private final HashMap<String, KeyNamePair> users = new HashMap<>();
+    private final ArrayList<KeyNamePair> waitingListForSignInBonus = new ArrayList<>();
+    private final ArrayList<Transaction> waitingTransactionForSignInBonus = new ArrayList<>();
+    private final PeerConnectionManager connectionManager;
+    private final Miner miner;
 
-    public MinerGenesisMessageTaskManager(
-            WalletConnectionAgent agent,
-            Miner miner,
-            ConcurrentLinkedQueue<Message> messageConcurrentLinkedQueue) {
-        super(agent, miner, messageConcurrentLinkedQueue);
-        this.agent = agent;
+    public MinerGenesisMessageTaskManager(Miner miner, PeerConnectionManager connectionManager) {
+        super(miner, connectionManager);
+        this.connectionManager = connectionManager;
+        this.miner = miner;
     }
 
     /*
@@ -29,47 +26,56 @@ public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager impl
 
     public void toDo() {
         try {
-            Thread.sleep(agent.sleepTime * 10);
-            if (waitingListForSignInBonus.size() == 0 && users.size() < SIGN_IN_BONUS_USERS_LIMIT) {
-                MessageTextPrivate mtp = new MessageTextPrivate(
-                        Message.TEXT_ASK_ADDRESSES,
-                        myWallet().getPrivateKey(),
-                        myWallet().getPublicKey(),
-                        myWallet().getName(),
-                        this.agent.getServerAddress());
-                Thread.sleep(agent.sleepTime * 10);
-            } else {
+            Thread.sleep(Configuration.getThreadSleepTimeMedium());
+            if (waitingListForSignInBonus.size() == 0 && users.size() < Configuration.getSignInBonusUsersLimit()) {
+                idleItem++;
+                if (idleItem >= 100) {
+                    idleItem = 0;
+                    MessageAddressBroadcastAsk maba = new MessageAddressBroadcastAsk(miner.getPublicKey(), miner.getName());
+                    connectionManager.sendMessageByAll(maba);
+                }
+            } else if (users.size() < Configuration.getSignInBonusUsersLimit() && waitingListForSignInBonus.size() > 0) {
                 sendSignInBonus();
             }
         } catch (Exception e) {}
     }
 
     private void sendSignInBonus() {
-        if (waitingListForSignInBonus.size() <= 0) {
+        if (waitingTransactionForSignInBonus.size() <= 0 && waitingListForSignInBonus.size() <= 0) {
             return;
         }
 
-        KeyNamePair keyNamePair = waitingListForSignInBonus.remove(0);
-        Transaction transaction = myWallet().transferFund(keyNamePair.getPublicKey(), signInBonus);
-        if (transaction != null && transaction.verifySignature()) {
-            System.out.println(myWallet().getName() + " is sending " + keyNamePair.getWalletName() + " sign-in bonus of " + signInBonus);
-            if (blocksMined < SELF_BLOCKS_TO_MINE_LIMIT && this.isMiningAction()) {
-                blocksMined++;
-                this.raiseMiningAction();
-                System.out.println(myWallet().getName() + " is mining the sign-in bonus block for " + keyNamePair.getWalletName() + " solely");
-
-                ArrayList<Transaction> minedTx = new ArrayList<>();
-                minedTx.add(transaction);
-                MinerTheWorker worker = new MinerTheWorker(myWallet(), this, this.agent, minedTx);
-                Thread miningThread = new Thread(worker);
-                miningThread.start();
+        Transaction tx = null;
+        String recipient;
+        if (waitingTransactionForSignInBonus.size() > 0) {
+            tx = waitingTransactionForSignInBonus.get(0);
+            recipient = connectionManager.getNameFromAddress(tx.getOutputUTXO(0).getReceiver());
+            LogManager.log(Configuration.getLogBarMax(), "Re-mine a block for the bonus transaction to " + recipient);
+        } else if (waitingTransactionForSignInBonus.size() > 0){
+            KeyNamePair publicKey = waitingListForSignInBonus.remove(0);
+            recipient = publicKey.getWalletName();
+            tx = miner.transferFund(publicKey.getPublicKey(), signInBonus);
+            if (tx != null && tx.verifySignature()) {
+                LogManager.log(Configuration.getLogBarMax(), miner.getName() + " is sending " + recipient  + " sign-in bonus of " + signInBonus);
             } else {
-                System.out.println(myWallet().getName() + " is broadcasting the sign-in bonus transaction for " + keyNamePair.getWalletName());
-                MessageTransactionBroadcast mtb = new MessageTransactionBroadcast(transaction);
-                this.agent.isSendMessage(mtb);
+                waitingListForSignInBonus.add(0, publicKey);
             }
+        }
+
+        if (blocksMined < Configuration.getSelfBlocksToMineLimit() && getMiningAction()) {
+            blocksMined++;
+            raiseMiningAction();
+            LogManager.log(Configuration.getLogBarMin(), miner.getName() + " is mining the sign-in bonus block for " + recipient + " by himself");
+            ArrayList<Transaction> txs = new ArrayList<>();
+            txs.add(tx);
+
+            MinerTheWorker worker = new MinerTheWorker(miner, this, connectionManager, txs);
+            Thread miningThread = new Thread(worker);
+            miningThread.start();
         } else {
-            waitingListForSignInBonus.add(0, keyNamePair);
+            LogManager.log(Configuration.getLogBarMin(), miner.getName() + " is broadcasting the transaction of sign-in bonus for " + recipient);
+            MessageTransactionBroadcast mtb = new MessageTransactionBroadcast(tx);
+            connectionManager.sendMessageByAll(mtb);
         }
     }
 
@@ -78,60 +84,66 @@ public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager impl
         This describes how a genesis Miner acts when receiving a block
          */
 
+        connectionManager.sendMessageByAll(mbb);
         Block block = mbb.getMessageBody();
-        boolean isVerifiedGuestBlock = myWallet().isVerifiedGuestBlock(block, myWallet().getLocalLedger());
+        boolean isVerifiedGuestBlock = miner.isVerifiedGuestBlock(block, miner.getLocalLedger());
         boolean isUpdatedLocalLedger = false;
         if (isVerifiedGuestBlock) {
-            isUpdatedLocalLedger = this.myWallet().isUpdatedLocalLedger(block);
+            isUpdatedLocalLedger = miner.isUpdatedLocalLedger(block);
         }
 
         if (isVerifiedGuestBlock && isUpdatedLocalLedger) {
-            System.out.println("New block added to local blockchain -> block size is now " + this.myWallet().getLocalLedger().getBlockchainSize());
-            displayWallet_MinerBalance(myWallet());
+            LogManager.log(Configuration.getLogBarMin(), "New block is added to the local blockchain -> blockchain size=" + miner.getLocalLedger().getBlockchainSize());
         } else {
-            System.out.println("New block rejected");
-
-            if (block.getCreator().equals(myWallet().getPublicKey())) {
-                System.out.println("Genesis miner needs to re-mine sign-in bonus block");
+            LogManager.log(Configuration.getLogBarMin(), "New block is rejected");
+            if (block.getCreator().equals(miner.getPublicKey())) {
+                LogManager.log(Configuration.getLogBarMin(), "Genesis miner's block is rejected");
                 String id = UtilityMethods.getKeyString(block.getTransaction(0).getOutputUTXO(0).getReceiver());
-                KeyNamePair keyNamePair = users.get(id);
-                if (keyNamePair != null) {
-                    waitingListForSignInBonus.add(0, keyNamePair);
-                } else {
-                    System.out.println();
-                    System.out.println("Error: existing user for sign-in bonus is not found");
+                KeyNamePair publicKey = users.get(id);
+                Transaction tx = block.getTransaction(0);
+                if (publicKey != null && !(miner.getLocalLedger().isTransactionExist(tx))) {
+                    waitingTransactionForSignInBonus.add(0, tx);
+                } else if (publicKey == null) {
+                    System.out.println("ERROR: an existing user for sign-in bonus is not found");
                 }
             }
         }
+        return isVerifiedGuestBlock && isUpdatedLocalLedger;
     }
 
     protected void receiveMessageAddressPrivate(MessageAddressPrivate map) {
         ArrayList<KeyNamePair> all = map.getMessageBody();
         for (KeyNamePair each : all) {
+            connectionManager.addAddress(each);
             String id = UtilityMethods.getKeyString(each.getPublicKey());
-            if(!each.getPublicKey().equals(myWallet().getPublicKey()) && !users.containsKey(id)) {
+            if(!each.getPublicKey().equals(miner.getPublicKey()) && !users.containsKey(id)) {
                 users.put(id, each);
-                if (users.size() <= SIGN_IN_BONUS_USERS_LIMIT) {
+                if (users.size() <= Configuration.getSignInBonusUsersLimit()) {
                     this.waitingListForSignInBonus.add(each);
                 }
+            }
+        }
+
+        if (!connectionManager.sendMessageByKey(map.getReceiverKey(), map)) {
+            connectionManager.sendMessageByAll(map);
+        }
+    }
+
+    protected void receiveMessageBroadcastMakingFriend(MessageBroadcastMakingFriend mbmf) {
+        connectionManager.sendMessageByAll(mbmf);
+        connectionManager.createOutgoingConnection(mbmf.getIpAddress());
+        connectionManager.addAddress(mbmf.getKeyNamePair());
+        String id = UtilityMethods.getKeyString(mbmf.getSenderKey());
+        if (!mbmf.getSenderKey().equals(miner.getPublicKey()) && !users.containsKey(id)) {
+            users.put(id, mbmf.getKeyNamePair());
+            if (users.size() <= Configuration.getSignInBonusUsersLimit()) {
+                waitingListForSignInBonus.add(mbmf.getKeyNamePair());
             }
         }
     }
 
     protected void receiveMessageTransactionBroadcast(MessageTransactionBroadcast mtb) {
-        // do nothing
-    }
-
-    protected void receivePrivateChatMessage(MessageTextPrivate mtp) {
-        // do nothing for the genesis miner
-    }
-
-    protected void receiveMessageTextBroadcast(MessageTextBroadcast mtb) {
-        // do nothing for the genesis miner
-    }
-
-    protected void askForLatestBlockchain() {
-        // do nothing for the genesis miner
+        connectionManager.sendMessageByAll(mtb);
     }
 
     public static final void displayWallet_MinerBalance(Wallet miner) {

@@ -6,8 +6,6 @@ public class Miner extends Wallet {
         super(minerName, password);
     }
 
-    public Miner(String minerName) { super(minerName); }
-
     public boolean isMinedBlock(Block block) {
         if (block.isMinedBlock(this.getPublicKey())) {
             byte[] signature = UtilityMethods.generateSignature(this.getPrivateKey(), block.getHashID());
