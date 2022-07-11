@@ -1,24 +1,24 @@
 package chapter9;
 
-import chapter8.WalletConnectionAgent;
-import chapter8.WalletSimulator;
-
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Enumeration;
 
 public class WalletMessageTaskManager implements Runnable {
     private boolean isServerRunning = true;
-    private WalletConnectionAgent agent;
-    private Wallet wallet;
+    private final Wallet wallet;
+    private final Hashtable<String, Message> existingMessages = new Hashtable<>();
     private ConcurrentLinkedQueue<Message> messageConcurrentLinkedQueue;
-    private HashMap<String, String> ackTransactions = new HashMap<>();
+    private final PeerConnectionManager connectionManager;
     private WalletSimulator simulator;
+    private int idleTime = 0;
 
-    public WalletMessageTaskManager(WalletConnectionAgent agent, Wallet wallet, ConcurrentLinkedQueue<Message> messageConcurrentLinkedQueue) {
-        this.agent = agent;
+    public WalletMessageTaskManager(Wallet wallet, PeerConnectionManager connectionManager) {
         this.wallet = wallet;
-        this.messageConcurrentLinkedQueue = messageConcurrentLinkedQueue;
+        this.connectionManager = connectionManager;
     }
 
     protected Wallet myWallet() {
@@ -29,50 +29,30 @@ public class WalletMessageTaskManager implements Runnable {
         this.simulator = simulator;
     }
 
-    protected void askForLatestBlockchain() {
-        MessageAskForBlockchainBroadcast askForLedger = new MessageAskForBlockchainBroadcast("Acknowledged",
-                this.wallet.getPrivateKey(), this.wallet.getPublicKey(), this.wallet.getName());
-        boolean isSendMsg = this.agent.isSendMessage(askForLedger);
-        if (isSendMsg) {
-            System.out.println("Sent a message to receive latest blockchain");
-        } else {
-            System.out.println("ERROR: failed to send a message to receive latest blockchain");
+    public void addMessageIntoQueue(Message msg) {
+        if (msg.getSenderKey().equals(wallet.getPublicKey()) && !msg.isSelfMessageAllowed()) {
+            return;
         }
+
+        if (UtilityMethods.isMessageTooOld(msg.getTimeStamp())) {
+            return;
+        }
+
+        Message checkMsg = existingMessages.get(msg.getMessageHashID());
+        if (checkMsg != null) {
+            return;
+        }
+
+        existingMessages.put(msg.getMessageHashID(), msg);
+        messageConcurrentLinkedQueue.add(msg);
     }
 
-    public void run() {
-        try {
-            Thread.sleep(agent.sleepTime * 2);
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        askForLatestBlockchain();
-
-        while (isServerRunning) {
-            if (this.messageConcurrentLinkedQueue.isEmpty()) {
-                try {
-                    Thread.sleep(this.agent.sleepTime);
-                } catch (Exception e) {
-                    System.out.println("Error while trying to sleep...");
-                    e.printStackTrace();
-                    this.close();
-                    this.agent.activeClose();
-                }
-            } else {
-                Message msg = this.messageConcurrentLinkedQueue.poll();
-                if (msg == null) {
-                    System.out.println("Error: message is null");
-                } else {
-                    try {
-                        processMessage(msg);
-                    } catch (Exception e) {
-                        System.out.println("Error when processing message");
-                        e.printStackTrace();
-                        this.close();
-                        this.agent.activeClose();
-                    }
-                }
+    private synchronized void discardObsoleteMessages() {
+        Enumeration<Message> E = existingMessages.elements();
+        while (E.hasMoreElements()) {
+            Message msg = E.nextElement();
+            if (UtilityMethods.isMessageTooOld(msg.getTimeStamp())) {
+                existingMessages.remove(msg.getMessageHashID());
             }
         }
     }
@@ -84,20 +64,10 @@ public class WalletMessageTaskManager implements Runnable {
             if (message.getMessageType() == Message.TEXT_PRIVATE) {
                 MessageTextPrivate messageTextPrivate = (MessageTextPrivate) message;
                 if (!messageTextPrivate.isValid()) {
-                    System.out.println("Private message text has been tampered");
+                    LogManager.log(Configuration.getLogBarMax(), "In WalletMessageTaskManager.processMessage() -> message tampered");
                     return;
-                } else if (!messageTextPrivate.getReceiver().equals(this.wallet.getPublicKey())) {
-                    System.out.println("Private text is not for intended user...ignoring it...");
                 }
-
-                String text = messageTextPrivate.getMessageBody();
-                if (messageTextPrivate.getSenderKey().equals(agent.getServerAddress()) && text.equals(Message.TEXT_CLOSE)) {
-                    System.out.println("Server is asking to close connection...closing now...");
-                    this.close();
-                    agent.close();
-                } else {
-                    receivePrivateChatMessage(messageTextPrivate);
-                }
+                receivePrivateChatMessage(messageTextPrivate);
             } else if (message.getMessageType() == Message.ADDRESS_PRIVATE) {
                 MessageAddressPrivate map = (MessageAddressPrivate) message;
                 receiveMessageAddressPrivate(map);
@@ -105,107 +75,138 @@ public class WalletMessageTaskManager implements Runnable {
                 MessageBlockchainPrivate mbp = (MessageBlockchainPrivate) message;
                 receiveMessageBlockchainPrivate(mbp);
             } else {
-                System.out.println("");
-                System.out.println("...private message not supported, please check...");
-                System.out.println("");
+                LogManager.log(Configuration.getLogBarMax(), "In WalletMessageTaskManager.processMessage() -> message not supported");
             }
         } else if (message.getMessageType() == Message.BLOCK_BROADCAST) {
-            System.out.println("Block broadcast message -> check if necessary to update block");
+            LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.processMessage() -> check if update required");
             MessageBlockBroadcast mbb = (MessageBlockBroadcast) message;
             this.receiveMessageBlockBroadcast(mbb);
         } else if (message.getMessageType() == Message.BLOCKCHAIN_BROADCAST) {
-            System.out.println("Blockchain broadcast message -> check if necessary to update blockchain");
+            LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.processMessage() -> check if update require");
             MessageBlockchainBroadcast mbb = (MessageBlockchainBroadcast) message;
-            boolean isLocalLedgerSet = this.wallet.setLocalLedger(mbb.getMessageBody());
-            if (isLocalLedgerSet) {
-                System.out.println("Blockchain is updated...");
+            boolean isReceivedBlockchainBroadcast = receiveBlockchainBroadcast(mbb);
+            if (isReceivedBlockchainBroadcast) {
+                LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.processMessage() -> blockchain is updated");
             } else {
-                System.out.println("Rejected the new blockchain...");
+                LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.processMessage() -> blockchain is rejected");
             }
         } else if (message.getMessageType() == Message.TRANSACTION_BROADCAST) {
-            System.out.println("Transaction broadcast message -> broadcasting accordingly");
+            LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.processMessage() -> transaction broadcast message");
             MessageTransactionBroadcast mtb = (MessageTransactionBroadcast) message;
             this.receiveMessageTransactionBroadcast(mtb);
-        } else if (message.getMessageType() == Message.BLOCK_ASK_BROADCAST) {
+        } else if (message.getMessageType() == Message.BLOCKCHAIN_ASK_BROADCAST) {
             MessageAskForBlockchainBroadcast mabb = (MessageAskForBlockchainBroadcast) message;
-            if (!(mabb.getSenderKey().equals(myWallet().getPublicKey())) && mabb.isValid()) {
-                receiveQueryForBlockchainBroadcast(mabb);
+            if (mabb.isValid()) {
+                receiveMessageForBlockchainBroadcast(mabb);
             }
         } else if (message.getMessageType() == Message.TEXT_BROADCAST) {
             MessageTextBroadcast mtb = (MessageTextBroadcast) message;
             receiveMessageTextBroadcast(mtb);
+        } else if (message.getMessageType() == Message.ADDRESS_BROADCAST_MAKING_FRIEND) {
+            receiveMessageBroadcastMakingFriend((MessageBroadcastMakingFriend) message);
+        } else if (message.getMessageType() == Message.ADDRESS_ASK_BROADCAST) {
+            receiveMessageAddressBroadcastAsk((MessageAddressBroadcastAsk) message);
         }
     }
 
     protected void receiveMessageTextBroadcast(MessageTextBroadcast mtb) {
-        String msgBody = mtb.getMessageBody();
-        String senderName = mtb.getSenderName();
-        this.simulator.appendMessageLineOnBoard(senderName + ": " + msgBody);
-        agent.addAddress(new KeyNamePair(mtb.getSenderKey(), mtb.getSenderName()));
+        connectionManager.sendMessageByAll(mtb);
+        String text = mtb.getMessageBody();
+        String name = mtb.getSenderName();
+        simulator.appendMessageLineOnBoard(name + ":" + text);
+        connectionManager.addAddress(new KeyNamePair(mtb.getSenderKey(), mtb.getSenderName()));
+    }
+
+    protected void receiveMessageAddressBroadcastAsk(MessageAddressBroadcastAsk msg) {
+        connectionManager.sendMessageByAll(msg);
+        KeyNamePair self = new KeyNamePair(wallet.getPublicKey(), wallet.getName());
+        ArrayList<KeyNamePair> keyNamePairs = connectionManager.getAllStoredAddresses();
+        keyNamePairs.add(self);
+        MessageAddressPrivate map = new MessageAddressPrivate(keyNamePairs, wallet.getPublicKey(), msg.getSenderKey());
+        if (!connectionManager.sendMessageByKey(map.getSenderKey(), map)) {
+            connectionManager.sendMessageByAll(map);
+        }
+    }
+
+    protected void receiveMessageBroadcastMakingFriend(MessageBroadcastMakingFriend msg) {
+        connectionManager.sendMessageByAll(msg);
+        connectionManager.createOutgoingConnection(msg.getIpAddress());
     }
 
     protected void receiveMessageAddressPrivate(MessageAddressPrivate map) {
-        ArrayList<KeyNamePair> allMsgBody = map.getMessageBody();
-        System.out.println("Users available:");
-        for (KeyNamePair knp : allMsgBody) {
-            if (!knp.getPublicKey().equals(wallet.getPublicKey())) {
-                agent.addAddress(knp);
-                System.out.println(knp.getPublicKey() + "| key=" + UtilityMethods.getKeyString(knp.getPublicKey()));
+        if (map.getReceiverKey().equals(wallet.getPublicKey())) {
+            ArrayList<KeyNamePair> all = map.getMessageBody();
+            LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.receiveMessageAddressPrivate() -> listing available addresses");
+            for (KeyNamePair each: all) {
+                if (!each.getPublicKey().equals(wallet.getPublicKey())) {
+                    connectionManager.addAddress(each);
+                    LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.receiveMessageAddressPrivate() | " + each.getWalletName() + "|" + UtilityMethods.getKeyString(each.getPublicKey()));
+                }
             }
         }
     }
 
     protected void receivePrivateChatMessage(MessageTextPrivate mtp) {
-        String msgBody = mtp.getMessageBody();
-        String senderName = mtp.getSenderName();
-        this.simulator.appendMessageLineOnBoard("Private <- " + senderName + ": " + msgBody);
-        agent.addAddress(new KeyNamePair(mtp.getSenderKey(), mtp.getSenderName()));
+        if (!(mtp.getReceiver().equals(wallet.getPublicKey()))) {
+            boolean isSendMessage = connectionManager.sendMessageByKey(mtp.getReceiver(), mtp);
+            if (!isSendMessage) {
+                connectionManager.sendMessageByAll(mtp);
+            }
+        } else {
+            String text = mtp.getMessageBody();
+            String name = mtp.getSenderName();
+            simulator.appendMessageLineOnBoard("private <- " + name + " : " + text);
+            connectionManager.addAddress(new KeyNamePair(mtp.getSenderKey(), mtp.getSenderName()));
+        }
     }
 
-    protected void receiveQueryForBlockchainBroadcast(MessageAskForBlockchainBroadcast mabb) {
-        System.out.println("Wallet instance -> ignoring query on blockchain");
+    protected boolean receiveBlockchainBroadcast(MessageBlockchainBroadcast mbb) {
+        connectionManager.sendMessageByAll(mbb);
+        return wallet.setLocalLedger(mbb.getMessageBody());
     }
 
     protected void receiveMessageTransactionBroadcast(MessageTransactionBroadcast mtb) {
+        connectionManager.sendMessageByAll(mtb);
         Transaction tx = mtb.getMessageBody();
-        if (!this.ackTransactions.containsKey(tx.getHashID())) {
-            int totalOutputUTXOs = tx.getNumberOfOutputUTXOs();
-            int receivedOutputUTXO = 0;
-            for (int i = 0; i < totalOutputUTXOs; i++) {
-                UTXO outputUTXO = tx.getOutputUTXO(i);
-                if (outputUTXO.getReceiver().equals(this.wallet.getPublicKey())) {
-                    receivedOutputUTXO += outputUTXO.getAmountTransferred();
-                }
+        if (tx.getSender().equals(wallet.getPublicKey())) {
+            return;
+        }
+        int outputUTXOs = tx.getNumberOfOutputUTXOs();
+        int totalOutputUTXOs = 0;
+        for (int i = 0; i < outputUTXOs; i++) {
+            UTXO utxo = tx.getOutputUTXO(i);
+            if (utxo.getReceiver().equals(wallet.getPublicKey())) {
+                totalOutputUTXOs += utxo.getAmountTransferred();
             }
+        }
 
-            if (receivedOutputUTXO > 0 && !tx.getSender().equals(myWallet().getPublicKey())) {
-                this.ackTransactions.put(tx.getHashID(), tx.getHashID());
-                System.out.println("Received: " + receivedOutputUTXO);
-                MessageTextPrivate mtp = new MessageTextPrivate("Amount received",
-                        this.wallet.getPrivateKey(), this.wallet.getPublicKey(), this.wallet.getName(), tx.getSender());
-                this.agent.isSendMessage(mtp);
-            }
+        if (totalOutputUTXOs > 0) {
+            LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManger.receiveMessageTransactionBroadcast -> payment received");
+            MessageTextPrivate mtp = new MessageTextPrivate("Received amount: " + totalOutputUTXOs, wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName(), tx.getSender());
+            connectionManager.sendMessageByKey(mtb.getSenderKey(), mtp);
         }
     }
 
-    protected void receiveMessageBlockBroadcast(MessageBlockBroadcast mbb) {
+    protected boolean receiveMessageBlockBroadcast(MessageBlockBroadcast mbb) {
+        connectionManager.sendMessageByAll(mbb);
         Block block = mbb.getMessageBody();
-        boolean isUpdatedLocalLedger = this.wallet.isUpdatedLocalLedger(block);
+        boolean isUpdatedLocalLedger = wallet.isUpdatedLocalLedger(block);
         if (isUpdatedLocalLedger) {
-            System.out.println("New block is added to the local blockchain");
+            LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.receiveMessageBlockBroadcast() -> new block added to local chain");
         } else {
-            int totalBlockTx = block.getTotalNumberOfTransactions();
+            int size = block.getTotalNumberOfTransactions();
             int counter = 0;
-            for (int i = 0; i < totalBlockTx; i++) {
+            for (int i = 0; i < size; i++) {
                 Transaction tx = block.getTransaction(i);
-                if (!myWallet().getLocalLedger().isTransactionExist(tx)) {
+                if (!wallet.getLocalLedger().isTransactionExist(tx)) {
                     MessageTransactionBroadcast mtb = new MessageTransactionBroadcast(tx);
-                    this.agent.isSendMessage(mtb);
+                    connectionManager.sendMessageByAll(mtb);
                     counter++;
                 }
             }
-            System.out.println("New block rejected -> released " + counter + " unpublished transactions into the pool");
+            LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.receiveMessageBlockBroadcast() -> block rejected : " + counter + "unpublished transactions released into pool");
         }
+        return isUpdatedLocalLedger;
     }
 
     protected void receiveMessageBlockchainPrivate(MessageBlockchainPrivate mbp) {
@@ -222,7 +223,41 @@ public class WalletMessageTaskManager implements Runnable {
         }
     }
 
+    protected void receiveMessageForBlockchainBroadcast(MessageAskForBlockchainBroadcast mabb) {
+        LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManger.receiveQueryForBlockchainBroadcast() -> wallet can only forward the request to blockchain");
+        connectionManager.sendMessageByAll(mabb);
+    }
+
     public void close() {
         isServerRunning = false;
+    }
+
+    public void run() {
+        while (isServerRunning) {
+            try {
+                Thread.sleep(Configuration.getThreadSleepTimeMedium());
+                idleTime++;
+            } catch (InterruptedException ie) {
+                LogManager.log(Configuration.getLogBarMin(), "Exception in WalletMessageTaskManager.run() " + ie.getMessage());
+            }
+
+            if (idleTime >= 400000) {
+                idleTime = 0;
+                discardObsoleteMessages();
+            }
+
+            if (messageConcurrentLinkedQueue.isEmpty()) {
+                try {
+                    Thread.sleep(Configuration.getThreadSleepTimeLong());
+                } catch (InterruptedException ie) {
+                    LogManager.log(Configuration.getLogBarMin(), "Exception in WalletMessageTaskManager.run() " + ie.getMessage());
+                }
+            } else {
+                while (!(messageConcurrentLinkedQueue.isEmpty())) {
+                    Message msg = messageConcurrentLinkedQueue.poll();
+                    processMessage(msg);
+                }
+            }
+        }
     }
 }

@@ -364,4 +364,9 @@ public class UtilityMethods {
             return messageDigestSHA256_toString(message);
         }
     }
+
+    public static boolean isMessageTooOld(long timeStamp) {
+        long currentTime = getTimeStamp();
+        return (currentTime - timeStamp) >= Configuration.getMessageBuriedTimeLimit();
+    }
 }

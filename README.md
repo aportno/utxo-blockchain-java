@@ -2085,5 +2085,3 @@ A solution to this problem is to tag every message with a unique ID, timestamp, 
 old will be discarded, messages that have already been processed by a peer will be discarded, and by default, the sender 
 of a message will discard the same message forwarded back to him.
 
-The most significant modification in this chapter is the removal of the central server. We replace the `BlockchainMessageServiceProvider` class
-with `PeerServer`.

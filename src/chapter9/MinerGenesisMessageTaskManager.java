@@ -73,7 +73,7 @@ public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager impl
         }
     }
 
-    protected void receiveMessageBlockBroadcast(MessageBlockBroadcast mbb) {
+    protected boolean receiveMessageBlockBroadcast(MessageBlockBroadcast mbb) {
         /*
         This describes how a genesis Miner acts when receiving a block
          */

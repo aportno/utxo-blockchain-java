@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerIncomingConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerIncomingConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerOutgoingConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerOutgoingConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MinerGenesisMessageTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MinerGenesisMessageTaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/UtilityMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/UtilityMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/WalletMessageTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/WalletMessageTaskManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,13 +144,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00161" summary="update">
-      <created>1657216936148</created>
-      <option name="number" value="00161" />
-      <option name="presentableId" value="LOCAL-00161" />
-      <option name="project" value="LOCAL" />
-      <updated>1657216936148</updated>
     </task>
     <task id="LOCAL-00162" summary="update">
       <created>1657217134916</created>
@@ -487,7 +481,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657560613058</updated>
     </task>
-    <option name="localTasksCounter" value="210" />
+    <task id="LOCAL-00210" summary="update">
+      <created>1657561516908</created>
+      <option name="number" value="00210" />
+      <option name="presentableId" value="LOCAL-00210" />
+      <option name="project" value="LOCAL" />
+      <updated>1657561516908</updated>
+    </task>
+    <option name="localTasksCounter" value="211" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
