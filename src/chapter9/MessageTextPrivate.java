@@ -50,14 +50,6 @@ public class MessageTextPrivate extends MessageSigned {
         return new KeyNamePair(this.getSenderKey(), this.senderName);
     }
 
-    public boolean isValid() {
-        return UtilityMethods.verifySignature(senderKey, signature, info);
-    }
-
-    public boolean isForBroadcast() {
-        return false;
-    }
-
     public String getMessageHashID() {
         return uniqueHashID;
     }
@@ -66,4 +58,14 @@ public class MessageTextPrivate extends MessageSigned {
     public long getTimeStamp() {
         return timeStamp;
     }
+
+    public boolean isValid() {
+        return UtilityMethods.verifySignature(senderKey, signature, info);
+    }
+
+    public boolean isForBroadcast() {
+        return false;
+    }
+
+
 }
