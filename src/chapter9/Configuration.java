@@ -6,7 +6,7 @@ public final class Configuration {
     private static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
     private static final String KEYPAIR_ALGORITHM = "RSA";
     private static final double MINING_REWARD = 100.0;
-    private static final int PORT = 1117;
+    private static final int PORT = 1118;
     private static final int SELF_BLOCKS_TO_MINE_LIMIT = 2;
     private static final int SIGN_IN_BONUS_USERS_LIMIT = 4;
     private static final int BLOCK_TRANSACTION_UPPER_LIMIT = 100;

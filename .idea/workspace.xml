@@ -3,31 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Block.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/Blockchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Blockchain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/chapter9/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Configuration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/KeyNamePair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/KeyNamePair.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageAddressBroadcastAsk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageAddressBroadcastAsk.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageAskForBlockchainBroadcast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageAskForBlockchainBroadcast.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageAskForBlockchainPrivate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageAskForBlockchainPrivate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageBlockBroadcast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageBlockBroadcast.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageBlockchainBroadcast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageBlockchainBroadcast.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageBlockchainPrivate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageBlockchainPrivate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageBroadcastMakingFriend.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageBroadcastMakingFriend.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageID.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageID.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/Miner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Miner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MinerGenesisMessageTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MinerGenesisMessageTaskManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MinerMessageTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MinerMessageTaskManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/MinerTheWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MinerTheWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Transaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/UTXO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/UTXO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/UTXOAsMiningReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/UTXOAsMiningReward.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/UtilityMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/UtilityMethods.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Wallet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/WalletMessageTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/WalletMessageTaskManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/WalletSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/WalletSimulator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,13 +145,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00170" summary="update">
-      <created>1657324299537</created>
-      <option name="number" value="00170" />
-      <option name="presentableId" value="LOCAL-00170" />
-      <option name="project" value="LOCAL" />
-      <updated>1657324299537</updated>
     </task>
     <task id="LOCAL-00171" summary="update">
       <created>1657325974781</created>
@@ -513,7 +482,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657584887267</updated>
     </task>
-    <option name="localTasksCounter" value="219" />
+    <task id="LOCAL-00219" summary="update">
+      <created>1657588444417</created>
+      <option name="number" value="00219" />
+      <option name="presentableId" value="LOCAL-00219" />
+      <option name="project" value="LOCAL" />
+      <updated>1657588444417</updated>
+    </task>
+    <option name="localTasksCounter" value="220" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
