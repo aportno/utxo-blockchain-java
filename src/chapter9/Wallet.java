@@ -237,7 +237,7 @@ public class Wallet {
         }
 
         Transaction rewardTx = block.getRewardTransaction();
-        if (rewardTx.getTotalAmountToTransfer() > Blockchain.MINING_REWARD + block.getTransactionFeeAmount()) {
+        if (rewardTx.getTotalAmountToTransfer() > Configuration.getMiningReward() + block.getTransactionFeeAmount()) {
             System.out.println("\tWarning: block(" + block.getHashID() + ") over rewarded");
             return false;
         }

@@ -12,9 +12,6 @@ public class WalletSimulator extends JFrame {
     private boolean balanceShowPublicKey;
     private JTextArea textInput;
     private JTextArea displayArea;
-    private JButton sentButton;
-    private GridBagLayout gbl;
-    private GridBagConstraints gbc;
     private final Wallet wallet;
     private final PeerConnectionManager connectionManager;
     private final WalletMessageTaskManager messageManager;
@@ -68,16 +65,16 @@ public class WalletSimulator extends JFrame {
         setBar();
 
         Container container = getContentPane();
-        gbl = new GridBagLayout();
-        gbc = new GridBagConstraints();
+        GridBagLayout gbl = new GridBagLayout();
+        GridBagConstraints gbc = new GridBagConstraints();
         container.setLayout(gbl);
         JLabel labelInput = new JLabel("Message Board");
         labelInput.setForeground(Color.GREEN);
 
         this.displayArea = new JTextArea(50, 100);
         this.textInput = new JTextArea(5, 100);
-        this.sentButton = new JButton("Send message");
-        this.sentButton.addActionListener(e -> {
+        JButton sentButton = new JButton("Send message");
+        sentButton.addActionListener(e -> {
             try {
                 MessageTextBroadcast mtb = new MessageTextBroadcast(
                         textInput.getText(), wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName());
@@ -90,25 +87,25 @@ public class WalletSimulator extends JFrame {
             textInput.setText("");
         });
 
-        this.gbc.fill = GridBagConstraints.BOTH;
-        this.gbc.weightx = 1;
-        this.gbc.weighty = 0.0;
-        this.gbc.gridx = 0;
-        this.gbc.gridy = 0;
-        this.gbc.gridwidth = 1;
-        this.gbc.gridheight = 1;
-        this.gbl.setConstraints(labelInput, this.gbc);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 0.0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbl.setConstraints(labelInput, gbc);
         container.add(labelInput);
 
-        this.gbc.weighty = 0.9;
-        this.gbc.gridx = 0;
-        this.gbc.gridy = 1;
-        this.gbc.gridheight = 9;
+        gbc.weighty = 0.9;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridheight = 9;
 
         JScrollPane displayAreaScroll = new JScrollPane(this.displayArea);
         displayAreaScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         displayAreaScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        this.gbl.setConstraints(displayAreaScroll, this.gbc);
+        gbl.setConstraints(displayAreaScroll, gbc);
         container.add(displayAreaScroll);
 
         this.displayArea.setEditable(false);
@@ -116,21 +113,21 @@ public class WalletSimulator extends JFrame {
         this.displayArea.setLineWrap(true);
         this.displayArea.setWrapStyleWord(true);
 
-        this.gbc.weighty = 0.0;
-        this.gbc.gridx = 0;
-        this.gbc.gridy = 11;
-        this.gbc.gridheight = 1;
-        this.gbl.setConstraints(this.sentButton, this.gbc);
-        container.add(this.sentButton);
+        gbc.weighty = 0.0;
+        gbc.gridx = 0;
+        gbc.gridy = 11;
+        gbc.gridheight = 1;
+        gbl.setConstraints(sentButton, gbc);
+        container.add(sentButton);
 
-        this.gbc.weighty = 0.1;
-        this.gbc.gridx = 0;
-        this.gbc.gridy = 12;
-        this.gbc.gridheight = 2;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 12;
+        gbc.gridheight = 2;
         JScrollPane textInputScroll = new JScrollPane(this.textInput);
         textInputScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         textInputScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        this.gbl.setConstraints(textInputScroll, this.gbc);
+        gbl.setConstraints(textInputScroll, gbc);
         container.add(textInputScroll);
 
         this.textInput.setLineWrap(true);
@@ -475,7 +472,7 @@ class FrameTransaction extends JFrame implements ActionListener {
 
         JComboBox<String> candidates = new JComboBox<>();
         for (KeyNamePair each : users) {
-            candidates.addItem(each.getWalletName());
+            candidates.addItem(each.walletName());
         }
         container.add(candidates);
 
@@ -498,7 +495,7 @@ class FrameTransaction extends JFrame implements ActionListener {
                     input.setText("Must be a positive number");
                     return;
                 }
-                boolean isSendTransaction = agent.isSendTransaction(users.get(selectedIndex).getPublicKey(), amount);
+                boolean isSendTransaction = agent.isSendTransaction(users.get(selectedIndex).publicKey(), amount);
                 if (!isSendTransaction) {
                     input.setText("Failed to send");
                 } else {
@@ -549,8 +546,8 @@ class FramePrivateMessage extends JFrame implements ActionListener {
 
         JComboBox<String> candidates = new JComboBox<>();
         for (KeyNamePair each: users) {
-            int n = agent.hasDirectConnection(each.getPublicKey());
-            candidates.addItem(each.getWalletName() + "-" + n);
+            int n = agent.hasDirectConnection(each.publicKey());
+            candidates.addItem(each.walletName() + "-" + n);
         }
 
         gbc.weightx = 0.5;
@@ -587,7 +584,7 @@ class FramePrivateMessage extends JFrame implements ActionListener {
             int selectedIndex = candidates.getSelectedIndex();
             String inputText = input.getText();
             if (inputText != null && inputText.length() > 0) {
-                PublicKey publicKey = users.get(selectedIndex).getPublicKey();
+                PublicKey publicKey = users.get(selectedIndex).publicKey();
                 boolean isSendPrivateMessage = agent.isSendPrivateMessage(publicKey, inputText);
                 if (isSendPrivateMessage) {
                     input.setText("Message sent");
@@ -615,7 +612,7 @@ class FramePrivateMessage extends JFrame implements ActionListener {
                         int selectedIndex = candidates.getSelectedIndex();
                         String text = input.getText();
                         if (text != null && text.length() > 0) {
-                            PublicKey publicKey = users.get(selectedIndex).getPublicKey();
+                            PublicKey publicKey = users.get(selectedIndex).publicKey();
                             agent.isSendPrivateMessage(publicKey, text);
                             walletSimulator.appendMessageLineOnBoard("Private -> " + agent.getNameFromAddress(publicKey) + " : " + text);
                         }

@@ -8,14 +8,13 @@ public class MessageBlockchainBroadcast extends Message {
     private final static long serialVersionUID = 1L;
     private final Blockchain ledger;
     private final PublicKey sender;
-    private final int initialSize;
     private final String uniqueHashID;
     private final long timeStamp;
 
     public MessageBlockchainBroadcast(Blockchain ledger, PublicKey sender) {
         this.ledger = ledger;
         this.sender = sender;
-        this.initialSize = ledger.getBlockchainSize();
+        int initialSize = ledger.getBlockchainSize();
         timeStamp = UtilityMethods.getTimeStamp();
         String msg = UtilityMethods.getKeyString(sender) + timeStamp + UtilityMethods.getUniqueNumber();
         uniqueHashID = UtilityMethods.messageDigestSHA256_toString(msg);
@@ -42,10 +41,6 @@ public class MessageBlockchainBroadcast extends Message {
 
     public PublicKey getSender() {
         return sender;
-    }
-
-    public int getInfoSize() {
-        return initialSize;
     }
 
     public int getMessageType() {

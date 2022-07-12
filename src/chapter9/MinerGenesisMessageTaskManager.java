@@ -6,7 +6,6 @@ import java.util.HashMap;
 public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager implements Runnable {
     private int blocksMined = 0;
     private int idleItem = 0;
-    private final int signInBonus = 1000;
     private final HashMap<String, KeyNamePair> users = new HashMap<>();
     private final ArrayList<KeyNamePair> waitingListForSignInBonus = new ArrayList<>();
     private final ArrayList<Transaction> waitingTransactionForSignInBonus = new ArrayList<>();
@@ -52,8 +51,9 @@ public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager impl
             LogManager.log(Configuration.getLogBarMax(), "Re-mine a block for the bonus transaction to " + recipient);
         } else if (waitingListForSignInBonus.size() > 0){
             KeyNamePair publicKey = waitingListForSignInBonus.remove(0);
-            recipient = publicKey.getWalletName();
-            tx = miner.transferFund(publicKey.getPublicKey(), signInBonus);
+            recipient = publicKey.walletName();
+            int signInBonus = 1000;
+            tx = miner.transferFund(publicKey.publicKey(), signInBonus);
             if (tx != null && tx.verifySignature()) {
                 LogManager.log(Configuration.getLogBarMax(), miner.getName() + " is sending " + recipient  + " sign-in bonus of " + signInBonus);
             } else {
@@ -114,8 +114,8 @@ public class MinerGenesisMessageTaskManager extends MinerMessageTaskManager impl
         ArrayList<KeyNamePair> all = map.getMessageBody();
         for (KeyNamePair each : all) {
             connectionManager.addAddress(each);
-            String id = UtilityMethods.getKeyString(each.getPublicKey());
-            if(!each.getPublicKey().equals(miner.getPublicKey()) && !users.containsKey(id)) {
+            String id = UtilityMethods.getKeyString(each.publicKey());
+            if(!each.publicKey().equals(miner.getPublicKey()) && !users.containsKey(id)) {
                 users.put(id, each);
                 if (users.size() <= Configuration.getSignInBonusUsersLimit()) {
                     this.waitingListForSignInBonus.add(each);

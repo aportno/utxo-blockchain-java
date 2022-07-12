@@ -23,12 +23,8 @@ public class Miner extends Wallet {
         }
     }
 
-    public boolean isDeletedTransaction(Transaction tx, Block block) {
-        return block.isDeletedTransaction(tx, this.getPublicKey());
-    }
-
     public boolean isGeneratedRewardTransaction(Block block) {
-        double amount = Blockchain.MINING_REWARD + block.getTransactionFeeAmount();
+        double amount = Configuration.getMiningReward() + block.getTransactionFeeAmount();
         Transaction tx = new Transaction(this.getPublicKey(), this.getPublicKey(), amount, null);
         UTXO miningRewardUTXO = new UTXOAsMiningReward(tx.getHashID(), tx.getSender(), this.getPublicKey(), amount);
 

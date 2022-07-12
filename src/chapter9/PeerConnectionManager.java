@@ -129,15 +129,15 @@ public class PeerConnectionManager implements Runnable {
         KeyNamePair keyNamePair = allAddresses.get(address);
 
         if (keyNamePair != null) {
-            return keyNamePair.getWalletName();
+            return keyNamePair.walletName();
         } else {
             return address;
         }
     }
 
     public void addAddress(KeyNamePair address) {
-        if (!isExistingUserByPublicKey(address.getPublicKey())) {
-            allAddresses.put(UtilityMethods.getKeyString(address.getPublicKey()), address);
+        if (!isExistingUserByPublicKey(address.publicKey())) {
+            allAddresses.put(UtilityMethods.getKeyString(address.publicKey()), address);
         }
     }
 

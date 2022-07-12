@@ -38,16 +38,8 @@ public class UTXO implements java.io.Serializable {
         return this.getHashID().equals(utxo.getHashID());
     }
 
-    public boolean isMiningReward() {
-        return false;
-    }
-
     public String getHashID() {
         return this.hashID;
-    }
-
-    public String getParentTransactionID() {
-        return this.parentTransactionID;
     }
 
     public PublicKey getReceiver() { return this.receiver; }
@@ -58,10 +50,6 @@ public class UTXO implements java.io.Serializable {
 
     public long getTimestamp() {
         return this.timestamp;
-    }
-
-    public long getSequentialNumber() {
-        return this.sequentialNumber;
     }
 
     public double getAmountTransferred() {

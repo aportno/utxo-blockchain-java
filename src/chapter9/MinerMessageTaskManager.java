@@ -19,10 +19,6 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
         this.isMiningAction = true;
     }
 
-    protected synchronized boolean isMiningAction() {
-        return this.isMiningAction;
-    }
-
     protected synchronized boolean getMiningAction() {
         return this.isMiningAction;
     }
@@ -33,16 +29,6 @@ public class MinerMessageTaskManager extends WalletMessageTaskManager implements
 
     protected Miner myWallet() {
         return (Miner) (super.myWallet());
-    }
-
-    protected void receiveQueryForBlockchainBroadcast(MessageAskForBlockchainBroadcast mabb) {
-        PublicKey receiver = mabb.getSenderKey();
-        Blockchain ledger = myWallet().getLocalLedger().copy_NotDeepCopy();
-        MessageBlockchainPrivate mbp = new MessageBlockchainPrivate(ledger, myWallet().getPublicKey(), receiver);
-
-        if (!connectionManager.sendMessageByKey(receiver, mbp)) {
-            connectionManager.sendMessageByAll(mbp);
-        }
     }
 
     protected boolean receiveMessageBlockBroadcast(MessageBlockBroadcast mbb) {

@@ -28,6 +28,6 @@ public class MessageAskForBlockchainBroadcast extends MessageTextBroadcast {
     }
 
     public int getMessageType() {
-        return Message.BLOCK_ASK_BROADCAST;
+        return Message.BLOCKCHAIN_ASK_BROADCAST;
     }
 }

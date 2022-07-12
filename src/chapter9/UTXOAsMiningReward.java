@@ -10,6 +10,4 @@ public class UTXOAsMiningReward extends UTXO {
     public UTXOAsMiningReward(String parentTransactionID, PublicKey sender, PublicKey receiver, double amountToTransfer) {
         super(parentTransactionID, sender, receiver, amountToTransfer);
     }
-
-    public boolean isMiningReward() { return true; }
 }

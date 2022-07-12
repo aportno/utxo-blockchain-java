@@ -15,7 +15,7 @@ public final class MessageID extends MessageSigned {
     private final String walletName;
     private final String info;
     private final String uniqueHashID;
-    private long timeStamp = 0;
+    private final long timeStamp;
 
     public MessageID(PrivateKey privateKey, PublicKey sender, String walletName) {
         this.info = Message.JCOIN_MESSAGE;

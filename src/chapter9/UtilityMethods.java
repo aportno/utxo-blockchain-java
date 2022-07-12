@@ -1,15 +1,7 @@
 package chapter9;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
-import java.security.spec.KeySpec;
 import java.util.Base64;
-import java.util.Scanner;
 
 public class UtilityMethods {
     public static long uniqueNumber = 0;
@@ -140,121 +132,6 @@ public class UtilityMethods {
         return encryptionByXOR(key, password);
     }
 
-    public static byte[] encryptionByAES(byte[] key, String password) {
-        try {
-            byte[] salt = new byte[8];
-            SecureRandom rand = new SecureRandom();
-
-            rand.nextBytes(salt);
-
-            String keyAlgo = "PBKDF2WithHmacSHA1";
-            SecretKeyFactory factory = SecretKeyFactory.getInstance(keyAlgo);
-            KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 1024, 128);
-            SecretKey tempKey = factory.generateSecret(keySpec);
-            SecretKey secretKey = new SecretKeySpec(tempKey.getEncoded(), "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-
-            AlgorithmParameters algoParams = cipher.getParameters();
-            byte[] iv = algoParams.getParameterSpec(IvParameterSpec.class).getIV();
-            byte[] output = cipher.doFinal(key);
-            byte[] outputSizeBytes = UtilityMethods.intToBytes(output.length);
-            byte[] ivSizeBytes = UtilityMethods.intToBytes(iv.length);
-            byte[] data = new byte[Integer.BYTES * 2 + salt.length + iv.length + output.length];
-
-            int j = 0;
-            for (int i = 0; i < outputSizeBytes.length; i++, j++) {
-                data[j] = outputSizeBytes[i];
-            }
-
-            for (int i = 0; i < ivSizeBytes.length; i++, j++) {
-                data[j] = ivSizeBytes[i];
-            }
-
-            for (int i = 0; i < salt.length; i++, j++) {
-                data[j] = salt[i];
-            }
-
-            for (int i = 0; i < iv.length; i++, j++) {
-                data[j] = iv[i];
-            }
-
-            for (int i = 0; i < output.length; i++, j++) {
-                data[j] = output[i];
-            }
-
-            return data;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static byte[] decryptionByAES(byte[] key, String password) {
-        try {
-            int j = 0;
-            byte[] lengthByte = new byte[Integer.BYTES];
-
-            for (int i = 0; i < lengthByte.length; i++, j++) {
-                lengthByte[i] = key[j];
-            }
-
-            int dataSize = bytesToInt(lengthByte);
-            for (int i = 0; i < lengthByte.length; i++, j++) {
-                lengthByte[i] = key[j];
-            }
-
-            int ivSize = bytesToInt(lengthByte);
-            byte[] salt = new byte[8];
-            for (int i = 0; i < salt.length; i++, j++) {
-                salt[i] = key[j];
-            }
-
-            byte[] ivBytes = new byte[ivSize];
-            for (int i = 0; i < ivBytes.length; i++, j++) {
-                ivBytes[i] = key[j];
-            }
-
-            byte[] dataBytes = new byte[dataSize];
-            for (int i = 0; i < dataBytes.length; i++, j++) {
-                dataBytes[i] = key[j];
-            }
-
-            PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, 1024, 128);
-            String keyAlgo = "PBKDF2WithHmacSHA1";
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(keyAlgo);
-            SecretKey tempKey = secretKeyFactory.generateSecret(pbeKeySpec);
-            SecretKey secretKey = new SecretKeySpec(tempKey.getEncoded(), "AES");
-            Cipher cipher2 = Cipher.getInstance("AES/CBC/PKCS5Padding");
-
-            cipher2.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(ivBytes));
-
-            return cipher2.doFinal(dataBytes);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static byte[] intToBytes(int num) {
-        byte[] b = new byte[Integer.BYTES];
-
-        for (int i = b.length - 1; i >= 0; i--) {
-            b[i] = (byte)(num & 0xFF);
-            num = num >> Byte.SIZE;
-        }
-
-        return b;
-    }
-
-    public static int bytesToInt(byte[] b) {
-        int j = 0;
-        for (byte value : b) {
-            j = j << Byte.SIZE;
-            j = j | (value & 0xFF);
-        }
-        return j;
-    }
-
     public static void displayTab(StringBuilder out, int level, String str) {
         out.append("\t".repeat(Math.max(0, level)));
         out.append(str).append(System.getProperty("line.separator"));
@@ -322,27 +199,6 @@ public class UtilityMethods {
         }
 
         displayTab(out, level, "}");
-    }
-
-    public static int guaranteeIntegerInputByScanner(Scanner in, int lowerBound, int upperBound) {
-        int x;
-        try {
-            x = in.nextInt();
-        } catch (java.util.InputMismatchException e) {
-            x = lowerBound -1;
-        }
-        while (x < lowerBound || x > upperBound) {
-            System.out.println("You selected " + x + ", please only enter an integer between " + lowerBound + " and "
-            + upperBound + " inclusively");
-            try {
-                x = in.nextInt();
-            } catch (java.util.InputMismatchException e) {
-                in.nextLine();
-                x = lowerBound - 1;
-            }
-        }
-        in.nextLine();
-        return x;
     }
 
     public static String computeMerkleTreeRootHash(String[] hashes) {

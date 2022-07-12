@@ -9,7 +9,6 @@ public class MessageBlockchainPrivate extends Message implements java.io.Seriali
     private final Blockchain ledger;
     private final PublicKey sender;
     private final PublicKey receiver;
-    private final int initialSize;
     private final String uniqueHashID;
     private final long timeStamp;
 
@@ -17,14 +16,10 @@ public class MessageBlockchainPrivate extends Message implements java.io.Seriali
         this.ledger = ledger;
         this.sender = sender;
         this.receiver = receiver;
-        this.initialSize = this.ledger.getBlockchainSize();
+        int initialSize = this.ledger.getBlockchainSize();
         timeStamp = UtilityMethods.getTimeStamp();
         String msg = UtilityMethods.getKeyString(sender) + timeStamp + UtilityMethods.getUniqueNumber();
         uniqueHashID = UtilityMethods.messageDigestSHA256_toString(msg);
-    }
-
-    public int getInfoSize() {
-        return initialSize;
     }
 
     public int getMessageType() {

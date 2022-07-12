@@ -1,7 +1,6 @@
 package chapter9;
 
 import java.io.Serial;
-import java.security.Key;
 import java.security.PublicKey;
 import java.security.PrivateKey;
 
@@ -9,7 +8,6 @@ public class MessageBroadcastMakingFriend extends Message {
     @Serial
     private static final long serialVersionUID = 1L;
     private final String info;
-    private final byte[] signature;
     private final PublicKey sender;
     private final String senderName;
     private final String uniqueHashID;
@@ -21,7 +19,7 @@ public class MessageBroadcastMakingFriend extends Message {
         this.senderName = senderName;
         this.ipAddress = ipAddress;
         info = Message.JCOIN_MESSAGE;
-        signature = UtilityMethods.generateSignature(privateKey, info);
+        byte[] signature = UtilityMethods.generateSignature(privateKey, info);
         timeStamp = UtilityMethods.getTimeStamp();
         String msg = UtilityMethods.getKeyString(senderKey) + senderName + UtilityMethods.getUniqueNumber() + timeStamp;
         uniqueHashID = UtilityMethods.messageDigestSHA256_toString(msg);
@@ -53,9 +51,7 @@ public class MessageBroadcastMakingFriend extends Message {
     }
 
     @Override
-    public boolean isForBroadcast() {
-        return true;
-    }
+    public boolean isForBroadcast() { return true; }
 
     public String getIpAddress() {
         return ipAddress;

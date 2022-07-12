@@ -17,7 +17,6 @@ public final class Configuration {
     private static final int THREAD_SLEEP_TIME_LONG = 1000;
     private static final int LOG_BAR = 0;
     private static final int LOG_BAR_MAX = 10;
-    private static final int LOG_BAR_MED = 5;
     private static final int LOG_BAR_MIN = 0;
     private static final int OUTGOING_CONNECTIONS_LIMIT = 6;
     private static final int INCOMING_CONNECTIONS_LIMIT = 20;
@@ -63,9 +62,7 @@ public final class Configuration {
         return BLOCK_TRANSACTION_LOWER_LIMIT;
     }
 
-    public static double getMiningReward() {
-        return MINING_REWARD;
-    }
+    public static double getMiningReward() { return MINING_REWARD; }
 
     public static long getMessageBuriedTimeLimit() {
         return MESSAGE_BURIED_TIME_LIMIT;
@@ -93,10 +90,6 @@ public final class Configuration {
 
     public static int getLogBarMin() {
         return LOG_BAR_MIN;
-    }
-
-    public static int getLogBarMed() {
-        return LOG_BAR_MED;
     }
 
     public static int getOutgoingConnectionsLimit() {

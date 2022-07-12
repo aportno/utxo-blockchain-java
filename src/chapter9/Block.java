@@ -5,18 +5,15 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class Block implements java.io.Serializable {
-    public final static int TRANSACTION_UPPER_LIMIT = 100;
-    public final static int TRANSACTION_LOWER_LIMIT = 1;
-
     @Serial
     private static final long serialVersionUID = 1L;
     private final ArrayList<Transaction> transactions = new ArrayList<>();
     private String hashID;
     private final String previousBlockHashID;
     private final long timestamp;
-    private int nonce = 0;
+    private long nonce = Long.MIN_VALUE;
     private final int difficultyLevel;
-    private PublicKey creator;
+    private final PublicKey creator;
     private boolean isMined = false;
     private byte[] signature;
     private Transaction rewardTransaction;
@@ -29,9 +26,7 @@ public class Block implements java.io.Serializable {
     }
 
     protected String computeHashID() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.previousBlockHashID).append(Long.toHexString(this.timestamp)).append(this.computeMerkleRoot()).append(nonce);
-        byte[] b = UtilityMethods.messageDigestSHA256_toBytes(sb.toString());
+        byte[] b = UtilityMethods.messageDigestSHA256_toBytes(this.previousBlockHashID + Long.toHexString(this.timestamp) + this.computeMerkleRoot() + nonce);
         return UtilityMethods.toBinaryString(b);
     }
 
@@ -56,25 +51,8 @@ public class Block implements java.io.Serializable {
         return UtilityMethods.computeMerkleTreeRootHash(hashes);
     }
 
-    public boolean isDeletedTransaction(Transaction transaction, PublicKey publicKey) {
-        if (!this.isMined && !this.isSigned() && publicKey.equals(this.getCreator())) {
-            return this.transactions.remove(transaction);
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isDeletedTransaction(int index, PublicKey publicKey) {
-        if (!this.isMined && !this.isSigned() && publicKey.equals(this.getCreator())) {
-            Transaction transaction = this.transactions.remove(index);
-            return (transaction != null);
-        } else {
-            return false;
-        }
-    }
-
     public boolean isAddedTransaction(Transaction transaction, PublicKey publicKey) {
-        if (this.getTotalNumberOfTransactions() >= Block.TRANSACTION_UPPER_LIMIT) {
+        if (this.getTotalNumberOfTransactions() >= Configuration.getBlockTransactionUpperLimit()) {
             return false;
         } else if (publicKey.equals(this.getCreator()) && !this.isMined() && !this.isSigned()) {
             this.transactions.add(transaction);
@@ -152,10 +130,6 @@ public class Block implements java.io.Serializable {
 
     public int getDifficultyLevel() {
         return this.difficultyLevel;
-    }
-
-    public int getNonce() {
-        return this.nonce;
     }
 
     public long getTimestamp() {

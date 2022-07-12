@@ -7,8 +7,8 @@ public class MessageBlockBroadcast extends Message {
     @Serial
     private static final long serialVersionUID = 1L;
     private final Block block;
-    private PublicKey sender;
-    private long timeStamp;
+    private final PublicKey sender;
+    private final long timeStamp;
 
     public MessageBlockBroadcast(Block block, PublicKey sender) {
         this.block = block;

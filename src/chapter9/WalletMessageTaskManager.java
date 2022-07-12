@@ -9,7 +9,7 @@ public class WalletMessageTaskManager implements Runnable {
     private boolean isServerRunning = true;
     private final Wallet wallet;
     private final Hashtable<String, Message> existingMessages = new Hashtable<>();
-    private ConcurrentLinkedQueue<Message> messageConcurrentLinkedQueue;
+    private final ConcurrentLinkedQueue<Message> messageConcurrentLinkedQueue = new ConcurrentLinkedQueue<>();
     private final PeerConnectionManager connectionManager;
     private WalletSimulator simulator;
     private int idleTime = 0;
@@ -136,9 +136,9 @@ public class WalletMessageTaskManager implements Runnable {
             ArrayList<KeyNamePair> all = map.getMessageBody();
             LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.receiveMessageAddressPrivate() -> listing available addresses");
             for (KeyNamePair each: all) {
-                if (!each.getPublicKey().equals(wallet.getPublicKey())) {
+                if (!each.publicKey().equals(wallet.getPublicKey())) {
                     connectionManager.addAddress(each);
-                    LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.receiveMessageAddressPrivate() | " + each.getWalletName() + "|" + UtilityMethods.getKeyString(each.getPublicKey()));
+                    LogManager.log(Configuration.getLogBarMin(), "In WalletMessageTaskManager.receiveMessageAddressPrivate() | " + each.walletName() + "|" + UtilityMethods.getKeyString(each.publicKey()));
                 }
             }
         }
@@ -230,7 +230,7 @@ public class WalletMessageTaskManager implements Runnable {
         isServerRunning = false;
     }
 
-    public void toDo() {};
+    public void toDo() {}
 
     public void run() {
         while (isServerRunning) {

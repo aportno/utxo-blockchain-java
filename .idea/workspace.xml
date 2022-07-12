@@ -2,10 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3123464a-84c2-4c92-84a1-d32b57acfeea" name="Changes" comment="update">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Block.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/Blockchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Blockchain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Configuration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/KeyNamePair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/KeyNamePair.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageAddressBroadcastAsk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageAddressBroadcastAsk.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageAskForBlockchainBroadcast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageAskForBlockchainBroadcast.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageAskForBlockchainPrivate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageAskForBlockchainPrivate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageBlockBroadcast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageBlockBroadcast.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageBlockchainBroadcast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageBlockchainBroadcast.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageBlockchainPrivate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageBlockchainPrivate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageBroadcastMakingFriend.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageBroadcastMakingFriend.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MessageID.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MessageID.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/Miner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Miner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/chapter9/MinerGenesisMessageTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MinerGenesisMessageTaskManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerIncomingConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerIncomingConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MinerMessageTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MinerMessageTaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/MinerTheWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/MinerTheWorker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/PeerConnectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/UTXO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/UTXO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/UTXOAsMiningReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/UTXOAsMiningReward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/UtilityMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/UtilityMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/Wallet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/chapter9/WalletMessageTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/WalletMessageTaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter9/WalletSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter9/WalletSimulator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +49,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -60,26 +85,13 @@
       <recent name="chapter3" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.WalletSimulator">
+  <component name="RunManager" selected="Application.chapter9.BlockchainPlatform">
     <configuration name="BlockchainPlatform" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chapter8.BlockchainPlatform" />
       <module name="learn_blockchain_in_java_zhou" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="chapter8.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestTCPClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter7.TestTCPClient" />
-      <module name="learn_blockchain_in_java_zhou" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="chapter7.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -126,13 +138,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="chapter9.BlockchainPlatform" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter9.BlockchainPlatform" />
+      <module name="learn_blockchain_in_java_zhou" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chapter9.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.chapter9.BlockchainPlatform" />
         <item itemvalue="Application.WalletSimulator" />
         <item itemvalue="Application.BlockchainPlatform" />
         <item itemvalue="Application.TestTCPClientFrame" />
         <item itemvalue="Application.TestTCPServerCenter" />
-        <item itemvalue="Application.TestTCPClient" />
       </list>
     </recent_temporary>
   </component>
@@ -144,20 +169,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1655870953492</updated>
-    </task>
-    <task id="LOCAL-00168" summary="update">
-      <created>1657312808743</created>
-      <option name="number" value="00168" />
-      <option name="presentableId" value="LOCAL-00168" />
-      <option name="project" value="LOCAL" />
-      <updated>1657312808743</updated>
-    </task>
-    <task id="LOCAL-00169" summary="update">
-      <created>1657322939675</created>
-      <option name="number" value="00169" />
-      <option name="presentableId" value="LOCAL-00169" />
-      <option name="project" value="LOCAL" />
-      <updated>1657322939675</updated>
     </task>
     <task id="LOCAL-00170" summary="update">
       <created>1657324299537</created>
@@ -488,7 +499,21 @@
       <option name="project" value="LOCAL" />
       <updated>1657583521005</updated>
     </task>
-    <option name="localTasksCounter" value="217" />
+    <task id="LOCAL-00217" summary="update">
+      <created>1657584679714</created>
+      <option name="number" value="00217" />
+      <option name="presentableId" value="LOCAL-00217" />
+      <option name="project" value="LOCAL" />
+      <updated>1657584679714</updated>
+    </task>
+    <task id="LOCAL-00218" summary="update">
+      <created>1657584887267</created>
+      <option name="number" value="00218" />
+      <option name="presentableId" value="LOCAL-00218" />
+      <option name="project" value="LOCAL" />
+      <updated>1657584887267</updated>
+    </task>
+    <option name="localTasksCounter" value="219" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

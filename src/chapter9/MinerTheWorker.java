@@ -8,11 +8,10 @@ already been finished by another miner and broadcast to the network.
  */
 
 public class MinerTheWorker implements Runnable {
-    private Miner miner;
-    private PeerConnectionManager agent;
-    private MinerMessageTaskManager manager;
-    private boolean isKeepMining = true;
-    private ArrayList<Transaction> existingTransactions;
+    private final Miner miner;
+    private final PeerConnectionManager agent;
+    private final MinerMessageTaskManager manager;
+    private final ArrayList<Transaction> existingTransactions;
 
     public MinerTheWorker(Miner miner, MinerMessageTaskManager manager, PeerConnectionManager agent, ArrayList<Transaction> existingTransaction) {
         this.miner = miner;
@@ -37,6 +36,7 @@ public class MinerTheWorker implements Runnable {
             // do nothing
         }
 
+        boolean isKeepMining = true;
         if (!isKeepMining) {
             manager.resetMiningAction();
             return;
@@ -65,9 +65,5 @@ public class MinerTheWorker implements Runnable {
         MessageBlockBroadcast mbb = new MessageBlockBroadcast(block, miner.getPublicKey());
         this.agent.sendMessageByAll(mbb);
         manager.resetMiningAction();
-    }
-
-    protected void abort() {
-        this.isKeepMining = false;
     }
 }

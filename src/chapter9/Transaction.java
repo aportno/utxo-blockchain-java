@@ -98,10 +98,6 @@ public class Transaction implements java.io.Serializable {
         return this.timestamp;
     }
 
-    public long getMySequentialNumber() {
-        return this.mySequentialNumber;
-    }
-
     public double getTotalAmountToTransfer() {
         double total = 0;
         for (double amount : this.amountToTransfer) {

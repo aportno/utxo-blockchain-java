@@ -8,7 +8,6 @@ import java.util.HashMap;
 public class Blockchain implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    public static final double MINING_REWARD = 100.0;
     private final LedgerList<Block> blockchain;
 
     private Blockchain(LedgerList<Block> blockchain) {
@@ -137,15 +136,6 @@ public class Blockchain implements java.io.Serializable {
     public double findRelatedUTXOs(PublicKey publicKey, ArrayList<UTXO> all, ArrayList<UTXO> spent, ArrayList<UTXO> unspent) {
         ArrayList<Transaction> sendingTransactions = new ArrayList<>();
         return findRelatedUTXOs(publicKey, all, spent, unspent, sendingTransactions);
-    }
-
-    public ArrayList<UTXO> findUnspentUTXOs(PublicKey publicKey) {
-        ArrayList<UTXO> all = new ArrayList<>();
-        ArrayList<UTXO> spent = new ArrayList<>();
-        ArrayList<UTXO> unspent = new ArrayList<>();
-        findRelatedUTXOs(publicKey, all, spent, unspent);
-
-        return unspent;
     }
 
     public double findUnspentUTXOs(PublicKey publicKey, ArrayList<UTXO> unspent) {

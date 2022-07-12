@@ -52,8 +52,4 @@ public class MessageAddressBroadcastAsk extends Message {
     public String getWalletName() {
         return walletName;
     }
-
-    public KeyNamePair getKeyNamePair() {
-        return new KeyNamePair(sender, walletName);
-    }
 }

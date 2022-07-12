@@ -9,7 +9,7 @@ public class MessageAskForBlockchainPrivate extends MessageTextPrivate {
     private static final long serialVersionUID = 1L;
     private final String uniqueHashID;
     private final long timeStamp;
-    private boolean required;
+    private final boolean required;
 
     public MessageAskForBlockchainPrivate(String info, PrivateKey privateKey, PublicKey senderKey, String senderName, PublicKey receiverKey, boolean required) {
         super(info, privateKey, senderKey, senderName, receiverKey);
