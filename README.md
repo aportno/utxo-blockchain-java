@@ -2085,3 +2085,14 @@ A solution to this problem is to tag every message with a unique ID, timestamp, 
 old will be discarded, messages that have already been processed by a peer will be discarded, and by default, the sender 
 of a message will discard the same message forwarded back to him.
 
+---
+## Running the Application
+* Run `BlockchainPlatform` on computer 1
+* Run `WalletSimulator` on computer 2
+* Run `WalletSimulator` on computer n
+
+TODO:
+1) Outline how to use the application
+2) Refactor where necessary
+3) Add additional functionality
+   1) Display all messages on the message board (including the sender)

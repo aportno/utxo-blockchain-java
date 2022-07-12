@@ -461,6 +461,7 @@ class FrameTransaction extends JFrame implements ActionListener {
         Container container = this.getContentPane();
         this.setSize(300, 120);
         GridLayout gl = new GridLayout(3, 2, 5, 5);
+
         JLabel selectUser = new JLabel("Select a user");
         JLabel selectTxAmount = new JLabel("Select transaction amount");
         JButton submitButton = new JButton("Submit");
@@ -485,7 +486,7 @@ class FrameTransaction extends JFrame implements ActionListener {
             int selectedIndex = candidates.getSelectedIndex();
             double amount;
             String inputText = input.getText();
-            if (inputText != null && inputText.length() > 10) {
+            if (inputText != null && inputText.length() > 0) {
                 try {
                     amount = Double.parseDouble(inputText);
                 } catch (Exception e1) {
@@ -500,6 +501,7 @@ class FrameTransaction extends JFrame implements ActionListener {
                     input.setText("Failed to send");
                 } else {
                     input.setText("Transaction sent");
+                    submitButton.setEnabled(false);
                 }
             }
         });
