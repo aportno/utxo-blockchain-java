@@ -6,11 +6,11 @@ import java.net.Socket;
 import java.net.InetAddress;
 
 public class PeerServer implements Runnable {
-    private Wallet wallet;
-    private ServerSocket server;
+    private final Wallet wallet;
+    private final ServerSocket server;
     private static String IPAddress;
-    private PeerConnectionManager connectionManager;
-    private WalletMessageTaskManager messageTaskManager;
+    private final PeerConnectionManager connectionManager;
+    private final WalletMessageTaskManager messageTaskManager;
     private boolean isServerRunning = true;
 
     public PeerServer(Wallet wallet, WalletMessageTaskManager messageTaskManager, PeerConnectionManager connectionManager) throws IOException {
@@ -30,7 +30,7 @@ public class PeerServer implements Runnable {
         LogManager.log(Configuration.getLogBarMax(), "Peer server of " + wallet.getName() + " is listening now");
         while (isServerRunning) {
             try {
-                if (connectionManager.numberOfExistingIncomingConnection() >= Configuration.getIncomingConnectionsLimit()) {
+                if (connectionManager.numberOfExistingIncomingConnections() >= Configuration.getIncomingConnectionsLimit()) {
                     Thread.sleep(Configuration.getThreadSleepTimeLong());
                 } else {
                     Socket socket = server.accept();
@@ -38,6 +38,7 @@ public class PeerServer implements Runnable {
                     LogManager.log(Configuration.getLogBarMax(), "Received an incoming connection request from " + clientAddress.getHostAddress());
                     PeerIncomingConnection peer = new PeerIncomingConnection(wallet, socket, messageTaskManager, connectionManager);
                     Thread thread = new Thread(peer);
+                    thread.start();
                     LogManager.log(Configuration.getLogBarMax(), "PeerIncomingConnection with " + peer.getConnectionIP() + " established");
                     connectionManager.addIncomingConnection(peer);
                 }

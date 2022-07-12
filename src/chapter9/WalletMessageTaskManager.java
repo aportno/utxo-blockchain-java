@@ -1,8 +1,6 @@
 package chapter9;
 
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.Enumeration;
@@ -232,6 +230,8 @@ public class WalletMessageTaskManager implements Runnable {
         isServerRunning = false;
     }
 
+    public void toDo() {};
+
     public void run() {
         while (isServerRunning) {
             try {
@@ -247,6 +247,7 @@ public class WalletMessageTaskManager implements Runnable {
             }
 
             if (messageConcurrentLinkedQueue.isEmpty()) {
+                toDo();
                 try {
                     Thread.sleep(Configuration.getThreadSleepTimeLong());
                 } catch (InterruptedException ie) {

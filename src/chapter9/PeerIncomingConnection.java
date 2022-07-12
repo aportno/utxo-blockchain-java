@@ -17,7 +17,7 @@ public class PeerIncomingConnection implements Runnable {
     private final WalletMessageTaskManager messageTaskManager;
     private boolean isServerRunning = true;
 
-    public PeerIncomingConnection(Wallet wallet, Socket socket, PeerConnectionManager connectionManager, WalletMessageTaskManager messageTaskManager)  throws Exception {
+    public PeerIncomingConnection(Wallet wallet, Socket socket, WalletMessageTaskManager messageTaskManager, PeerConnectionManager connectionManager)  throws Exception {
         this.wallet = wallet;
         this.socket = socket;
         this.connectionManager = connectionManager;
@@ -44,7 +44,7 @@ public class PeerIncomingConnection implements Runnable {
     public void run() {
         while (isServerRunning) {
             try {
-                Thread.sleep(Configuration.getThreadSleepTimeMedium();
+                Thread.sleep(Configuration.getThreadSleepTimeMedium());
             } catch (InterruptedException ie) {
                 LogManager.log(Configuration.getLogBarMin(), "Exception in PeerIncomingConnection.run() -> " + ie.getMessage());
                 activeClose();
