@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This repo follows the instructions in Hong Zhou's _Learning Blockchain in Java - A step-by-step approach with P2P demonstration_.
+This repo adapts the instructions to create a blockchain platform from Hong Zhou's _Learning Blockchain in Java - A step-by-step approach with P2P demonstration_.
 The blockchain is developed from scratch using bitcoins UTXO accounting model.
 
 [Purchase "Learning Blockchain in Java" on Amazon](https://www.amazon.com/Learning-Blockchain-Java-step-step/dp/1795002158)
