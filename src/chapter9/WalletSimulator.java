@@ -32,7 +32,8 @@ public class WalletSimulator extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 try {
-                    con
+                    connectionManager.shutdownAll();
+                    messageManager.close();
                 } catch (Exception e1) {
                     try {
                         connectionManager.shutdownAll();
@@ -76,20 +77,17 @@ public class WalletSimulator extends JFrame {
         this.displayArea = new JTextArea(50, 100);
         this.textInput = new JTextArea(5, 100);
         this.sentButton = new JButton("Send message");
-        this.sentButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                try {
-                    MessageTextBroadcast mtb = new MessageTextBroadcast(
-                            textInput.getText(), wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName());
-                    connectionManager.sendMessageByAll(mtb);
-                    appendMessageLineOnBoard(wallet.getName() + ":" + textInput.getText());
-                } catch (Exception e2) {
-                    LogManager.log(Configuration.getLogBarMax(), "Exception in WalletSimulator.sentButton.addActionListener" + e2.getMessage());
-                    throw new RuntimeException(e2);
-                }
-                textInput.setText("");
+        this.sentButton.addActionListener(e -> {
+            try {
+                MessageTextBroadcast mtb = new MessageTextBroadcast(
+                        textInput.getText(), wallet.getPrivateKey(), wallet.getPublicKey(), wallet.getName());
+                connectionManager.sendMessageByAll(mtb);
+                appendMessageLineOnBoard(wallet.getName() + ":" + textInput.getText());
+            } catch (Exception e2) {
+                LogManager.log(Configuration.getLogBarMax(), "Exception in WalletSimulator.sentButton.addActionListener" + e2.getMessage());
+                throw new RuntimeException(e2);
             }
+            textInput.setText("");
         });
 
         this.gbc.fill = GridBagConstraints.BOTH;
@@ -185,9 +183,7 @@ public class WalletSimulator extends JFrame {
                         4. Display blockchain -> displays your local blockchain in the display board."""));
 
         JMenuItem askBlockchainItem = new JMenuItem("Update blockchain");
-        askBlockchainItem.addActionListener(e -> {
-            connectionManager.broadcastRequestForBlockchainUpdate();
-        });
+        askBlockchainItem.addActionListener(e -> connectionManager.broadcastRequestForBlockchainUpdate());
 
         JMenuItem askAddressesItem = new JMenuItem("Update users");
         askAddressesItem.addActionListener(e -> {
@@ -203,9 +199,7 @@ public class WalletSimulator extends JFrame {
         displayBlockchain.addActionListener(e -> displayBlockchain(wallet));
 
         JMenuItem makingFriendsItem = new JMenuItem("Making friends");
-        makingFriendsItem.addActionListener(e -> {
-            connectionManager.makingFriends();
-        });
+        makingFriendsItem.addActionListener(e -> connectionManager.makingFriends());
 
         askMenu.add(askMenuHelpItem);
         askMenu.add(askBlockchainItem);
@@ -315,11 +309,11 @@ public class WalletSimulator extends JFrame {
         Random randNumGenerator = new Random();
         int randOutcome = randNumGenerator.nextInt(4);
         Scanner scanner = new Scanner(System.in);
-        LogManager.log(Configuration.getLogBarMax(), "Provide a name:")
+        LogManager.log(Configuration.getLogBarMax(), "Provide a name:");
         String providedName = scanner.nextLine();
         LogManager.log(Configuration.getLogBarMax(), "Provide a password");
         String providedPassword = scanner.nextLine();
-        LogManager.log(Configuration.getLogBarMax(), "Display public key as address? Y/N")
+        LogManager.log(Configuration.getLogBarMax(), "Display public key as address? Y/N");
         String providedPkChoice = scanner.nextLine();
         boolean isShowPkAsAddress = providedPkChoice.toUpperCase(Locale.ROOT).startsWith("Y");
 
@@ -434,12 +428,6 @@ class MessageFrame extends JFrame {
 
     public void setMessage(String msg) {
         message.setText(msg);
-        this.validate();
-        this.setVisible(true);
-    }
-
-    public void appendMessage(String msg) {
-        message.append(msg);
         this.validate();
         this.setVisible(true);
     }
